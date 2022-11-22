@@ -1,8 +1,9 @@
 #include "LRU.hpp"
-#include "generic_hit_count.hpp"
+#include "hit_count.hpp"
 
 int main()
 {
-  count_hits<caches::LRU<int>>();
+  int hits = count_hits_from_stdin<caches::LRU<int>>();
+  std::cout << hits << std::endl;
   return 0;
 }
