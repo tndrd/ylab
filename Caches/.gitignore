@@ -4,5 +4,7 @@
 !include/*
 !src/*
 !tests/*/*
+!tests/*
+!tests/
 !src/testers/*
 !CMakeLists.txt
