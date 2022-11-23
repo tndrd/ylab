@@ -3,5 +3,7 @@
 !.gitignore
 !include/*
 !src/*
+!tests/*
+!tests/
 !src/testers/*
 !CMakeLists.txt
