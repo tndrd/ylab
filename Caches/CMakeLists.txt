@@ -50,7 +50,6 @@ function(load_tests tester testfolder)
 endfunction()
 
 # Loading tests
-
 load_tests(LRUtest LRU)
 load_tests(LFUtest LFU)
 load_tests(idealtest ideal)
