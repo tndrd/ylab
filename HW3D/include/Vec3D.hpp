@@ -1,3 +1,5 @@
+#pragma once
+
 #include <array>
 #include <cmath>
 
@@ -11,6 +13,8 @@ bool fit(double a, double b)
   return (a - b) < FIT_TOLERANCE;
 }
 
+// Just a regular 3D vector
+// With overloaded vector operations
 struct Vec3D
 {
   double x = NAN;
@@ -41,13 +45,15 @@ struct Vec3D
     return std::sqrt(x*x + y*y + z*z);
   }
 
-  void normalize()
+  Vec3D normalize() const
   {
     double absval = length();
 
-    x /= absval;
-    y /= absval;
-    z /= absval;
+    double xn = x / absval;
+    double yn = y / absval;
+    double zn = z / absval;
+
+    return {xn, yn, zn};
   }
 };
 
@@ -104,6 +110,24 @@ Vec3D abs(const Vec3D& v)
 bool operator==(const Vec3D& v1, const Vec3D& v2)
 {
   return fit(v1.x, v2.x) && fit(v1.y, v2.y) && fit(v1.z, v2.z);
+}
+
+double det(const Vec3D& v1, const Vec3D& v2, const Vec3D& v3)
+{
+  double min1 = v1.x * (v2.y*v3.z - v2.z*v3.y);
+  double min2 = v1.y * (v2.x*v3.z - v2.z*v3.x);
+  double min3 = v1.z * (v2.x*v3.y - v2.y*v3.x);
+
+  return min1 - min2 + min3;
+}
+
+Vec3D vecmul(const Vec3D& v1, const Vec3D& v2)
+{
+  double min1 = v1.y*v2.z - v1.z*v2.y;
+  double min2 = v1.x*v2.z - v1.z*v2.x;
+  double min3 = v1.x*v2.y - v1.y*v2.x;
+
+  return {min1, -min2, min3};
 }
 
 using Point3D = Vec3D; // Just for aestethical purposes. Just to emphasise that Point3D is a radius-vector
