@@ -35,7 +35,7 @@ class Relation<Line3D, Line3D>
   double t2_ = NAN;
   
   public:
-  double get_state() const { return state_; }
+  State  get_state() const { return state_; }
   double get_t1()    const { return t1_; }
   double get_t2()    const { return t2_; }
 };
@@ -67,7 +67,7 @@ class Relation<Plane3D, Plane3D>
   double b_ = NAN;
 
   public:
-  double get_state() const { return state_; }
+  State  get_state() const { return state_; }
   double get_a()     const { return a_; }
   double get_b()     const { return b_; }
 };
@@ -151,14 +151,14 @@ Relation<Plane3D, Plane3D> get_relation(const Plane3D& p1, const Plane3D& p2)
 }
 
 // Returns the intersection point of two lines. Given lines should really intersect
-Point3D intersection(const Line3D& l1, const Line3D& l2, const Relation<Line3D, Line3D>& relation)
+Point3D get_intersection(const Line3D& l1, const Line3D& l2, const Relation<Line3D, Line3D>& relation)
 {
   if (relation.get_state() != relation.INTERSECTING) throw;
   return l1.point_from_param(relation.get_t1());
 }
 
 // Returns the intersection line of two planes. Given planes should really intersect
-LineInf3D intersection(const Plane3D& p1, const Plane3D& p2, const Relation<Plane3D, Plane3D>& relation)
+LineInf3D get_intersection(const Plane3D& p1, const Plane3D& p2, const Relation<Plane3D, Plane3D>& relation)
 {
   if (relation.get_state() != relation.INTERSECTING) throw;
 
