@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Vec3D.hpp"
-//#include "LineInf3D.hpp"
+#include "LineInf3D.hpp"
 
 namespace HW3D
 {
