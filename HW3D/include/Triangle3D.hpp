@@ -29,6 +29,7 @@ class Triangle3D
     return {vertices_[i1], vertices_[i2]};
   }
 
+  // Returns specified vertice of triangle
   Vec3D get_vertice(u_char i) const
   {
     return vertices_[i];

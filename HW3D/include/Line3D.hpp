@@ -15,7 +15,7 @@ class Line3D
   Point3D p_; // Line offset radius-vector.
 
   // a and p are class invariants, so they should be protected
-  // Line3D will have two childs: line segment LineSeg3D, infinite line LineInf3D, ray LineRay3D
+  // Line3D will have three childs: line segment LineSeg3D, infinite line LineInf3D, ray LineRay3D
   // They construct differently: 
   //  - LineSeg3D from two points
   //  - LineInf3D as an intersection of two planes or by explicitly given a and p
