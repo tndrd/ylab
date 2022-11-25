@@ -98,6 +98,7 @@ bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
     {
       return intersect_noncomplanar_triangles(tr1, tr2);
     }
+    default: throw;
   } 
 
 }
