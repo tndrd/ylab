@@ -37,10 +37,7 @@ namespace HW3D
 
     bool check_param(double t) const 
     {
-      bool cond1 = (t >= 0) && (t <= 1);
-      bool cond2 = fit(t, 1);
-      bool cond3 = fit(t, 0);
-      return cond1 || cond2 || cond3; 
+      return interval_fit(t, 0, 1); 
     }
   };
 }

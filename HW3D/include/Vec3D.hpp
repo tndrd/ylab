@@ -14,6 +14,15 @@ bool fit(double a, double b)
   return (a - b) < FIT_TOLERANCE;
 }
 
+// a <= t <= b
+bool interval_fit(double t, double a, double b)
+{
+  bool cond1 = (t >= a) && (t <= b);
+  bool cond2 = fit(t, a);
+  bool cond3 = fit(t, b);
+  return cond1 || cond2 || cond3;
+}
+
 // Just a regular 3D vector
 // With overloaded vector operations
 struct Vec3D
