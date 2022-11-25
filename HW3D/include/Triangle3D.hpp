@@ -32,7 +32,7 @@ class Triangle3D
   // Intersects all the triangle edges with a specific line
   // Returns vector of t params, which represent intersection points through line equation
   // This vector is sorted in ascending order
-  // Number of points may be zero, two, or infinity
+  // Number of points may be zero, two, three or infinity
   // If only one vertice lay on desired line, we consider the intersection count to be equal two
   // That's because in this case two edges intersect the line in one point
   std::vector<double> intersect_with(const Line3D& line) const
@@ -41,7 +41,9 @@ class Triangle3D
     
     for (int i = 0; i < 3; i++)
     {
-      LineSeg3D edge = {vertices_[i], vertices_[(i+1)%3]};
+      Point3D v1 = vertices_[i];
+      Point3D v2 = vertices_[(i+1)%3];
+      LineSeg3D edge = {v1, v2};
 
       Relation<Line3D, Line3D> rel = get_relation(edge, line);
       
@@ -65,6 +67,7 @@ class Triangle3D
         case rel.INTERSECTING:
         {
           intersections.push_back(rel.get_t2());
+          break;
         }
       }
     }
