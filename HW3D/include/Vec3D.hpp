@@ -162,6 +162,12 @@ Vec3D vecmul(const Vec3D& v1, const Vec3D& v2)
   return {min1, -min2, min3};
 }
 
+std::ostream& operator<<(std::ostream& os, const Vec3D& v)
+{
+    os << "{" << v.x << ", " << v.y << ", " << v.z << "}";
+    return os;
+}
+
 using Point3D = Vec3D; // Just for aestethical purposes. Just to emphasise that Point3D is a radius-vector
 
 };
