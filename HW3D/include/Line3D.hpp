@@ -54,10 +54,10 @@ class Line3D
   }
 
   // Coincidence of childs determines differently for each child
-  virtual bool is_coincident(const Line3D&) const { throw; };
+  // virtual bool is_coincident(const Line3D&) const { throw; };
 
   // Check if given parameter fits the restrictions on t
-  virtual bool check_param(double t) const { throw; };  
+  // virtual bool check_param(double t) const { throw; };  
 };
 
 }

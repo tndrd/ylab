@@ -61,7 +61,8 @@ class Triangle3D
   // Number of points may be zero, two, three or infinity
   // If only one vertice lay on desired line, we consider the intersection count to be equal two
   // That's because in this case two edges intersect the line in one point
-  std::vector<double> intersect_with(const Line3D& line) const
+  template<typename LineT>
+  std::vector<double> intersect_with(const LineT& line) const
   {
     std::vector<double> intersections;
     
@@ -71,7 +72,7 @@ class Triangle3D
       Point3D v2 = vertices_[(i+1)%3];
       LineSeg3D edge = {v1, v2};
 
-      Relation<Line3D, Line3D> rel = get_relation(edge, line);
+      LineRelation rel = get_relation(edge, line);
       
       switch(rel.get_state())
       {

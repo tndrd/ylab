@@ -53,7 +53,7 @@ bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& t
   Plane3D p1 = tr1.get_plane();
   Plane3D p2 = tr2.get_plane();
 
-  Relation<Plane3D, Plane3D> pi = get_relation(p1, p2);
+  PlaneRelation pi = get_relation(p1, p2);
 
   LineInf3D pil = get_intersection(p1, p2, pi);
 
@@ -80,7 +80,7 @@ bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
   Plane3D p2 = tr2.get_plane();
 
   // Intersect triangles' planes
-  Relation<Plane3D, Plane3D> pi = get_relation(p1, p2);
+  PlaneRelation pi = get_relation(p1, p2);
 
   switch(pi.get_state())
   {

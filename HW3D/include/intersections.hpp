@@ -6,15 +6,12 @@
 
 namespace HW3D
 {
-template<typename A, typename B> class Relation;
-
 
 // Info about relationship between two lines
 // Also contains intersection params (if exist)
 // Is returned by get_relation() function
 // This class is well-incapsulated, user won't ocassionaly change it
-template<>
-class Relation<Line3D, Line3D>
+class LineRelation
 {
   public:
   enum State
@@ -25,7 +22,7 @@ class Relation<Line3D, Line3D>
     NON_INTERSECTING 
   };
 
-  Relation(State state, double t1=NAN, double t2=NAN):
+  LineRelation(State state, double t1=NAN, double t2=NAN):
   state_(state), t1_(t1), t2_(t2) {}
 
   private:
@@ -45,8 +42,7 @@ class Relation<Line3D, Line3D>
 // Also contains intersection params (if exist)
 // Is returned by get_relation() function
 // This class is well-incapsulated, user won't ocassionaly change it
-template<>
-class Relation<Plane3D, Plane3D>
+class PlaneRelation
 {
   public:
   enum State
@@ -56,7 +52,7 @@ class Relation<Plane3D, Plane3D>
     INTERSECTING
   };
 
-  Relation(State state, double a=NAN, double b=NAN):
+  PlaneRelation(State state, double a=NAN, double b=NAN):
   state_(state), a_(a), b_(b) {}
 
   private:
@@ -79,9 +75,10 @@ class Relation<Plane3D, Plane3D>
 // If the parameter t fits both lines' restrictions, then they really intersect
 // Otherwise they do not
 // Returns relationship info and intersection params (if exist)
-Relation<Line3D, Line3D> get_relation(const Line3D& l1, const Line3D& l2)
+template<typename LineT1, typename LineT2>
+LineRelation get_relation(const LineT1& l1, const LineT2& l2)
 {
-  using state_t = Relation<Line3D, Line3D>::State;
+  using state_t = LineRelation;
 
   if (l1.is_coincident(l2))
     return {state_t::COINCIDENT};
@@ -126,9 +123,9 @@ Relation<Line3D, Line3D> get_relation(const Line3D& l1, const Line3D& l2)
 // If planes are not coincident or parallel then they do intersect with each other
 // We can find the intersection line with som formulas [Reference: GCT page 530]
 // Returns relationship info and intersection params (if exist)
-Relation<Plane3D, Plane3D> get_relation(const Plane3D& p1, const Plane3D& p2)
+PlaneRelation get_relation(const Plane3D& p1, const Plane3D& p2)
 {
-  using state_t = Relation<Plane3D, Plane3D>::State;
+  using state_t = PlaneRelation;
 
   if (p1.is_coincident(p2))
     return {state_t::COINCIDENT};
@@ -151,14 +148,15 @@ Relation<Plane3D, Plane3D> get_relation(const Plane3D& p1, const Plane3D& p2)
 }
 
 // Returns the intersection point of two lines. Given lines should really intersect
-Point3D get_intersection(const Line3D& l1, const Line3D& l2, const Relation<Line3D, Line3D>& relation)
+template<typename LineT1, typename LineT2>
+Point3D get_intersection(const LineT1& l1, const LineT2& l2, const LineRelation& relation)
 {
   if (relation.get_state() != relation.INTERSECTING) throw;
   return l1.point_from_param(relation.get_t1());
 }
 
 // Returns the intersection line of two planes. Given planes should really intersect
-LineInf3D get_intersection(const Plane3D& p1, const Plane3D& p2, const Relation<Plane3D, Plane3D>& relation)
+LineInf3D get_intersection(const Plane3D& p1, const Plane3D& p2, const PlaneRelation& relation)
 {
   if (relation.get_state() != relation.INTERSECTING) throw;
 
