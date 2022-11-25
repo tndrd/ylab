@@ -17,7 +17,7 @@ namespace HW3D
       return a_ == lr.a_ && p_ == lr.p_; 
     }
 
-    bool check_param(double t) const 
+    bool check_param(double t) const
     {
       return t >= 0; 
     }

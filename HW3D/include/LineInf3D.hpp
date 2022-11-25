@@ -12,7 +12,7 @@ namespace HW3D
     public:
     LineInf3D(const Vec3D& a, const Point3D& p = {0,0,0}): Line3D(a, p) {}
 
-    bool is_coincident(const LineInf3D& li)
+    bool is_coincident(const LineInf3D& li) const
     { 
       Vec3D p1 = p_ - project_v(p_, a_);
       Vec3D p2 = li.p_ - project_v(li.p_, a_);
