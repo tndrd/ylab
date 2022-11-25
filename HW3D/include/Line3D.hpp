@@ -50,7 +50,7 @@ class Line3D
 
   bool is_parallel(const Line3D& l2) const
   {
-    return abs(a_.normalize()) == abs(l2.a_.normalize());
+    return abseq(a_.normalize(), l2.a_.normalize());
   }
 
   // Coincidence of childs determines differently for each child

@@ -127,14 +127,21 @@ Vec3D project_v(const Vec3D& which_vec, const Vec3D& where_vec)
   return (which_vec * where_vec / where_vec.length()) * where_vec; 
 }
 
+/*
 Vec3D abs(const Vec3D& v)
 {
   return {std::abs(v.x), std::abs(v.y), std::abs(v.z)};
 }
+*/
 
 bool operator==(const Vec3D& v1, const Vec3D& v2)
 {
   return fit(v1.x, v2.x) && fit(v1.y, v2.y) && fit(v1.z, v2.z);
+}
+
+bool abseq(const Vec3D& v1, const Vec3D& v2)
+{
+  return v1 == v2 || v1 == -v2;
 }
 
 double det(const Vec3D& v1, const Vec3D& v2, const Vec3D& v3)

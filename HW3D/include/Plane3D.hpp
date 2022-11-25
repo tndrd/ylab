@@ -61,7 +61,7 @@ class Plane3D
 
   bool is_parallel(const Plane3D& p) const
   {
-    return abs(n_) == abs(p.n_);
+    return abseq(n_, p.n_);
   }
 
   LineInf3D make_line(const Vec3D& direction)
