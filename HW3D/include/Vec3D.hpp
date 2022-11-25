@@ -23,6 +23,21 @@ bool interval_fit(double t, double a, double b)
   return cond1 || cond2 || cond3;
 }
 
+bool intervals_intersect(double min1, double max1, double min2, double max2)
+{
+  if(fit(max1,min2) || fit(max2, min1))
+  {
+    return true;
+  }
+
+  if (max1 < min2 || max2 < min1)
+  {
+    return false;
+  }
+
+  return true;
+}
+
 // Just a regular 3D vector
 // With overloaded vector operations
 struct Vec3D
