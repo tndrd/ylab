@@ -64,6 +64,11 @@ class Plane3D
     return abs(n_) == abs(p.n_);
   }
 
+  LineInf3D make_line(const Vec3D& direction)
+  {
+    return {direction, n_ * s_};
+  }
+
 };
 
 }
