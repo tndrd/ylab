@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cmath>
+#include <iostream>
 
 namespace HW3D
 {
