@@ -73,25 +73,26 @@ class Triangle3D
       LineSeg3D edge = {v1, v2};
 
       LineRelation rel = get_relation(edge, line);
-      
+      using state_t = LineRelation::State;
+    
       switch(rel.get_state())
       {
-        case rel.COINCIDENT:
+        case state_t::COINCIDENT:
         {
           break;
         }
 
-        case rel.PARALLEL:
+        case state_t::PARALLEL:
         {
           break;
         }
 
-        case rel.NON_INTERSECTING:
+        case state_t::NON_INTERSECTING:
         {
           break;
         }
 
-        case rel.INTERSECTING:
+        case state_t::INTERSECTING:
         {
           intersections.push_back(rel.get_t2());
           break;
