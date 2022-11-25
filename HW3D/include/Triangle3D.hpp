@@ -1,0 +1,78 @@
+#include "Plane3D.hpp"
+#include "LineSeg3D.hpp"
+#include "intersections.hpp"
+#include <array>
+#include <vector>
+#include <algorithm>
+
+namespace HW3D
+{
+class Triangle3D
+{
+  // Triangle in 3D class
+  // Conists of three vertices
+  std::array<Point3D, 3> vertices_;
+
+  public:
+  Triangle3D(const Point3D& p1, const Point3D& p2, const Point3D& p3):
+  vertices_({p1, p2, p3}) {}
+
+  // Returns plane of triangle
+  Plane3D get_plane() const
+  {
+    return {vertices_[0], vertices_[1], vertices_[2]};
+  }
+
+  // Returns specified edge of triangle
+  LineSeg3D get_edge(u_char i1, u_char i2) const
+  {
+    return {vertices_[i1], vertices_[i2]};
+  }
+
+  // Intersects all the triangle edges with a specific line
+  // Returns vector of t params, which represent intersection points through line equation
+  // This vector is sorted in ascending order
+  // Number of points may be zero, two, or infinity
+  // If only one vertice lay on desired line, we consider the intersection count to be equal two
+  // That's because in this case two edges intersect the line in one point
+  std::vector<double> intersect_with(const Line3D& line) const
+  {
+    std::vector<double> intersections;
+    
+    for (int i = 0; i < 3; i++)
+    {
+      LineSeg3D edge = {vertices_[i], vertices_[(i+1)%3]};
+
+      Relation<Line3D, Line3D> rel = get_relation(edge, line);
+      
+      switch(rel.get_state())
+      {
+        case rel.COINCIDENT:
+        {
+          break;
+        }
+
+        case rel.PARALLEL:
+        {
+          break;
+        }
+
+        case rel.NON_INTERSECTING:
+        {
+          break;
+        }
+
+        case rel.INTERSECTING:
+        {
+          intersections.push_back(rel.get_t2());
+        }
+      }
+    }
+
+    std::sort(intersections.begin(), intersections.end());
+    return intersections;
+  }
+
+};
+
+}
