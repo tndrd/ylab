@@ -29,6 +29,31 @@ class Triangle3D
     return {vertices_[i1], vertices_[i2]};
   }
 
+  Vec3D get_vertice(u_char i) const
+  {
+    return vertices_[i];
+  }
+
+  // Returns edge normal directions
+  std::vector<Vec3D> get_edge_normals() const
+  {
+    std::vector<Vec3D> normal_lines;
+    
+    Plane3D plane = get_plane();
+
+    for (int i = 0; i < 3; i++)
+    {
+      Point3D v1 = vertices_[i];
+      Point3D v2 = vertices_[(i+1)%3];
+      LineSeg3D edge = {v1, v2};
+
+      Vec3D direction = vecmul(plane.get_n(), edge.get_a()).normalize(); 
+      normal_lines.push_back(direction);
+    }
+
+    return normal_lines;
+  }
+
   // Intersects all the triangle edges with a specific line
   // Returns vector of t params, which represent intersection points through line equation
   // This vector is sorted in ascending order
