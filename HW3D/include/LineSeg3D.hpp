@@ -27,9 +27,20 @@ namespace HW3D
       return cond1 || cond2; 
     }
 
+    bool is_coincident(const LineInf3D& li) const
+    { 
+      Vec3D p1 = p_ - project_v(p_, a_);
+      Vec3D p2 = li.get_p() - project_v(li.get_p(), a_);
+
+      return is_parallel(li) && (p1 == p2);
+    }
+
     bool check_param(double t) const 
     {
-      return (t >= 0) && (t <= 1); 
+      bool cond1 = (t >= 0) && (t <= 1);
+      bool cond2 = fit(t, 1);
+      bool cond3 = fit(t, 0);
+      return cond1 || cond2 || cond3; 
     }
   };
 }
