@@ -39,6 +39,15 @@ class Line3D
     return p_ + a_ * t;
   }
 
+  double param_from_point(const Point3D& p) const
+  {
+    double t = ((p - p_) * a_) / (a_ * a_);
+
+    if (!(p == point_from_param(t))) throw;
+
+    return t;
+  }
+
   bool is_parallel(const Line3D& l2) const
   {
     return abs(a_.normalize()) == abs(l2.a_.normalize());
