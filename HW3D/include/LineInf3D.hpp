@@ -6,11 +6,11 @@ namespace HW3D
 {
   // Infinite line class
   // Can be constructed with a and p given explicitly,
-  // There are no restrictions on paraeter t
+  // There are no restrictions on parameter t
   class LineInf3D: public Line3D
   {
     public:
-    LineInf3D(const Vec3D& a, const Point3D& p): Line3D(a, p) {}
+    LineInf3D(const Vec3D& a, const Point3D& p = {0,0,0}): Line3D(a, p) {}
 
     bool is_coincident(const LineInf3D& li)
     { 
