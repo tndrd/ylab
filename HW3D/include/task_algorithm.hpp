@@ -4,6 +4,8 @@
 namespace HW3D
 {
 
+std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& direction);
+
 // Reference: [GCT page 265]
 bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
 {
@@ -29,7 +31,7 @@ bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
   return true;
 }
 
-std::array<double,2> ComputeInterval(const Triangle3D& tr, Vec3D direction)
+std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& direction)
 {
   std::vector<double> projections;
 
