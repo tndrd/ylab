@@ -66,6 +66,7 @@ TEST(Vec3D, VectorOperations)
   Vec3D zo = {7, 8, 9};
   EXPECT_FIT(det(xo, yo, zo), 0);
 }
+
 //--------------------------------------------------------------------
 
 TEST(Lines, LineSeg3D)
@@ -155,28 +156,141 @@ TEST(Lines, LineInf3D)
   EXPECT_FALSE(l1.is_parallel(l4));
   EXPECT_FALSE(l1.is_coincident(l4));
 }
+
 //--------------------------------------------------------------------
 
 TEST(Plane3D, General)
 {
   Plane3D pl1 {{1, 1, 1}, 1};
-  Plane3D pl2 {{-1, -1, -1}, -1};
+  Plane3D pl2 {{-2, -2, -2}, -2};
 
   EXPECT_TRUE(pl1.is_parallel(pl2));
   EXPECT_TRUE(pl1.is_coincident(pl2));
   EXPECT_TRUE(pl2.is_coincident(pl1)); 
 
-  Plane3D pl3 {{1, 1, 1}, 5};
+  Plane3D pl3 {{-1, -1, -1}, 1};
   EXPECT_TRUE(pl3.is_parallel(pl2));
   EXPECT_TRUE(pl2.is_parallel(pl3));
   EXPECT_FALSE(pl3.is_coincident(pl2));
   EXPECT_FALSE(pl2.is_coincident(pl3));
 
-  Plane3D pl4 {{1, 1, -1}, 1};
+  Plane3D pl4 {{1, 1, 1}, 3};
   EXPECT_FALSE(pl1.is_coincident(pl4));
-  EXPECT_FALSE(pl1.is_parallel(pl4));
+  EXPECT_TRUE(pl1.is_parallel(pl4));
 
-  Plane3D pl5 {{1, 0, 0}, 0};
+  Plane3D pl5 {{2, 2, -2}, 1};
   EXPECT_FALSE(pl1.is_coincident(pl5));
   EXPECT_FALSE(pl1.is_parallel(pl5));
+
+  Plane3D pl6 {{1, -1, 1}, 0};
+  EXPECT_FALSE(pl1.is_coincident(pl6));
+  EXPECT_FALSE(pl1.is_parallel(pl6));
+
+  Plane3D pl7{{-1, 1, -1}, 0};
+  EXPECT_TRUE(pl6.is_coincident(pl7));
+  EXPECT_TRUE(pl6.is_parallel(pl7));
+
+  Plane3D pl8{{1,-1, 1}, 1};
+  EXPECT_EQ(pl8.get_s(), pl1.get_s());
+  EXPECT_FALSE(pl1.is_coincident(pl8));
+  EXPECT_FALSE(pl1.is_parallel(pl8));
 }
+
+TEST(Plane3D, ThreePointsGeneral)
+{
+  Point3D p1 {1, 1, 2};
+  Point3D p2 {1, -1, 2};
+  Point3D p3 {-1, -1, 2};
+  Point3D p4 {-2, -2, 2};
+
+  Plane3D pl1 {p1, p2, p3};
+  Vec3D n1 {0, 0, 1};
+  double s1 = 2;
+  EXPECT_EQ(pl1.get_n(), n1);
+  EXPECT_EQ(pl1.get_s(), s1);
+  
+  Plane3D pl2 {p2, p3, p4};
+  EXPECT_TRUE(pl1.is_coincident(pl2));
+  EXPECT_TRUE(pl1.is_parallel(pl2));
+
+  Vec3D n3 {0, 0, -2};
+  double s3 = -4;
+  Plane3D pl3 {n3, s3};
+
+  EXPECT_EQ(pl3.get_n(), n1);
+  EXPECT_EQ(pl3.get_s(), s1);
+}
+
+TEST(Plane3D, ThreePoints1)
+{
+  Point3D p1 {-2, 0, 0};
+  Point3D p2 {0, -2, 0};
+  Point3D p3 {0, 0, -2};
+
+  Plane3D pl {p1, p2, p3};
+  double a = -1 / std::sqrt(3) ;
+  Vec3D  n {a, a, a};
+  double s = 2 / std::sqrt(3); 
+
+  EXPECT_EQ(pl.get_n(), n);
+  EXPECT_EQ(pl.get_s(), s);
+}
+
+TEST(Plane3D, ThreePoints2)
+{
+  Point3D p1 {0, 0, 0};
+  Point3D p2 {0, 5, 0};
+  Point3D p3 {0, 0, 5};
+
+  Plane3D pl {p1, p2, p3};
+  Vec3D  n {-1, 0, 0};
+  double s = 0; 
+
+  EXPECT_EQ(pl.get_n(), n);
+  EXPECT_EQ(pl.get_s(), s);
+}
+
+TEST(Plane3D, ThreePoints3)
+{
+  Point3D p1 {-4, 8, 5};
+  Point3D p2 {-3, 6, -1};
+  Point3D p3 {7, 8, 3};
+
+  Plane3D pl {p1, p2, p3};
+  Vec3D  n {-0.0590024, 0.944039, -0.324513};
+  double s = 6.16576; 
+
+  EXPECT_EQ(pl.get_n(), n);
+  EXPECT_FIT(pl.get_s(), s);
+}
+
+TEST(Plane3D, ThreePoints4)
+{
+  Point3D p1 {7, -8, 7};
+  Point3D p2 {-7, -1, 4};
+  Point3D p3 {1, -4, -1};
+
+  Plane3D pl {p1, p2, p3};
+  Vec3D  n {-0.420135, -0.897561, -0.133679};
+  double s = 3.30379; 
+
+  EXPECT_EQ(pl.get_n(), n);
+  EXPECT_FIT(pl.get_s(), s);
+}
+
+TEST(Plane3D, ThreePoints5)
+{
+  Point3D p1 {-7, 8, 7};
+  Point3D p2 {-7, -1, 4};
+  Point3D p3 {0, 0, 0};
+
+  Plane3D pl {p1, p2, p3};
+  Vec3D  n {-0.506408, 0.272681, -0.818044};
+  double s = 0; 
+
+  EXPECT_EQ(pl.get_n(), n);
+  EXPECT_EQ(pl.get_s(), s);
+}
+
+//--------------------------------------------------------------------
+
