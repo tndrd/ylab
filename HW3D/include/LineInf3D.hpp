@@ -10,7 +10,7 @@ namespace HW3D
   class LineInf3D: public Line3D
   {
     public:
-    LineInf3D(const Vec3D& a, const Point3D& p = {0,0,0}): Line3D(a, p) {}
+    LineInf3D(const Vec3D& a, const Point3D& p={0,0,0}): Line3D(a, p) {}
 
     bool is_coincident(const LineInf3D& li) const
     { 
