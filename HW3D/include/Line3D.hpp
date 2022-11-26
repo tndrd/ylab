@@ -36,7 +36,7 @@ class Line3D
 
   Point3D point_from_param(double t) const
   {
-    return p_ + a_ * t;
+    return p_ + (a_ * t);
   }
 
   double param_from_point(const Point3D& p) const
