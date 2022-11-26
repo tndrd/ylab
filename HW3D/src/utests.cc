@@ -627,3 +627,116 @@ TEST(LineIntersections, LineSeg_LineSeg6)
   LineRelation rel = get_relation(a, b);
   EXPECT_EQ(rel.get_state(), state_t::NON_INTERSECTING);
 }
+
+//--------------------------------------------------------------------
+
+using plstate_t = PlaneRelation::State;
+
+TEST(Plane3D, Intersection1)
+{
+  Plane3D pa {{1, 0, 0}, 0};
+  Plane3D pb {{0, 1, 0}, 0};
+
+  Vec3D a {0, 0, 1};
+  Vec3D p {0, 0, 0};
+  LineInf3D intr {a, p};
+
+  PlaneRelation rel = get_relation(pa, pb);
+  ASSERT_EQ(rel.get_state(), plstate_t::INTERSECTING);
+
+  LineInf3D intr_c = get_intersection(pa, pb, rel);
+  EXPECT_TRUE(intr.is_coincident(intr_c));
+}
+
+TEST(Plane3D, Intersection2)
+{
+  Plane3D pa {{1, 0, 0}, 1};
+  Plane3D pb {{0, 1, 0}, 0};
+
+  Vec3D a {0, 0, 1};
+  Vec3D p {1, 0, 0};
+  LineInf3D intr {a, p};
+
+  PlaneRelation rel = get_relation(pa, pb);
+  ASSERT_EQ(rel.get_state(), plstate_t::INTERSECTING);
+
+  LineInf3D intr_c = get_intersection(pa, pb, rel);
+  EXPECT_TRUE(intr.is_coincident(intr_c));
+}
+
+TEST(Plane3D, Intersection3)
+{
+  Plane3D pa {{1, 0, 0}, 1};
+  Plane3D pb {{0, 1, 0}, 1};
+
+  Vec3D a {0, 0, 1};
+  Vec3D p {1, 1, 0};
+  LineInf3D intr {a, p};
+
+  PlaneRelation rel = get_relation(pa, pb);
+  ASSERT_EQ(rel.get_state(), plstate_t::INTERSECTING);
+
+  LineInf3D intr_c = get_intersection(pa, pb, rel);
+  EXPECT_TRUE(intr.is_coincident(intr_c));
+}
+
+TEST(Plane3D, Intersection4)
+{
+  Point3D a {0, -4, 0};
+  Point3D b {3, 0, 0};
+  Point3D c {0, 0, 5};
+
+  Point3D d {-2, 0, 0};
+  Point3D e {-2, 7, -1};
+  Point3D f {-4, -6, 8};
+
+  Plane3D p1 = {a, b, c};
+  Plane3D p2 = {d, e, f};
+
+  Vec3D   ra = {0.26474, -0.362037, -0.89378};
+  Point3D rp = {-2.23102, -5.66698, 1.63465};
+  LineInf3D intr {ra, rp};
+
+  PlaneRelation rel = get_relation(p1, p2);
+  ASSERT_EQ(rel.get_state(), plstate_t::INTERSECTING);
+
+  LineInf3D intr_c = get_intersection(p1, p2, rel);
+  EXPECT_TRUE(intr.is_coincident(intr_c));
+}
+
+TEST(Plane3D, Intersection5)
+{
+  Point3D a {0, -5, 0};
+  Point3D b {3, 2, 0};
+  Point3D c {0, 0, 10};
+
+  Point3D d {-5, 4, 2};
+  Point3D e {-6, -3, 0};
+  Point3D f {4, 3, -2};
+
+  Plane3D p1 = {a, b, c};
+  Plane3D p2 = {d, e, f};
+
+  Vec3D   ra = {0.357021, 0.918376, 0.170652};
+  Point3D rp = {2.48795, -0.486972, -2.58438};
+  LineInf3D intr {ra, rp};
+
+  PlaneRelation rel = get_relation(p1, p2);
+  ASSERT_EQ(rel.get_state(), plstate_t::INTERSECTING);
+
+  LineInf3D intr_c = get_intersection(p1, p2, rel);
+  EXPECT_TRUE(intr.is_coincident(intr_c));
+}
+
+TEST(Plane3D, Intersection6)
+{
+  Plane3D p1 = {{1, 1, 1}, 0};
+  Plane3D p2 = {{3, 3, 3}, 0};
+  Plane3D p3 = {{3, 3, 3}, 1};
+
+  PlaneRelation rel1 = get_relation(p1, p2);
+  EXPECT_EQ(rel1.get_state(), plstate_t::COINCIDENT);
+
+  PlaneRelation rel2 = get_relation(p2, p3);
+  EXPECT_EQ(rel2.get_state(), plstate_t::PARALLEL);
+}
