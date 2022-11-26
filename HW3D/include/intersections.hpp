@@ -94,14 +94,14 @@ LineRelation get_relation(const LineT1& l1, const LineT2& l2)
 
   Vec3D  u = p1 - p2;
   double A = a1 * a1;
-  double B = - a1 * a2;
+  double B = a1 * a2;
   double C = a2 * a2;
   double D = a1 * u;
   double E = a2 * u;
   double F = u * u;
 
-  double t1 = (A*E - C*D) / (A*C - B*B);
-  double t2 = (B*D - A*E) / (A*C - B*B);
+  double t1 =  (B*E - C*D) / (A*C - B*B);
+  double t2 = -(B*D - A*E) / (A*C - B*B);
 
   if (!l1.check_param(t1) || !l2.check_param(t2))
     return {state_t::NON_INTERSECTING, t1, t2};
