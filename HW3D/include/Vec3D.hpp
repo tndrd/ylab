@@ -11,7 +11,7 @@ const double FIT_TOLERANCE = 0.00001;
 
 bool fit(double a, double b)
 {
-  return (a - b) < FIT_TOLERANCE;
+  return std::abs(a - b) < FIT_TOLERANCE;
 }
 
 // a <= t <= b
