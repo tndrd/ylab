@@ -12,12 +12,14 @@ namespace HW3D
     public:
     LineInf3D(const Vec3D& a, const Point3D& p={0,0,0}): Line3D(a, p) {}
 
-    bool is_coincident(const LineInf3D& li) const
+    bool is_coincident(const Line3D& li) const
     { 
-      Vec3D p1 = p_ - project_v(p_, a_);
-      Vec3D p2 = li.p_ - project_v(li.p_, a_);
+      if (!is_parallel(li)) return false;
 
-      return is_parallel(li) && (p1 == p2); 
+      Vec3D p1 = p_ - project_v(p_, a_);
+      Vec3D p2 = li.get_p() - project_v(li.get_p(), a_);
+
+      return p1 == p2; 
     }
 
     bool check_param(double t) const { return true; }

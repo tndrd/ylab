@@ -29,10 +29,7 @@ namespace HW3D
 
     bool is_coincident(const LineInf3D& li) const
     { 
-      Vec3D p1 = p_ - project_v(p_, a_);
-      Vec3D p2 = li.get_p() - project_v(li.get_p(), a_);
-
-      return is_parallel(li) && (p1 == p2);
+      return li.is_coincident(*this);
     }
 
     bool check_param(double t) const 
