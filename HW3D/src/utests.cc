@@ -294,3 +294,57 @@ TEST(Plane3D, ThreePoints5)
 
 //--------------------------------------------------------------------
 
+using state_t = LineRelation::State;
+
+TEST(LineIntersections, LineInf_LineInf1)
+{
+  Point3D intr {2, 3, 4};
+
+  Point3D pa {-5, -3, 0};
+  Point3D pb {6, 4, -1};
+
+  LineInf3D a {(intr - pa) * 8,  pa};
+  LineInf3D b {(intr - pb) * -3, pb};
+
+  LineRelation rel = get_relation(a, b);
+
+  ASSERT_EQ(rel.get_state(), state_t::INTERSECTING);
+
+  Point3D intr_c = get_intersection(a, b, rel);
+  EXPECT_EQ(intr, intr_c);
+}
+
+TEST(LineIntersections, LineInf_LineInf2)
+{
+  LineInf3D a {{5, 3, 2}, {-10, -6, -4}};
+  LineInf3D b {{4, 4, 4}, {-10, -10, -10}};
+  Point3D intr {0, 0, 0};
+
+  LineRelation rel1 = get_relation(a, b);
+  ASSERT_EQ(rel1.get_state(), state_t::INTERSECTING);
+
+  Point3D intr_c1 = get_intersection(a, b, rel1);
+  EXPECT_EQ(intr, intr_c1);
+
+  LineRelation rel2 = get_relation(b, a);
+  ASSERT_EQ(rel2.get_state(), state_t::INTERSECTING);
+
+  Point3D intr_c2 = get_intersection(b, a, rel2);
+  EXPECT_EQ(intr, intr_c2);
+}
+
+TEST(LineIntersections, LineInf_LineInf3)
+{
+  LineInf3D a {{1, 1, 1}, {0, 0, 0}};
+  LineInf3D b {{-1, -1, -1}, {0, 0, 5}};
+  LineInf3D c {{5, 3, -5}, {1, 1, 1}};
+
+  LineRelation rel1 = get_relation(a, a);
+  EXPECT_EQ(rel1.get_state(), state_t::COINCIDENT);
+
+  LineRelation rel2 = get_relation(a, b);
+  EXPECT_EQ(rel2.get_state(), state_t::PARALLEL);
+
+  LineRelation rel3 = get_relation(b, c);
+  EXPECT_EQ(rel3.get_state(), state_t::NON_INTERSECTING);
+}
