@@ -60,4 +60,10 @@ class Line3D
   // virtual bool check_param(double t) const { throw; };  
 };
 
+std::ostream& operator<<(std::ostream& os, const Line3D& l)
+{
+    os << "a: " << l.get_a() << " p:" << l.get_p();
+    return os;
+}
+
 }
