@@ -559,6 +559,7 @@ TEST(LineIntersections, LineSeg_LineSeg3)
 
   LineSeg3D a {pa, pa + (intr - pa)};
   LineSeg3D b {pb, pb + (intr - pb)};
+  LineSeg3D c {pa + (intr - pa), pa};
 
   LineRelation rel = get_relation(a, b);
   ASSERT_EQ(rel.get_state(), state_t::INTERSECTING);
@@ -571,6 +572,12 @@ TEST(LineIntersections, LineSeg_LineSeg3)
 
   Point3D intr_c2 = get_intersection(b, a, rel2);
   EXPECT_EQ(intr, intr_c2);
+
+  LineRelation rel3 = get_relation(b, c);
+  ASSERT_EQ(rel3.get_state(), state_t::INTERSECTING);
+
+  Point3D intr_c3 = get_intersection(b, c, rel3);
+  EXPECT_EQ(intr, intr_c3);
 }
 
 TEST(LineIntersections, LineSeg_LineSeg4)
@@ -605,4 +612,18 @@ TEST(LineIntersections, LineSeg_LineSeg5)
 
   LineRelation rel2 = get_relation(b, c);
   EXPECT_EQ(rel2.get_state(), state_t::PARALLEL);
+}
+
+TEST(LineIntersections, LineSeg_LineSeg6)
+{
+  Point3D pa {1, 1, 1};
+  Point3D pb {-1, -2, -3};
+  Point3D pc {3, 2, 3};
+  Point3D pd {8, 8, 2};
+
+  LineSeg3D a {pa, pb};
+  LineSeg3D b {pc, pd};
+
+  LineRelation rel = get_relation(a, b);
+  EXPECT_EQ(rel.get_state(), state_t::NON_INTERSECTING);
 }
