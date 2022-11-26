@@ -82,6 +82,12 @@ struct Vec3D
   }
 };
 
+std::ostream& operator<<(std::ostream& os, const Vec3D& v)
+{
+    os << "{" << v.x << ", " << v.y << ", " << v.z << "}";
+    return os;
+}
+
 Vec3D operator+(const Vec3D& v1, const Vec3D& v2)
 {
   return {v1.x + v2.x, v1.y + v2.y, v1.z + v2.z};
@@ -124,7 +130,7 @@ Vec3D operator-(const Vec3D& v)
 
 Vec3D project_v(const Vec3D& which_vec, const Vec3D& where_vec)
 {
-  return (which_vec * where_vec / where_vec.length()) * where_vec; 
+  return ((which_vec * where_vec) / (where_vec * where_vec)) * where_vec; 
 }
 
 /*
@@ -160,12 +166,6 @@ Vec3D vecmul(const Vec3D& v1, const Vec3D& v2)
   double min3 = v1.x*v2.y - v1.y*v2.x;
 
   return {min1, -min2, min3};
-}
-
-std::ostream& operator<<(std::ostream& os, const Vec3D& v)
-{
-    os << "{" << v.x << ", " << v.y << ", " << v.z << "}";
-    return os;
 }
 
 using Point3D = Vec3D; // Just for aestethical purposes. Just to emphasise that Point3D is a radius-vector
