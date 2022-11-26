@@ -13,6 +13,11 @@ TEST(Vec3D, SimpleOperations)
   Vec3D c {12, 8, 16};
   Vec3D r {0, 0, 0};
   EXPECT_EQ(a + b - c / 2, r);
+
+  Vec3D x {0, 0, 0};
+  Vec3D y {0, 0, 1};
+
+  EXPECT_FALSE(x == y);
 }
 
 TEST(Vec3D, ExtraOperations)
