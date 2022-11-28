@@ -11,12 +11,12 @@ bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
 {
   
   auto normals1 = tr1.get_edge_normals();
-  auto normals2 = tr1.get_edge_normals();
+  auto normals2 = tr2.get_edge_normals();
 
   for (int i = 0; i < 3; i++)
   {
     auto interval1 = ComputeInterval(tr1, normals1[i]);
-    auto interval2 = ComputeInterval(tr1, normals1[i]);
+    auto interval2 = ComputeInterval(tr2, normals1[i]);
 
     double max1 = interval1[1];
     double min1 = interval1[0];
@@ -31,7 +31,7 @@ bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
   for (int i = 0; i < 3; i++)
   {
     auto interval1 = ComputeInterval(tr1, normals2[i]);
-    auto interval2 = ComputeInterval(tr1, normals2[i]);
+    auto interval2 = ComputeInterval(tr2, normals2[i]);
 
     double max1 = interval1[1];
     double min1 = interval1[0];
