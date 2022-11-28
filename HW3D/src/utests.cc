@@ -952,3 +952,110 @@ TEST(Triangle3D, EdgeNormals2)
 }
 
 //--------------------------------------------------------------------
+
+TEST(ComplanarTriangles, ComputeInterval1)
+{
+  Point3D pt1 {1, 1, 0};
+  Point3D pt2 {2, 3, 0};
+  Point3D pt3 {5, 4, 0};
+
+  Triangle3D tr {pt1, pt2, pt3};
+
+  Vec3D dir = {2, 1, 0};
+
+  auto intv = ComputeInterval(tr, dir.normalize());
+
+  EXPECT_FIT(intv[0], 1.34164);
+  EXPECT_FIT(intv[1], 6.26099);
+}
+
+TEST(ComplanarTriangles, ComputeInterval2)
+{
+  Point3D pt1 {1, 1, 0};
+  Point3D pt2 {-1, 2, 0};
+  Point3D pt3 {5, 4, 0};
+
+  Triangle3D tr {pt1, pt2, pt3};
+
+  Vec3D dir = {2, 1, 0};
+
+  auto intv = ComputeInterval(tr, dir.normalize());
+
+  EXPECT_FIT(intv[0], 0);
+  EXPECT_FIT(intv[1], 6.26099);
+}
+
+TEST(ComplanarTriangles, ComputeInterval3)
+{
+  Point3D pt1 {1, 1, 0};
+  Point3D pt2 {0, 3, 0};
+  Point3D pt3 {5, 4, 0};
+
+  Triangle3D tr {pt1, pt2, pt3};
+
+  Vec3D dir = {2, 1, 0};
+
+  auto intv = ComputeInterval(tr, dir.normalize());
+
+  EXPECT_FIT(intv[0], 1.34164);
+  EXPECT_FIT(intv[1], 6.26099);
+}
+
+TEST(ComplanarTriangles, ComputeInterval4)
+{
+  Point3D pt1 {1, 1, -1};
+  Point3D pt2 {2, 3, -1};
+  Point3D pt3 {5, 4, -1};
+
+  Triangle3D tr {pt1, pt2, pt3};
+
+  Vec3D dir = {2, 1, 0};
+
+  auto intv = ComputeInterval(tr, dir.normalize());
+
+  EXPECT_FIT(intv[0], 1.34164);
+  EXPECT_FIT(intv[1], 6.26099);
+}
+
+TEST(ComplanarTriangles, ComputeInterval5)
+{
+  Point3D pt1 {-2, -2, 4};
+  Point3D pt2 {-1, -1, 2};
+  Point3D pt3 {-3, 3, 0};
+
+  Triangle3D tr {pt1, pt2, pt3};
+
+  Vec3D dir = {0, -1, 1};
+
+  auto intv = ComputeInterval(tr, dir.normalize());
+
+  double pr1 = -2.12132;
+  double pr2 = 4.24264;
+
+  EXPECT_FIT(intv[0], pr1);
+  EXPECT_FIT(intv[1], pr2);
+}
+
+TEST(ComplanarTriangles, ComputeInterval6)
+{
+  Point3D pt1 {-2, -2, 4};
+  Point3D pt2 {-1, -1, 2};
+  Point3D pt3 {-3, 3, 0};
+  Vec3D   ofs {3, 4, 5};
+
+  Triangle3D tr {pt1 + ofs, pt2 + ofs, pt3 + ofs};
+
+  Vec3D dir = {0, -1, 1};
+
+  auto intv = ComputeInterval(tr, dir.normalize());
+
+  double pr1 = -2.12132;
+  double pr2 = 4.24264;
+
+  double int_ofs = ofs * dir.normalize();
+
+  EXPECT_FIT(intv[0], pr1 + int_ofs);
+  EXPECT_FIT(intv[1], pr2 + int_ofs);
+}
+
+//--------------------------------------------------------------------
