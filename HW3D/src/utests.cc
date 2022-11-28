@@ -1318,3 +1318,193 @@ TEST(ComplanarTriangles, Intersection15)
 }
 
 //--------------------------------------------------------------------
+
+TEST(NonComplanarTriangles, Intersection1)
+{
+  Point3D a1 {1, 2, 0};  // C
+  Point3D b1 {-1, 1, 0}; // D
+  Point3D c1 {-2, 4, 0}; // E
+
+  Point3D a2 {-2, 5, 2};  // F
+  Point3D b2 {1, 6, -1};  // G
+  Point3D c2 {0.5, 4, -0.5}; // H
+
+  Vec3D ofs {-9, -1, -1};
+
+  Triangle3D tr1 {a1 + ofs, b1 + ofs, c1 + ofs};
+  Triangle3D tr2 {a2 + ofs, b2 + ofs, c2 + ofs};
+
+  EXPECT_FALSE(intersect_noncomplanar_triangles(tr1, tr2));
+  EXPECT_FALSE(intersect_noncomplanar_triangles(tr2, tr1)); 
+}
+
+TEST(NonComplanarTriangles, Intersection2)
+{
+  Point3D a1 {2, 4, 0};  // C
+  Point3D b1 {-1, 1, 0}; // D
+  Point3D c1 {-2, 4, 0}; // E
+
+  Point3D a2 {-2, 4, 2}; // F
+  Point3D b2 {1, 6, -1}; // G
+  Point3D c2 {0.5, 4, -0.5}; // H
+
+  Vec3D ofs {-9, -1, -1};
+
+  Triangle3D tr1 {a1 + ofs, b1 + ofs, c1 + ofs};
+  Triangle3D tr2 {a2 + ofs, b2 + ofs, c2 + ofs};
+
+  EXPECT_TRUE(intersect_noncomplanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_noncomplanar_triangles(tr2, tr1)); 
+}
+
+TEST(NonComplanarTriangles, Intersection3)
+{
+  Point3D a1 {2, 4 - 0.001, 0};  // C
+  Point3D b1 {-1, 1, 0}; // D
+  Point3D c1 {-2, 4, 0}; // E
+
+  Point3D a2 {-2, 4, 2}; // F
+  Point3D b2 {1, 6, -1}; // G
+  Point3D c2 {0.5, 4, -0.5}; // H
+
+  Vec3D ofs {-9, -1, -1};
+
+  Triangle3D tr1 {a1 + ofs, b1 + ofs, c1 + ofs};
+  Triangle3D tr2 {a2 + ofs, b2 + ofs, c2 + ofs};
+
+  EXPECT_FALSE(intersect_noncomplanar_triangles(tr1, tr2));
+  EXPECT_FALSE(intersect_noncomplanar_triangles(tr2, tr1)); 
+}
+
+TEST(NonComplanarTriangles, Intersection4)
+{
+  Point3D a1 {0, 4, 0};  // C
+  Point3D b1 {-1, 1, 0}; // D
+  Point3D c1 {-2, 4, 0}; // E
+
+  Point3D a2 {-2, 4, 2}; // F
+  Point3D b2 {1, 6, -1}; // G
+  Point3D c2 {0.5, 4, -0.5}; // H
+
+  Vec3D ofs {-9, -1, -1};
+
+  Triangle3D tr1 {a1 + ofs, b1 + ofs, c1 + ofs};
+  Triangle3D tr2 {a2 + ofs, b2 + ofs, c2 + ofs};
+
+  EXPECT_TRUE(intersect_noncomplanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_noncomplanar_triangles(tr2, tr1)); 
+}
+
+TEST(NonComplanarTriangles, Intersection5)
+{
+  Point3D a1 {2, 4, 0};  // C
+  Point3D b1 {-1, 1, 0}; // D
+  Point3D c1 {-2, 4, 0}; // E
+
+  Point3D a2 {-2, 3, 2}; // F
+  Point3D b2 {1, 5, -1}; // G
+  Point3D c2 {0.5, 1, -0.5}; // H
+
+  Vec3D ofs {-9, -1, -1};
+
+  Triangle3D tr1 {a1 + ofs, b1 + ofs, c1 + ofs};
+  Triangle3D tr2 {a2 + ofs, b2 + ofs, c2 + ofs};
+
+  EXPECT_TRUE(intersect_noncomplanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_noncomplanar_triangles(tr2, tr1)); 
+}
+
+TEST(NonComplanarTriangles, Intersection6)
+{
+  Point3D a1 {2, 4, 0};  // C
+  Point3D b1 {0, 2, 0}; // D
+  Point3D c1 {0, 4, 0}; // E
+
+  Point3D a2 {-2, 3, 2}; // F
+  Point3D b2 {1, 5, -1}; // G
+  Point3D c2 {0.5, 1, -0.5}; // H
+
+  Vec3D ofs {-9, -1, -1};
+
+  Triangle3D tr1 {a1 + ofs, b1 + ofs, c1 + ofs};
+  Triangle3D tr2 {a2 + ofs, b2 + ofs, c2 + ofs};
+
+  EXPECT_TRUE(intersect_noncomplanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_noncomplanar_triangles(tr2, tr1)); 
+}
+
+TEST(NonComplanarTriangles, Intersection7)
+{
+  Point3D a1 {2, 4, 0};  // C
+  Point3D b1 {0, 2, 0}; // D
+  Point3D c1 {0, 4, 0}; // E
+
+  Point3D a2 {-2, 3, 2}; // F
+  Point3D b2 {0, 5, 0}; // G
+  Point3D c2 {0, 1, 0}; // H
+
+  Vec3D ofs {-9, -1, -1};
+
+  Triangle3D tr1 {a1 + ofs, b1 + ofs, c1 + ofs};
+  Triangle3D tr2 {a2 + ofs, b2 + ofs, c2 + ofs};
+
+  EXPECT_TRUE(intersect_noncomplanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_noncomplanar_triangles(tr2, tr1)); 
+}
+
+TEST(NonComplanarTriangles, Intersection8)
+{
+  Point3D a1 {2, 4, 0};  // C
+  Point3D b1 {0, 2, 0}; // D
+  Point3D c1 {0, 4, 0}; // E
+
+  Point3D a2 {-2, 3, 2}; // F
+  Point3D b2 {0, 1.5, 0}; // G
+  Point3D c2 {0, 1, 0}; // H
+
+  Vec3D ofs {-9, -1, -1};
+
+  Triangle3D tr1 {a1 + ofs, b1 + ofs, c1 + ofs};
+  Triangle3D tr2 {a2 + ofs, b2 + ofs, c2 + ofs};
+
+  EXPECT_FALSE(intersect_noncomplanar_triangles(tr1, tr2));
+  EXPECT_FALSE(intersect_noncomplanar_triangles(tr2, tr1)); 
+}
+
+TEST(NonComplanarTriangles, Intersection9)
+{
+  Point3D a1 {2, 4, 0};  // C
+  Point3D b1 {0, 2, 0}; // D
+  Point3D c1 {0, 4, 0}; // E
+
+  Point3D a2 {-2, 3, 2}; // F
+  Point3D b2 {0, 2, 0}; // G
+  Point3D c2 {0, 1, 0}; // H
+
+  Vec3D ofs {-9, -1, -1};
+
+  Triangle3D tr1 {a1 + ofs, b1 + ofs, c1 + ofs};
+  Triangle3D tr2 {a2 + ofs, b2 + ofs, c2 + ofs};
+
+  EXPECT_TRUE(intersect_noncomplanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_noncomplanar_triangles(tr2, tr1)); 
+}
+
+TEST(NonComplanarTriangles, Intersection10)
+{
+  Point3D a1 {2, 4, 0};  // C
+  Point3D b1 {1, 2, 0}; // D
+  Point3D c1 {0.5, 4, 0}; // E
+
+  Point3D a2 {-2, 3, 2}; // F
+  Point3D b2 {0, 2, 0}; // G
+  Point3D c2 {0, 1, 0}; // H
+
+  Vec3D ofs {-9, -1, -1};
+
+  Triangle3D tr1 {a1 + ofs, b1 + ofs, c1 + ofs};
+  Triangle3D tr2 {a2 + ofs, b2 + ofs, c2 + ofs};
+
+  EXPECT_FALSE(intersect_noncomplanar_triangles(tr1, tr2));
+  EXPECT_FALSE(intersect_noncomplanar_triangles(tr2, tr1)); 
+}
