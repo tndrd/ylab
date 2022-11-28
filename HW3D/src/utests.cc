@@ -740,3 +740,169 @@ TEST(Plane3D, Intersection6)
   PlaneRelation rel2 = get_relation(p2, p3);
   EXPECT_EQ(rel2.get_state(), plstate_t::PARALLEL);
 }
+
+//--------------------------------------------------------------------
+
+TEST(Triangle3D, General)
+{
+  Point3D p1 {-7, 8, 7};
+  Point3D p2 {-7, -1, 4};
+  Point3D p3 {0, 0, 0};
+
+  Triangle3D t {p1, p2, p3};
+  Plane3D pl = t.get_plane();
+  Vec3D  n {-0.506408, 0.272681, -0.818044};
+  double s = 0; 
+
+  EXPECT_EQ(pl.get_n(), n);
+  EXPECT_EQ(pl.get_s(), s);
+}
+
+TEST(Triangle3D, Intersection1)
+{
+  Point3D p1 {1, 0, 1};
+  Point3D p2 {0, 2, 0};
+  Point3D p3 {2, 0, 3};
+
+  Triangle3D t {p1, p2, p3};
+
+  LineInf3D li {p2 - p1, p1}; 
+
+  std::vector<double> intr_c = t.intersect_with(li);
+
+  ASSERT_EQ(intr_c.size(), 2);
+  Point3D pi1 = li.point_from_param(intr_c[0]);
+  Point3D pi2 = li.point_from_param(intr_c[1]);
+
+  EXPECT_EQ(pi1, p1);
+  EXPECT_EQ(pi2, p2);
+}
+
+TEST(Triangle3D, Intersection2)
+{
+  Point3D p1 {1, 0, 0};
+  Point3D p2 {0, 2, 4};
+  Point3D p3 {0, 1, 3};
+
+  Vec3D ofs {0, 0, 1};
+
+  Triangle3D t {p1, p2, p3};
+
+  LineInf3D li {p2 - p1, p1 + ofs}; 
+
+  std::vector<double> intr_c = t.intersect_with(li);
+
+  EXPECT_EQ(intr_c.size(), 0);
+}
+
+TEST(Triangle3D, Intersection3)
+{
+  Point3D p1 {1, 0, 0};
+  Point3D p2 {0, 2, 0};
+  Point3D p3 {0, 0, 3};
+
+  Triangle3D t {p1, p2, p3};
+
+  LineSeg3D ls {{-2, -2, -2}, {1, 1, 1}}; 
+
+  std::vector<double> intr_c = t.intersect_with(ls);
+
+  EXPECT_EQ(intr_c.size(), 0);
+}
+
+TEST(Triangle3D, Intersection4)
+{
+  Point3D pt1 {2, 0, 0};
+  Point3D pt2 {0, 1, 0};
+  Point3D pt3 {0, 0, 3};
+
+  Triangle3D t {pt1, pt2, pt3};
+
+  Point3D p1 {0, 0.5, 1.5};
+  Point3D p2 {1, 0, 1.5};
+
+  LineInf3D li {p2 - p1, p1}; 
+
+  std::vector<double> intr_c = t.intersect_with(li);
+
+  ASSERT_EQ(intr_c.size(), 2);
+
+  Point3D pi1 = li.point_from_param(intr_c[0]);
+  Point3D pi2 = li.point_from_param(intr_c[1]);
+
+  EXPECT_EQ(pi1, p1);
+  EXPECT_EQ(pi2, p2);
+}
+
+TEST(Triangle3D, Intersection5)
+{
+  Point3D pt1 {2, 0, 0};
+  Point3D pt2 {0, 1, 0};
+  Point3D pt3 {0, 0, 3};
+
+  Triangle3D t {pt1, pt2, pt3};
+
+  Point3D p1 {0, 0.5, 1.5};
+  Point3D p2 {1, 0, 1.5};
+
+  Vec3D a {p2 - p1};
+
+  LineSeg3D li {p2 - (a / 2), p1 - (a / 2)}; 
+
+  std::vector<double> intr_c = t.intersect_with(li);
+
+  ASSERT_EQ(intr_c.size(), 1);
+
+  Point3D pi1 = li.point_from_param(intr_c[0]);
+
+  EXPECT_EQ(pi1, p1);
+}
+
+TEST(Triangle3D, Intersection6)
+{
+  Point3D pt1 {1, 0, 0};
+  Point3D pt2 {0, 2, 0};
+  Point3D pt3 {0, 0, 3};
+
+  Triangle3D t {pt1, pt2, pt3};
+
+  Point3D p1 {1, 2, 3};
+  Point3D p2 {4, 5, 6};
+
+  LineInf3D li {p2 - p1, pt3}; 
+
+  std::vector<double> intr_c = t.intersect_with(li);
+
+  ASSERT_EQ(intr_c.size(), 2);
+  
+  Point3D pi1 = li.point_from_param(intr_c[0]);
+  Point3D pi2 = li.point_from_param(intr_c[1]);
+
+  EXPECT_EQ(pi1, pi2);
+  EXPECT_EQ(pi2, pt3);
+}
+
+TEST(Triangle3D, Intersection7)
+{
+  Point3D p1 {1, 0, 0};
+  Point3D p2 {1, 2, 0};
+  Point3D p3 {1, 0, 3};
+
+  Triangle3D t {p1, p2, p3};
+
+  Point3D p4 = (p1 + p2) / 2;
+
+  LineInf3D li {p4 - p3, p3}; 
+
+  std::vector<double> intr_c = t.intersect_with(li);
+
+  ASSERT_EQ(intr_c.size(), 3);
+
+  Point3D pi1 = li.point_from_param(intr_c[0]);
+  Point3D pi2 = li.point_from_param(intr_c[1]);
+  Point3D pi3 = li.point_from_param(intr_c[2]);
+
+  EXPECT_EQ(pi1, pi2);
+  EXPECT_EQ(pi2, p3);
+  EXPECT_EQ(pi3, p4);
+}
