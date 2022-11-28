@@ -1059,3 +1059,262 @@ TEST(ComplanarTriangles, ComputeInterval6)
 }
 
 //--------------------------------------------------------------------
+
+TEST(ComplanarTriangles, Intersection1)
+{
+  Point3D a1 {1, -1, 0};
+  Point3D b1 {1, -3, 0};
+  Point3D c1 {3, -2, 0};
+
+  Point3D a2 {2, 1, 0};
+  Point3D b2 {2, -2, 0};
+  Point3D c2 {4, 1, 0};
+
+  Triangle3D tr1 {a1, b1, c1};
+  Triangle3D tr2 {a2, b2, c2};
+
+  EXPECT_TRUE(intersect_complanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_complanar_triangles(tr2, tr1));
+}
+
+TEST(ComplanarTriangles, Intersection2)
+{
+  Point3D a1 {1, -1, 0};
+  Point3D b1 {1, -3, 0};
+  Point3D c1 {3, -2, 0};
+
+  Point3D a2 {2, 1, 0};
+  Point3D b2 {2, -1.5, 0};
+  Point3D c2 {4, 1, 0};
+
+  Triangle3D tr1 {a1, b1, c1};
+  Triangle3D tr2 {a2, b2, c2};
+
+  EXPECT_TRUE(intersect_complanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_complanar_triangles(tr2, tr1));
+}
+
+TEST(ComplanarTriangles, Intersection3)
+{
+  Point3D a1 {1, -1, 0};
+  Point3D b1 {1, -3, 0};
+  Point3D c1 {3, -2, 0};
+
+  Point3D a2 {2, 1, 0};
+  Point3D b2 {2, -1, 0};
+  Point3D c2 {4, 1, 0};
+
+  Triangle3D tr1 {a1, b1, c1};
+  Triangle3D tr2 {a2, b2, c2};
+
+  EXPECT_FALSE(intersect_complanar_triangles(tr1, tr2));
+  EXPECT_FALSE(intersect_complanar_triangles(tr2, tr1));
+}
+
+TEST(ComplanarTriangles, Intersection4)
+{
+  Point3D a1 {0, 0, 0};
+  Point3D b1 {1, -3, 0};
+  Point3D c1 {3, -2, 0};
+
+  Point3D a2 {2, 1, 0};
+  Point3D b2 {0, 0, 0};
+  Point3D c2 {4, 1, 0};
+
+  Triangle3D tr1 {a1, b1, c1};
+  Triangle3D tr2 {a2, b2, c2};
+
+  EXPECT_TRUE(intersect_complanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_complanar_triangles(tr2, tr1));
+}
+
+TEST(ComplanarTriangles, Intersection5)
+{
+  Point3D a1 {1, -1, 0};
+  Point3D b1 {1, -3, 0};
+  Point3D c1 {3, -2, 0};
+
+  Point3D a2 {2, 1, 0};
+  Point3D b2 {1, -2, 0};
+  Point3D c2 {4, 1, 0};
+
+  Triangle3D tr1 {a1, b1, c1};
+  Triangle3D tr2 {a2, b2, c2};
+
+  EXPECT_TRUE(intersect_complanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_complanar_triangles(tr2, tr1));
+}
+
+TEST(ComplanarTriangles, Intersection6)
+{
+  Point3D a1 {1, -1, 0};
+  Point3D b1 {1, -3, 0};
+  Point3D c1 {3, -2, 0};
+
+  Point3D a2 {1, -1.5, 0};
+  Point3D b2 {1, -2, 0};
+  Point3D c2 {4, 1, 0};
+
+  Triangle3D tr1 {a1, b1, c1};
+  Triangle3D tr2 {a2, b2, c2};
+
+  EXPECT_TRUE(intersect_complanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_complanar_triangles(tr2, tr1));
+}
+
+TEST(ComplanarTriangles, Intersection7)
+{
+  Point3D a1 {1, -1, 0};
+  Point3D b1 {1, -3, 0};
+  Point3D c1 {3, -2, 0};
+
+  Point3D a2 {1, -1.5, 0};
+  Point3D b2 {1, -2, 0};
+  Point3D c2 {0, -2, 0};
+
+  Triangle3D tr1 {a1, b1, c1};
+  Triangle3D tr2 {a2, b2, c2};
+
+  EXPECT_TRUE(intersect_complanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_complanar_triangles(tr2, tr1));
+}
+
+TEST(ComplanarTriangles, Intersection8)
+{
+  Point3D a1 {1, -1, 0};
+  Point3D b1 {1, -3, 0};
+  Point3D c1 {3, -2, 0};
+
+  Point3D a2 {1, -1.5, 0};
+  Point3D b2 {1, -2, 0};
+  Point3D c2 {2, -2, 0};
+
+  Triangle3D tr1 {a1, b1, c1};
+  Triangle3D tr2 {a2, b2, c2};
+
+  EXPECT_TRUE(intersect_complanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_complanar_triangles(tr2, tr1));
+}
+
+TEST(ComplanarTriangles, Intersection9)
+{
+  Point3D a1 {1, -1, 0};
+  Point3D b1 {1, -3, 0};
+  Point3D c1 {3, -2, 0};
+
+  Point3D a2 {1.5, -1.5, 0};
+  Point3D b2 {1.5, -2, 0};
+  Point3D c2 {2, -2, 0};
+
+  Triangle3D tr1 {a1, b1, c1};
+  Triangle3D tr2 {a2, b2, c2};
+
+  EXPECT_TRUE(intersect_complanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_complanar_triangles(tr2, tr1));
+}
+
+TEST(ComplanarTriangles, Intersection10)
+{
+  Point3D a1 {1, -1, 0};
+  Point3D b1 {1, -3, 0};
+  Point3D c1 {-3, -2, 0};
+
+  Point3D a2 {1.5, -1.5, 0};
+  Point3D b2 {1.5, -2, 0};
+  Point3D c2 {2, -2, 0};
+
+  Triangle3D tr1 {a1, b1, c1};
+  Triangle3D tr2 {a2, b2, c2};
+
+  EXPECT_FALSE(intersect_complanar_triangles(tr1, tr2));
+  EXPECT_FALSE(intersect_complanar_triangles(tr2, tr1));
+}
+
+TEST(ComplanarTriangles, Intersection11)
+{
+  Point3D a1 {1, -1, 0};
+  Point3D b1 {1, -3, 0};
+  Point3D c1 {3, -2, 0};
+
+  Point3D a2 {1.5, -1.5, 0};
+  Point3D b2 {1.5, -2, 0};
+  Point3D c2 {2, -2, 0};
+
+  Vec3D ofs {3, 4, -5};
+
+  Triangle3D tr1 {a1 + ofs, b1 + ofs, c1 + ofs};
+  Triangle3D tr2 {a2 + ofs, b2 + ofs, c2 + ofs};
+
+  EXPECT_TRUE(intersect_complanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_complanar_triangles(tr2, tr1));
+}
+
+TEST(ComplanarTriangles, Intersection12)
+{
+  Point3D a1 {1, 0, 0};
+  Point3D b1 {0, 1, 0};
+  Point3D c1 {0, 0, 1};
+
+  Point3D a2 {-1, -1, 3};
+  Point3D b2 {-4, 5, 0};
+  Point3D c2 {5, -4, 0};
+
+  Triangle3D tr1 {a1, b1, c1};
+  Triangle3D tr2 {a2, b2, c2};
+
+  EXPECT_TRUE(intersect_complanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_complanar_triangles(tr2, tr1));
+}
+
+TEST(ComplanarTriangles, Intersection13)
+{
+  Point3D a1 {1, 0, 0};
+  Point3D b1 {0, 1, 0};
+  Point3D c1 {0, 0, 1};
+
+  Point3D a2 {-1, -1, 3};
+  Point3D b2 {-4, 5, 0};
+  Point3D c2 {0, 1, 0};
+
+  Triangle3D tr1 {a1, b1, c1};
+  Triangle3D tr2 {a2, b2, c2};
+
+  EXPECT_TRUE(intersect_complanar_triangles(tr1, tr2));
+  EXPECT_TRUE(intersect_complanar_triangles(tr2, tr1));
+}
+
+TEST(ComplanarTriangles, Intersection14)
+{
+  Point3D a1 {1, 0, 0};
+  Point3D b1 {0, 1, 0};
+  Point3D c1 {0, 0, 1};
+
+  Point3D a2 {-1, -1, 3};
+  Point3D b2 {-4, 5, 0};
+  Point3D c2 {-2, 3, 0};
+
+  Triangle3D tr1 {a1, b1, c1};
+  Triangle3D tr2 {a2, b2, c2};
+
+  EXPECT_FALSE(intersect_complanar_triangles(tr1, tr2));
+  EXPECT_FALSE(intersect_complanar_triangles(tr2, tr1));
+}
+
+TEST(ComplanarTriangles, Intersection15)
+{
+  Point3D a1 {1, 0, 0};
+  Point3D b1 {0, 1, 0};
+  Point3D c1 {0, 0, 1};
+
+  Point3D a2 {-1, -1, 3};
+  Point3D b2 {-4, 5, 0};
+  Point3D c2 {-1, 2, 0};
+
+  Triangle3D tr1 {a1, b1, c1};
+  Triangle3D tr2 {a2, b2, c2};
+
+  EXPECT_FALSE(intersect_complanar_triangles(tr1, tr2));
+  EXPECT_FALSE(intersect_complanar_triangles(tr2, tr1));
+}
+
+//--------------------------------------------------------------------
