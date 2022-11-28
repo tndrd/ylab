@@ -906,3 +906,49 @@ TEST(Triangle3D, Intersection7)
   EXPECT_EQ(pi2, p3);
   EXPECT_EQ(pi3, p4);
 }
+
+//--------------------------------------------------------------------
+
+TEST(Triangle3D, EdgeNormals1)
+{
+  Point3D pt1 {2, 0, 0};
+  Point3D pt2 {0, 1, 0};
+  Point3D pt3 {0, 0, 3};
+
+  Triangle3D t {pt1, pt2, pt3};
+
+  std::vector<Vec3D> normals = t.get_edge_normals();
+
+  ASSERT_EQ(normals.size(), 3);
+
+  Vec3D n1 {-0.127775, -0.255551, 0.958315};
+  Vec3D n2 {0.903508, -0.406579, -0.135526};
+  Vec3D n3 {-0.713186, 0.515079, -0.475457};
+
+  EXPECT_EQ(normals[0], n1);
+  EXPECT_EQ(normals[1], n2);
+  EXPECT_EQ(normals[2], n3);
+}
+
+TEST(Triangle3D, EdgeNormals2)
+{
+  Point3D pt1 {2, 3, 4};
+  Point3D pt2 {-5, 6, -3};
+  Point3D pt3 {-2, -2, -2};
+
+  Triangle3D t {pt1, pt2, pt3};
+
+  std::vector<Vec3D> normals = t.get_edge_normals();
+
+  ASSERT_EQ(normals.size(), 3);
+
+  Vec3D n1 {-0.0575693, -0.937175, -0.344077};
+  Vec3D n2 {0.582783, 0.31232, 0.750213};
+  Vec3D n3 {-0.503454, 0.798582, -0.329849};
+
+  EXPECT_EQ(normals[0], n1);
+  EXPECT_EQ(normals[1], n2);
+  EXPECT_EQ(normals[2], n3);
+}
+
+//--------------------------------------------------------------------
