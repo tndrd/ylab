@@ -9,13 +9,13 @@ namespace HW3D
 
 const double FIT_TOLERANCE = 0.00001;
 
-bool fit(double a, double b)
+inline bool fit(double a, double b)
 {
   return std::abs(a - b) < FIT_TOLERANCE;
 }
 
 // a <= t <= b
-bool interval_fit(double t, double a, double b)
+inline bool interval_fit(double t, double a, double b)
 {
   bool cond1 = (t >= a) && (t <= b);
   bool cond2 = fit(t, a);
@@ -23,7 +23,7 @@ bool interval_fit(double t, double a, double b)
   return cond1 || cond2 || cond3;
 }
 
-bool intervals_intersect(double min1, double max1, double min2, double max2)
+inline bool intervals_intersect(double min1, double max1, double min2, double max2)
 {
   if(fit(max1,min2) || fit(max2, min1))
   {
@@ -82,53 +82,53 @@ struct Vec3D
   }
 };
 
-std::ostream& operator<<(std::ostream& os, const Vec3D& v)
+inline std::ostream& operator<<(std::ostream& os, const Vec3D& v)
 {
     os << "{" << v.x << ", " << v.y << ", " << v.z << "}";
     return os;
 }
 
-Vec3D operator+(const Vec3D& v1, const Vec3D& v2)
+inline Vec3D operator+(const Vec3D& v1, const Vec3D& v2)
 {
   return {v1.x + v2.x, v1.y + v2.y, v1.z + v2.z};
 }
 
-Vec3D operator-(const Vec3D& v1, const Vec3D& v2)
+inline Vec3D operator-(const Vec3D& v1, const Vec3D& v2)
 {
   return {v1.x - v2.x, v1.y - v2.y, v1.z - v2.z};
 }
 
-double operator*(const Vec3D& v1, const Vec3D& v2)
+inline double operator*(const Vec3D& v1, const Vec3D& v2)
 {
   return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
 }
 
-Vec3D operator*(const Vec3D& v, const double k)
+inline Vec3D operator*(const Vec3D& v, const double k)
 {
   return {v.x * k, v.y * k, v.z * k};
 }
 
-Vec3D operator*(const double k, const Vec3D& v)
+inline Vec3D operator*(const double k, const Vec3D& v)
 {
   return {v.x * k, v.y * k, v.z * k};
 }
 
-Vec3D operator/(const Vec3D& v, const double k)
+inline Vec3D operator/(const Vec3D& v, const double k)
 {
   return {v.x / k, v.y / k, v.z / k};
 }
 
-Vec3D operator/(const double k, const Vec3D& v)
+inline Vec3D operator/(const double k, const Vec3D& v)
 {
   return {v.x / k, v.y / k, v.z / k};
 }
 
-Vec3D operator-(const Vec3D& v)
+inline Vec3D operator-(const Vec3D& v)
 {
   return {-v.x, -v.y, -v.z};
 }
 
-Vec3D project_v(const Vec3D& which_vec, const Vec3D& where_vec)
+inline Vec3D project_v(const Vec3D& which_vec, const Vec3D& where_vec)
 {
   return ((which_vec * where_vec) / (where_vec * where_vec)) * where_vec; 
 }
@@ -140,17 +140,17 @@ Vec3D abs(const Vec3D& v)
 }
 */
 
-bool operator==(const Vec3D& v1, const Vec3D& v2)
+inline bool operator==(const Vec3D& v1, const Vec3D& v2)
 {
   return fit(v1.x, v2.x) && fit(v1.y, v2.y) && fit(v1.z, v2.z);
 }
 
-bool abseq(const Vec3D& v1, const Vec3D& v2)
+inline bool abseq(const Vec3D& v1, const Vec3D& v2)
 {
   return v1 == v2 || v1 == -v2;
 }
 
-double det(const Vec3D& v1, const Vec3D& v2, const Vec3D& v3)
+inline double det(const Vec3D& v1, const Vec3D& v2, const Vec3D& v3)
 {
   double min1 = v1.x * (v2.y*v3.z - v2.z*v3.y);
   double min2 = v1.y * (v2.x*v3.z - v2.z*v3.x);
@@ -159,7 +159,7 @@ double det(const Vec3D& v1, const Vec3D& v2, const Vec3D& v3)
   return min1 - min2 + min3;
 }
 
-Vec3D vecmul(const Vec3D& v1, const Vec3D& v2)
+inline Vec3D vecmul(const Vec3D& v1, const Vec3D& v2)
 {
   double min1 = v1.y*v2.z - v1.z*v2.y;
   double min2 = v1.x*v2.z - v1.z*v2.x;
