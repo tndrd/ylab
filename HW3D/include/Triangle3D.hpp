@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Plane3D.hpp"
 #include "LineSeg3D.hpp"
 #include "intersections.hpp"
