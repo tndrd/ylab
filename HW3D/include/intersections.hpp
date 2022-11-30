@@ -76,7 +76,7 @@ class PlaneRelation
 // Otherwise they do not
 // Returns relationship info and intersection params (if exist)
 template<typename LineT1, typename LineT2>
-LineRelation get_relation(const LineT1& l1, const LineT2& l2)
+LineRelation get_line_relation(const LineT1& l1, const LineT2& l2)
 {
   using state_t = LineRelation;
 
@@ -123,7 +123,8 @@ LineRelation get_relation(const LineT1& l1, const LineT2& l2)
 // If planes are not coincident or parallel then they do intersect with each other
 // We can find the intersection line with som formulas [Reference: GCT page 530]
 // Returns relationship info and intersection params (if exist)
-PlaneRelation get_relation(const Plane3D& p1, const Plane3D& p2)
+template<typename PlaneT1, typename PlaneT2>
+PlaneRelation get_plane_relation(const PlaneT1& p1, const PlaneT2& p2)
 {
   using state_t = PlaneRelation;
 
@@ -149,14 +150,15 @@ PlaneRelation get_relation(const Plane3D& p1, const Plane3D& p2)
 
 // Returns the intersection point of two lines. Given lines should really intersect
 template<typename LineT1, typename LineT2>
-Point3D get_intersection(const LineT1& l1, const LineT2& l2, const LineRelation& relation)
+Point3D get_line_intersection(const LineT1& l1, const LineT2& l2, const LineRelation& relation)
 {
   if (relation.get_state() != relation.INTERSECTING) throw;
   return l1.point_from_param(relation.get_t1());
 }
 
 // Returns the intersection line of two planes. Given planes should really intersect
-LineInf3D get_intersection(const Plane3D& p1, const Plane3D& p2, const PlaneRelation& relation)
+template<typename PlaneT1, typename PlaneT2>
+LineInf3D get_plane_intersection(const PlaneT1& p1, const PlaneT2& p2, const PlaneRelation& relation)
 {
   if (relation.get_state() != relation.INTERSECTING) throw;
 

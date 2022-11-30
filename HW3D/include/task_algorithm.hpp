@@ -68,9 +68,9 @@ bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& t
   Plane3D p1 = tr1.get_plane();
   Plane3D p2 = tr2.get_plane();
 
-  PlaneRelation pi = get_relation(p1, p2);
+  PlaneRelation pi = get_plane_relation(p1, p2);
 
-  LineInf3D pil = get_intersection(p1, p2, pi);
+  LineInf3D pil = get_plane_intersection(p1, p2, pi);
 
   std::vector<double> intrs1 = tr1.intersect_with(pil);
   std::vector<double> intrs2 = tr2.intersect_with(pil);
@@ -95,7 +95,7 @@ bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
   Plane3D p2 = tr2.get_plane();
 
   // Intersect triangles' planes
-  PlaneRelation pi = get_relation(p1, p2);
+  PlaneRelation pi = get_plane_relation(p1, p2);
 
   switch(pi.get_state())
   {

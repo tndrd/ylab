@@ -72,7 +72,7 @@ class Triangle3D
       Point3D v2 = vertices_[(i+1)%3];
       LineSeg3D edge = {v1, v2};
 
-      LineRelation rel = get_relation(edge, line);
+      LineRelation rel = get_line_relation(edge, line);
       using state_t = LineRelation::State;
     
       switch(rel.get_state())
