@@ -1530,6 +1530,9 @@ TEST(AllTriangles, Intersection1)
   Triangle3D tr1 {a1 + ofs, b1 + ofs, c1 + ofs};
   Triangle3D tr2 {a2 + ofs, b2 + ofs, c2 + ofs};
 
+
+  EXPECT_TRUE(intersect_triangles(tr1, tr1));
+  EXPECT_TRUE(intersect_triangles(tr2, tr2));
   EXPECT_FALSE(intersect_triangles(tr1, tr2));
   EXPECT_FALSE(intersect_triangles(tr2, tr1));
 }
@@ -1600,4 +1603,86 @@ TEST(AllTriangles, Intersection5)
 
   EXPECT_FALSE(intersect_triangles(tr1, tr2));
   EXPECT_FALSE(intersect_triangles(tr2, tr1));
+}
+
+//--------------------------------------------------------------------
+
+TEST(Task, E2E)
+{
+  Point3D a1 {1, 0, 0};
+  Point3D b1 {0, 1, 0};
+  Point3D c1 {0, 0, 1};
+
+  Vec3D ofs {1, 1, 1};
+
+  Triangle3D tr1 {a1, b1, c1};
+  Triangle3D tr2 {a1 + ofs, b1 + ofs, c1 + ofs};
+
+  Point3D a3 {1, 0, 0};
+  Point3D b3 {0, 1, 0};
+  Point3D c3 {0, 0, 1};
+
+  Point3D a4 {-1, -1, 3};
+  Point3D b4 {-4, 5, 0};
+  Point3D c4 {0, 1, 0};
+
+  Triangle3D tr3 {a3, b3, c3};
+  Triangle3D tr4 {a4, b4, c4};
+
+  Point3D a5 {1, 0, 0};
+  Point3D b5 {0, 1, 0};
+  Point3D c5 {0, 0, 1};
+
+  Point3D a6 {-1, -1, 3};
+  Point3D b6 {-4, 5, 0};
+  Point3D c6 {-1, 2, 0};
+
+  Triangle3D tr5 {a5, b5, c5};
+  Triangle3D tr6 {a6, b6, c6};
+
+  Point3D a7 {2, 4, 0};  // C
+  Point3D b7 {0, 2, 0}; // D
+  Point3D c7 {0, 4, 0}; // E
+
+  Point3D a8 {-2, 3, 2}; // F
+  Point3D b8 {0, 2, 0}; // G
+  Point3D c8 {0, 1, 0}; // H
+
+  Triangle3D tr7 {a7, b7, c7};
+  Triangle3D tr8 {a8, b8, c8};
+
+  Point3D a9 {2, 4, 0};  // C
+  Point3D b9 {1, 2, 0}; // D
+  Point3D c9 {0.5, 4, 0}; // E
+
+  Point3D a10 {-2, 3, 2}; // F
+  Point3D b10 {0, 2, 0}; // G
+  Point3D c10 {0, 1, 0}; // H
+
+  Triangle3D tr9  {a9, b9, c9};
+  Triangle3D tr10 {a10, b10, c10};
+
+  size_t N = 10;
+  std::vector<Triangle3D> triangles
+    {tr1, tr2, tr3, tr4, tr5, tr6, tr7, tr8, tr9, tr10};
+
+  std::vector<int> answers_c;
+
+  for (int i = 0; i < N; i++)
+  {
+    for (int k = 0; k < N; k++)
+    {
+      if (k == i) continue;
+      if (intersect_triangles(triangles[i], triangles[k]))
+      {
+        answers_c.push_back(i);
+        break;
+      }
+
+    }
+  }
+  
+  std::vector<int> answers_r {0, 2, 3, 4, 5, 6, 7, 8, 9};
+
+  ASSERT_EQ(answers_c, answers_r);
 }
