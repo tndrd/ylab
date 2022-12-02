@@ -25,6 +25,7 @@ class Matrix
 {
   // Brief: Matrix class with O(1) row swap possibility
   // All the matrix content is stored in one buffer [data_]
+  // Single buffer grants access locality
   // Also there is a RowProxy array [rows_]. Each row proxy points to specific row in buffer
   // Right after the creation of matrix rows_[i][k] points to data_[i][k]
   // If we swap rows_[i] and rows_[j], rows_[i][k] will point to data_[j][k]
@@ -201,6 +202,55 @@ class Matrix
   Matrix&& swap_rows(size_t r1, size_t r2) &&
   {
     return std::move(swap_rows(r1, r2));
+  }
+
+  // a -= k*b
+  void subtract_mul_row(size_t row_a, size_t row_b, T k)
+  {
+    for (int i = 0; i < m; ++i)
+      (*this)[row_a] -= k * (*this)[row_b];
+  }
+
+  Matrix gauss() const
+  {
+    Matrix mat {*this};
+
+    size_t ofs = 0;
+
+    for (size_t col = 0; col < m; ++col)
+    {
+      bool found = false;
+      size_t main = col - ofs; 
+      size_t row = main;
+
+      for(; row < n; ++row)
+      {
+        if (mat[row][col] != 0)
+        {
+          found = true;
+          break;
+        }
+      }
+
+      if (!found)
+      {
+        ++ofs;
+        continue;
+      }
+
+      mat.swap_rows(main, row);
+      
+      for (size_t lower_row = main + 1; lower_row < n; ++lower_row)
+      {
+        T coeff = mat[lower_row][col] / mat[main][col]; 
+        for(int k = col; k < m; ++k)
+        {
+          mat[lower_row][k] -= coeff * mat[main][k];
+        }
+      }
+    }
+
+    return mat;
   }
 };
 
