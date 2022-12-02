@@ -203,70 +203,67 @@ class Matrix
   {
     return std::move(swap_rows(r1, r2));
   }
+};
 
-  // a -= k*b
-  void subtract_mul_row(size_t row_a, size_t row_b, T k)
+template<typename T, size_t n>
+double det(const Matrix<T, n, n>& mat)
+{
+  Matrix<T,n,n> copy {mat};
+
+  size_t n_swaps = 0;
+
+  for (size_t col = 0; col < n; ++col)
   {
-    for (int i = 0; i < m; ++i)
-      (*this)[row_a] -= k * (*this)[row_b];
-  }
+    bool found = false; 
+    size_t row = col;
 
-  Matrix gauss() const
-  {
-    Matrix mat {*this};
-
-    size_t ofs = 0;
-
-    for (size_t col = 0; col < m; ++col)
+    for(; row < n; ++row)
     {
-      bool found = false;
-      size_t main = col - ofs; 
-      size_t row = main;
-
-      for(; row < n; ++row)
+      if (copy[row][col] != 0)
       {
-        if (mat[row][col] != 0)
-        {
-          found = true;
-          break;
-        }
-      }
-
-      if (!found)
-      {
-        ++ofs;
-        continue;
-      }
-
-      mat.swap_rows(main, row);
-      
-      for (size_t lower_row = main + 1; lower_row < n; ++lower_row)
-      {
-        T coeff = mat[lower_row][col] / mat[main][col]; 
-        for(int k = col; k < m; ++k)
-        {
-          mat[lower_row][k] -= coeff * mat[main][k];
-        }
+        found = true;
+        break;
       }
     }
 
-    return mat;
+    if (!found) {return 0;}
+
+    copy.swap_rows(col, row);
+    n_swaps += !!(col - row);
+
+    for (size_t lower_row = col + 1; lower_row < n; ++lower_row)
+    {
+      T coeff = copy[lower_row][col] / copy[col][col]; 
+      for(int k = col; k < n; ++k)
+      {
+        copy[lower_row][k] -= coeff * copy[col][k];
+      }
+    }
   }
-};
+
+  double determinant = 1 - static_cast<int>(2 * (n_swaps % 2));
+
+  for(size_t i = 0; i < n; ++i)
+  {
+    determinant *= copy[i][i];
+  }
+  return determinant;
+}
 
 // Just a dump
 template<typename T, size_t n, size_t m>
-inline std::ostream& operator<<(std::ostream& os, Matrix<T, n, m>& mat)
+std::ostream& operator<<(std::ostream& os, Matrix<T, n, m>& mat)
+{
+  for (size_t i = 0; i < n; ++i)
   {
-    for (size_t i = 0; i < n; ++i)
+    os << "{ ";
+    for (size_t k = 0; k < m; ++k)
     {
-      os << "{ ";
-      for (size_t k = 0; k < m; ++k)
-      {
-        os << mat[i][k] << " ";
-      }
-      os << "}" << std::endl;
+      os << mat[i][k] << " ";
     }
-    return os;
+    os << "}" << std::endl;
   }
+  return os;
+}
+
 }
