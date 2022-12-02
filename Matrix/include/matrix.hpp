@@ -45,13 +45,13 @@ class Matrix
     public:
     RowProxy(T* parent_buf=nullptr, size_t ofs=0) noexcept: ofs_(ofs), buf_(parent_buf) {}
 
-    const T&  operator[] (size_t k) const &
+    T&  operator[] (size_t k) &
     {
       if(k >= m) throw;
       return *(buf_ + ofs_ + k);
     }
 
-    T& operator[] (size_t k) &
+    const T& operator[] (size_t k) const &
     {
       return (*this)[k];
     }
@@ -72,7 +72,7 @@ class Matrix
   std::unique_ptr<RowProxy> rows_;  // Array of Proxys that point to beginning of each row inside the data_
 
   // Fills rows so first row proxy point to first row in data_ and so on 
-  void order_rows() noexcept
+  void order_rows()
   {
     for (size_t row = 0; row < n; ++row)
     {
@@ -81,7 +81,7 @@ class Matrix
   }
 
   // Remaps rowproxys to current data_ buffer
-  void remap_rows() noexcept
+  void remap_rows()
   {
     for (size_t row = 0; row < n; ++row)
     {
@@ -177,6 +177,19 @@ class Matrix
   }
 
   // Returns row proxy lvalue so the row can be acessed
+  RowProxy& operator[] (size_t i) &
+  {
+    if(i >= n) throw;
+    return rows_.get()[i];
+  }
+  
+  const RowProxy& operator[] (size_t i) const &
+  {
+    return (*this)[i];
+  }
+
+  // Question: This is a previous version and it caused segfaults.
+  /* 
   const RowProxy& operator[] (size_t i) const &
   {
     if(i >= n) throw;
@@ -187,6 +200,8 @@ class Matrix
   {
     return (*this)[i];
   }
+  */
+  // Why current version works fine but previous didn't?
 
   // Return row proxy rvalue if needed
   RowProxy&& operator[] (size_t i) &&
