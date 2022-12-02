@@ -2,8 +2,10 @@
 
 !src/
 !include/
+!tests/
 !src/*
 !include/*
+!tests/*
 
 !CMakeLists.txt
 !.gitignore
