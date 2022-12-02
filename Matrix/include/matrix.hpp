@@ -153,14 +153,13 @@ class Matrix
     return *this;
   }
 
-  // Move ctor. Steals other's data and and then remaps RowProxys to current buffer
+  // Move ctor
   Matrix(Matrix&& other) noexcept: data_(std::move(other.data_)), rows_(std::move(other.rows_))
   {
     DEBUG_PRINT("Matrix move ctor");
-    remap_rows();
   }
 
-  // Move assignment. Does the same as Move ctor
+  // Move assignment
   Matrix& operator= (Matrix&& other) noexcept
   {
     DEBUG_PRINT("Matrix move=");
@@ -170,7 +169,6 @@ class Matrix
 
     data_ = std::move(other.data_);
     rows_ = std::move(other.rows_);
-    remap_rows();
 
     return *this;
   }
