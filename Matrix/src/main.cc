@@ -1,17 +1,13 @@
 #include "matrix.hpp"
 
-using namespace HWMatrix;
+using namespace HWMatrix; 
 
 int main()
 {
-  std::vector<int> values {1, 2, 3, 4, 5, 6, 7, 8, 9};
-  //Matrix<int, 3, 3> mat {values};
+  std::vector<double> values {1.5, 0, 0, 0, 0, 0, 0, 0, 0};
+  auto mat = Matrix<double, 3, 3>{values}.swap_rows(1,2);
 
-  //std::cout << "--------" << std::endl;
+  //mat.gugugaga();
 
-  //int a = mat[0][1];
-
-  auto a = Matrix<int, 3, 3>{values}.swap_rows(0, 1).swap_rows(0, 1);
-
-  std::cout << a << std::endl;
+  std::cout << mat;
 }

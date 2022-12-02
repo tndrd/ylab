@@ -177,13 +177,13 @@ class Matrix
   }
 
   // Returns row proxy lvalue so the row can be acessed
-  const RowProxy&  operator[] (size_t i) const &
+  const RowProxy& operator[] (size_t i) const &
   {
     if(i >= n) throw;
     return rows_.get()[i];
   }
   
-  RowProxy&  operator[] (size_t i) &
+  RowProxy& operator[] (size_t i) &
   {
     return (*this)[i];
   }
