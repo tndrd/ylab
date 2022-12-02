@@ -23,7 +23,19 @@ inline void DEBUG_PRINT(const char* str) {}
 template<typename T, size_t n, size_t m>
 class Matrix
 {
+  // Brief: Matrix class with O(1) row swap possibility
+  // All the matrix content is stored in one buffer [data_]
+  // Also there is a RowProxy array [rows_]. Each row proxy points to specific row in buffer
+  // Right after the creation of matrix rows_[i][k] points to data_[i][k]
+  // If we swap rows_[i] and rows_[j], rows_[i][k] will point to data_[j][k]
+  // Wow! Rows i and j are now logically swapped (But physically not)!
 
+  // The next important part is copying/moving
+  // We want to save the original row order after copying/moving
+  // So we need to inherit the original row order by remapping copied/moved
+  // rowproxys to current data buffer. remap_rows() does it.  
+
+  // Class that stores row offset ofs_ in data buffer buf_
   class RowProxy
   {
     size_t  ofs_;
@@ -45,15 +57,17 @@ class Matrix
       return std::move((*this)[k]);
     }
 
+    // Switches to another buffer without losing its order in row array
     void change_parent(Matrix& new_parent) noexcept
     {
       buf_ = new_parent.data_.get();
     }
   };
 
-  std::unique_ptr<T> data_;
-  std::unique_ptr<RowProxy> rows_;
+  std::unique_ptr<T> data_;         // Buffer that stores all the matrice content
+  std::unique_ptr<RowProxy> rows_;  // Array of Proxys that point to beginning of each row inside the data_
 
+  // Fills rows so first row proxy point to first row in data_ and so on 
   void order_rows() noexcept
   {
     for (size_t row = 0; row < n; ++row)
@@ -62,7 +76,8 @@ class Matrix
     }
   }
 
-  void adopt_rows() noexcept
+  // Remaps rowproxys to current data_ buffer
+  void remap_rows() noexcept
   {
     for (size_t row = 0; row < n; ++row)
     {
@@ -70,6 +85,7 @@ class Matrix
     }
   }
 
+  // Deep copies all the content and all the proxies from other matrix
   void deepcopy_from(const Matrix& other)
   {
     std::copy(other.data_.get(), other.data_.get() + size(), data_.get());
@@ -87,12 +103,14 @@ class Matrix
   size_t size() const noexcept {return n * m;}
   Dim    dims() const noexcept {return {n, m};}
 
+  // Constructs empty matrix
   Matrix(): data_{new T[size()]}, rows_{new RowProxy[n]}
   {
     DEBUG_PRINT("Matrix ctor");
     order_rows();
   }
 
+  // Constructs empty matrix and fills it with values in row-major order
   Matrix(std::vector<T>& values): Matrix()
   {
     if (values.size() != size()) throw;
@@ -104,6 +122,7 @@ class Matrix
     DEBUG_PRINT("Matrix dtor");
   }
 
+  // Copy constructor. Deep copies all the data and then remaps recieved RowProxys to current buffer. This way it saves the original row order.
   // Question: how to avoid calling base constructor here? I mean, is there a way to construct objects inside std::copy with their copy ctor?
   //                                      |
   //                                      ⌄
@@ -111,9 +130,10 @@ class Matrix
   {
     DEBUG_PRINT("Matrix copy ctor");
     deepcopy_from(other);
-    adopt_rows();
+    remap_rows();
   }
 
+  // Copy assignment
   Matrix& operator= (const Matrix& other)
   {
     DEBUG_PRINT("Matrix copy=");
@@ -122,24 +142,24 @@ class Matrix
       return *this;
 
     //delete[] rows_;         // No need for that
-    //delete[] data_;         // Dims are equal, so we do not need to allocate new buffer
-    //data_{new T[size()]};   // We can simply rewrite the old one
-    
-    //rows_{new RowProxy[n]}; // Also there is no need to allocate new RowProxys 
-                              // Because size_t(T), n , m are equal for both matrices
+    //delete[] data_;         // sizeof(T), n , m are equal for both matrices,
+                              // so we do not need to allocate new buffers.
+    //data_{new T[size()]};   // We can simply rewrite the old ones    
+    //rows_{new RowProxy[n]}; // Again, remap_rows saves the original row order
 
     deepcopy_from(other);
-    adopt_rows();
-
+    remap_rows();
     return *this;
   }
 
+  // Move ctor. Steals other's data and and then remaps RowProxys to current buffer
   Matrix(Matrix&& other) noexcept: data_(std::move(other.data_)), rows_(std::move(other.rows_))
   {
     DEBUG_PRINT("Matrix move ctor");
-    adopt_rows();
+    remap_rows();
   }
 
+  // Move assignment. Does the same as Move ctor
   Matrix& operator= (Matrix&& other) noexcept
   {
     DEBUG_PRINT("Matrix move=");
@@ -149,11 +169,12 @@ class Matrix
 
     data_ = std::move(other.data_);
     rows_ = std::move(other.rows_);
-    adopt_rows();
+    remap_rows();
 
     return *this;
   }
 
+  // Returns row proxy lvalue so the row can be acessed
   RowProxy&  operator[] (size_t i) const &
   {
     DEBUG_PRINT("RowProxy& Matrix::operator[] &");
@@ -161,24 +182,29 @@ class Matrix
     return rows_.get()[i];
   }
   
+  // Return row proxy rvalue if needed
   RowProxy&& operator[] (size_t i) const &&
   {
     DEBUG_PRINT("moving |");
     return std::move((*this)[i]);
   }
 
+  // And here's the main feature of this complicated matrix:
+  // O(1) row swap!
   Matrix& swap_rows(size_t r1, size_t r2) &
   {
     std::swap((*this)[r1], (*this)[r2]);
     return *this;
   }
 
+  // The same but with rvalue matrix
   Matrix&& swap_rows(size_t r1, size_t r2) &&
   {
     return std::move(swap_rows(r1, r2));
   }
 };
 
+// Just a dump
 template<typename T, size_t n, size_t m>
 inline std::ostream& operator<<(std::ostream& os, Matrix<T, n, m>& mat)
   {
