@@ -45,16 +45,19 @@ class Matrix
     public:
     RowProxy(T* parent_buf=nullptr, size_t ofs=0) noexcept: ofs_(ofs), buf_(parent_buf) {}
 
-    T&  operator[] (size_t k) const &
+    const T&  operator[] (size_t k) const &
     {
-      DEBUG_PRINT("T& RowProxy::operator[] &");
       if(k >= m) throw;
       return *(buf_ + ofs_ + k);
     }
-    
-    T&& operator[] (size_t k) const &&
+
+    T& operator[] (size_t k) &
     {
-      DEBUG_PRINT("moving |");
+      return (*this)[k];
+    }
+    
+    T&& operator[] (size_t k) &&
+    {
       return std::move((*this)[k]);
     }
 
@@ -174,19 +177,26 @@ class Matrix
   }
 
   // Returns row proxy lvalue so the row can be acessed
-  RowProxy&  operator[] (size_t i) const &
+  const RowProxy&  operator[] (size_t i) const &
   {
-    DEBUG_PRINT("RowProxy& Matrix::operator[] &");
     if(i >= n) throw;
     return rows_.get()[i];
   }
   
-  // Return row proxy rvalue if needed
-  RowProxy&& operator[] (size_t i) const &&
+  RowProxy&  operator[] (size_t i) &
   {
-    DEBUG_PRINT("moving |");
+    return (*this)[i];
+  }
+
+  // Return row proxy rvalue if needed
+  RowProxy&& operator[] (size_t i) &&
+  {
     return std::move((*this)[i]);
   }
+
+  // Question: do i need
+  // const RowProxy&& operator[] (size_t i) const &&
+  // And therefore const T&& RowProxy::operator[] const && ?
 
   // And here's the main feature of this complicated matrix:
   // O(1) row swap!
