@@ -12,9 +12,89 @@ static bool fit(double a, double b)
 
 #define EXPECT_FIT(a,b) EXPECT_TRUE(fit((a), (b)))
 
+
+TEST(Matrix, Swap)
+{
+  std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
+  Matrix<double, 3, 3> mat {data};
+  EXPECT_EQ(mat[0][0], 1);
+  mat.swap_rows(0, 1);
+  EXPECT_EQ(mat[0][0], 4);
+}
+
+TEST(Matrix, CopyCtorSwap)
+{
+  std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
+  Matrix<double, 3, 3> mat {data};
+  Matrix<double, 3, 3> copy1 = mat;
+  
+  EXPECT_EQ(copy1[0][0], 1);
+  EXPECT_EQ(mat[0][0], 1);
+  copy1.swap_rows(0, 1);
+  EXPECT_EQ(copy1[0][0], 4);
+  EXPECT_EQ(mat[0][0], 1);
+
+  mat.swap_rows(0,2);
+  EXPECT_EQ(mat[0][0], 7);
+  Matrix<double, 3, 3> copy2 = mat;
+  EXPECT_EQ(copy2[0][0], 7);
+}
+
+TEST(Matrix, CopyAssignSwap)
+{
+  std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
+  std::vector<double> empt {0, 0, 0, 0, 0, 0, 0, 0, 0};
+  Matrix<double, 3, 3> mat {data};
+  Matrix<double, 3, 3> copy1 {empt};
+  copy1.swap_rows(0,1);
+  copy1 = mat;
+  
+  
+  EXPECT_EQ(copy1[0][0], 1);
+  EXPECT_EQ(mat[0][0], 1);
+  copy1.swap_rows(0, 1);
+  EXPECT_EQ(copy1[0][0], 4);
+  EXPECT_EQ(mat[0][0], 1);
+
+  mat.swap_rows(0,2);
+  EXPECT_EQ(mat[0][0], 7);
+  Matrix<double, 3, 3> copy2 {empt};
+  copy2.swap_rows(0,1);
+  copy2 = mat;
+  EXPECT_EQ(copy2[0][0], 7);
+}
+
+TEST(Matrix, MoveCtorSwap)
+{
+  std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
+  
+  Matrix<double, 3, 3> newm = Matrix<double, 3, 3>{data}.swap_rows(0,1).swap_rows(1,2);
+
+  EXPECT_EQ(newm[0][0], 4);
+  EXPECT_EQ(newm[1][0], 7);
+  EXPECT_EQ(newm[2][0], 1);
+}
+
+TEST(Matrix, MoveAssignSwap)
+{
+  std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
+  std::vector<double> empt {0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+  Matrix<double, 3, 3> newm = empt;
+  newm.swap_rows(0, 1);
+
+  newm = Matrix<double, 3, 3>{data}.swap_rows(0,1).swap_rows(1,2);
+
+  EXPECT_EQ(newm[0][0], 4);
+  EXPECT_EQ(newm[1][0], 7);
+  EXPECT_EQ(newm[2][0], 1);
+}
+
+// GENERATED TESTS
+
 TEST(Matrix, Determinant0)
 {
-  std::vector<double> data {1, 0, -2, 0.5, 3, 1, 0, 2, -1};
+  std::vector<double> data { 1, 0, -2, 0.5, 3, 1, 0, 2, -1 };
   Matrix<double, 3, 3> mat = data;
   EXPECT_FIT(det(mat), -7);
 }
