@@ -5,7 +5,7 @@ def gen_test(dim, val, res, suite, name):
   print(f"  std::vector<double> data ", end=" ")
   print_val(val)
   print(";")
-  print(f"  Matrix<double, {dim}, {dim}> mat = data;")
+  print(f"  Matrix<double> mat ({dim}, {dim}, data);")
   print(f"  EXPECT_FIT(det(mat), {res});")
   print("}")
 

@@ -15,7 +15,7 @@ static bool fit(double a, double b)
 TEST(Matrix, Access)
 {
   std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
-  Matrix<double, 3, 3> mat {data};
+  Matrix<double> mat {3, 3, data};
 
   EXPECT_EQ(mat[2][2], 9);
   mat[2][2] = 42;
@@ -25,7 +25,7 @@ TEST(Matrix, Access)
 TEST(Matrix, ConstAccess)
 {
   std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
-  const Matrix<double, 3, 3> mat {data};
+  const Matrix<double> mat {3, 3, data};
 
   EXPECT_EQ(mat[2][2], 9);
   //mat[2][2] = 42;      // Doesn't compile, great! 
@@ -36,15 +36,15 @@ TEST(Matrix, RvalueAccess)
 {
   std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-  double a = Matrix<double, 3, 3>{data}.swap_rows(0,1).swap_rows(1,2)[2][2];
+  double a = Matrix<double>{3, 3, data}.swap_rows(0,1).swap_rows(1,2)[2][2];
   EXPECT_EQ(a, 3);
 }
 
 TEST(Matrix, CopyCtorSwap)
 {
   std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
-  Matrix<double, 3, 3> mat {data};
-  Matrix<double, 3, 3> copy1 = mat;
+  Matrix<double> mat {3, 3, data};
+  Matrix<double> copy1 = mat;
   
   EXPECT_EQ(copy1[0][0], 1);
   EXPECT_EQ(mat[0][0], 1);
@@ -54,7 +54,7 @@ TEST(Matrix, CopyCtorSwap)
 
   mat.swap_rows(0,2);
   EXPECT_EQ(mat[0][0], 7);
-  Matrix<double, 3, 3> copy2 = mat;
+  Matrix<double> copy2 = mat;
   EXPECT_EQ(copy2[0][0], 7);
 }
 
@@ -62,8 +62,8 @@ TEST(Matrix, CopyAssignSwap)
 {
   std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
   std::vector<double> empt {0, 0, 0, 0, 0, 0, 0, 0, 0};
-  Matrix<double, 3, 3> mat {data};
-  Matrix<double, 3, 3> copy1 {empt};
+  Matrix<double> mat {3, 3, data};
+  Matrix<double> copy1 {3, 3, empt};
   copy1.swap_rows(0,1);
   copy1 = mat;
   
@@ -76,7 +76,7 @@ TEST(Matrix, CopyAssignSwap)
 
   mat.swap_rows(0,2);
   EXPECT_EQ(mat[0][0], 7);
-  Matrix<double, 3, 3> copy2 {empt};
+  Matrix<double> copy2 {3, 3, empt};
   copy2.swap_rows(0,1);
   copy2 = mat;
   EXPECT_EQ(copy2[0][0], 7);
@@ -86,7 +86,7 @@ TEST(Matrix, MoveCtorSwap)
 {
   std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
   
-  Matrix<double, 3, 3> newm = Matrix<double, 3, 3>{data}.swap_rows(0,1).swap_rows(1,2);
+  Matrix<double> newm = Matrix<double>{3, 3, data}.swap_rows(0,1).swap_rows(1,2);
 
   EXPECT_EQ(newm[0][0], 4);
   EXPECT_EQ(newm[1][0], 7);
@@ -98,10 +98,10 @@ TEST(Matrix, MoveAssignSwap)
   std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
   std::vector<double> empt {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-  Matrix<double, 3, 3> newm = empt;
+  Matrix<double> newm {3, 3, empt};
   newm.swap_rows(0, 1);
 
-  newm = Matrix<double, 3, 3>{data}.swap_rows(0,1).swap_rows(1,2);
+  newm = Matrix<double>{3, 3, data}.swap_rows(0,1).swap_rows(1,2);
 
   EXPECT_EQ(newm[0][0], 4);
   EXPECT_EQ(newm[1][0], 7);
@@ -110,17 +110,10 @@ TEST(Matrix, MoveAssignSwap)
 
 // GENERATED TESTS
 
-TEST(Matrix, Determinant0)
-{
-  std::vector<double> data { 1, 0, -2, 0.5, 3, 1, 0, 2, -1 };
-  Matrix<double, 3, 3> mat = data;
-  EXPECT_FIT(det(mat), -7);
-}
-
 TEST(Matrix, Determinant1)
 {
   std::vector<double> data  { 42.0 };
-  Matrix<double, 1, 1> mat = data;
+  Matrix<double> mat (1, 1, data);
   EXPECT_FIT(det(mat), 42.0);
 }
 
@@ -128,7 +121,7 @@ TEST(Matrix, Determinant1)
 TEST(Matrix, Determinant2)
 {
   std::vector<double> data  { -42.0 };
-  Matrix<double, 1, 1> mat = data;
+  Matrix<double> mat (1, 1, data);
   EXPECT_FIT(det(mat), -42.0);
 }
 
@@ -136,7 +129,7 @@ TEST(Matrix, Determinant2)
 TEST(Matrix, Determinant3)
 {
   std::vector<double> data  { 0.0 };
-  Matrix<double, 1, 1> mat = data;
+  Matrix<double> mat (1, 1, data);
   EXPECT_FIT(det(mat), 0.0);
 }
 
@@ -144,7 +137,7 @@ TEST(Matrix, Determinant3)
 TEST(Matrix, Determinant4)
 {
   std::vector<double> data  { 1.0,  0.0,  0.0,  1.0 };
-  Matrix<double, 2, 2> mat = data;
+  Matrix<double> mat (2, 2, data);
   EXPECT_FIT(det(mat), 1.0);
 }
 
@@ -152,7 +145,7 @@ TEST(Matrix, Determinant4)
 TEST(Matrix, Determinant5)
 {
   std::vector<double> data  { 0.0,  1.0,  1.0,  0.0 };
-  Matrix<double, 2, 2> mat = data;
+  Matrix<double> mat (2, 2, data);
   EXPECT_FIT(det(mat), -1.0);
 }
 
@@ -160,7 +153,7 @@ TEST(Matrix, Determinant5)
 TEST(Matrix, Determinant6)
 {
   std::vector<double> data  { 1.0,  0.0,  0.0,  0.0 };
-  Matrix<double, 2, 2> mat = data;
+  Matrix<double> mat (2, 2, data);
   EXPECT_FIT(det(mat), 0.0);
 }
 
@@ -168,7 +161,7 @@ TEST(Matrix, Determinant6)
 TEST(Matrix, Determinant7)
 {
   std::vector<double> data  { 11.0,  -2.0,  7.0,  5.0 };
-  Matrix<double, 2, 2> mat = data;
+  Matrix<double> mat (2, 2, data);
   EXPECT_FIT(det(mat), 69.0);
 }
 
@@ -176,7 +169,7 @@ TEST(Matrix, Determinant7)
 TEST(Matrix, Determinant8)
 {
   std::vector<double> data  { 1.0,  0.0,  0.0,  0.0,  1.0,  0.0,  0.0,  0.0,  1.0 };
-  Matrix<double, 3, 3> mat = data;
+  Matrix<double> mat (3, 3, data);
   EXPECT_FIT(det(mat), 1.0);
 }
 
@@ -184,7 +177,7 @@ TEST(Matrix, Determinant8)
 TEST(Matrix, Determinant9)
 {
   std::vector<double> data  { 0.0,  0.0,  1.0,  1.0,  0.0,  0.0,  0.0,  1.0,  0.0 };
-  Matrix<double, 3, 3> mat = data;
+  Matrix<double> mat (3, 3, data);
   EXPECT_FIT(det(mat), 1.0);
 }
 
@@ -192,7 +185,7 @@ TEST(Matrix, Determinant9)
 TEST(Matrix, Determinant10)
 {
   std::vector<double> data  { 3.0,  3.0,  -1.0,  4.0,  1.0,  3.0,  1.0,  -2.0,  -2.0 };
-  Matrix<double, 3, 3> mat = data;
+  Matrix<double> mat (3, 3, data);
   EXPECT_FIT(det(mat), 54.0);
 }
 
@@ -200,7 +193,7 @@ TEST(Matrix, Determinant10)
 TEST(Matrix, Determinant11)
 {
   std::vector<double> data  { 1.0,  2.0,  3.0,  4.0,  5.0,  6.0,  7.0,  8.0,  9.0 };
-  Matrix<double, 3, 3> mat = data;
+  Matrix<double> mat (3, 3, data);
   EXPECT_FIT(det(mat), 0.0);
 }
 
@@ -208,7 +201,7 @@ TEST(Matrix, Determinant11)
 TEST(Matrix, Determinant12)
 {
   std::vector<double> data  { 1.0,  0.0,  0.0,  0.0,  0.0,  1.0,  0.0,  0.0,  0.0,  0.0,  21.0,  0.0,  0.0,  0.0,  0.0,  2.0 };
-  Matrix<double, 4, 4> mat = data;
+  Matrix<double> mat (4, 4, data);
   EXPECT_FIT(det(mat), 42.0);
 }
 
@@ -216,7 +209,7 @@ TEST(Matrix, Determinant12)
 TEST(Matrix, Determinant13)
 {
   std::vector<double> data  { -2.0,  1.0,  3.0,  2.0,  3.0,  0.0,  -1.0,  2.0,  -5.0,  2.0,  3.0,  0.0,  4.0,  -1.0,  2.0,  -3.0 };
-  Matrix<double, 4, 4> mat = data;
+  Matrix<double> mat (4, 4, data);
   EXPECT_FIT(det(mat), -80.0);
 }
 
@@ -224,7 +217,7 @@ TEST(Matrix, Determinant13)
 TEST(Matrix, Determinant14)
 {
   std::vector<double> data  { -1.0,  -4.0,  0.0,  -2.0,  0.0,  1.0,  5.0,  4.0,  3.0,  1.0,  1.0,  0.0,  -1.0,  0.0,  2.0,  2.0 };
-  Matrix<double, 4, 4> mat = data;
+  Matrix<double> mat (4, 4, data);
   EXPECT_FIT(det(mat), -12.0);
 }
 
@@ -232,7 +225,7 @@ TEST(Matrix, Determinant14)
 TEST(Matrix, Determinant15)
 {
   std::vector<double> data  { -1.0,  -4.0,  0.0,  0.0,  0.0,  1.0,  1.0,  5.0,  3.0,  1.0,  7.0,  1.0,  -1.0,  0.0,  4.0,  2.0 };
-  Matrix<double, 4, 4> mat = data;
+  Matrix<double> mat (4, 4, data);
   EXPECT_FIT(det(mat), 324.0);
 }
 
@@ -240,7 +233,7 @@ TEST(Matrix, Determinant15)
 TEST(Matrix, Determinant16)
 {
   std::vector<double> data  { -1.0,  -4.0,  0.0,  0.0,  -2.0,  0.0,  1.0,  1.0,  5.0,  4.0,  3.0,  1.0,  7.0,  1.0,  0.0,  0.0,  0.0,  2.0,  0.0,  -3.0,  -1.0,  0.0,  4.0,  2.0,  2.0 };
-  Matrix<double, 5, 5> mat = data;
+  Matrix<double> mat (5, 5, data);
   EXPECT_FIT(det(mat), 996.0);
 }
 
