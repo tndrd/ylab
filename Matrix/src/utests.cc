@@ -12,14 +12,32 @@ static bool fit(double a, double b)
 
 #define EXPECT_FIT(a,b) EXPECT_TRUE(fit((a), (b)))
 
-
-TEST(Matrix, Swap)
+TEST(Matrix, Access)
 {
   std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
   Matrix<double, 3, 3> mat {data};
-  EXPECT_EQ(mat[0][0], 1);
-  mat.swap_rows(0, 1);
-  EXPECT_EQ(mat[0][0], 4);
+
+  EXPECT_EQ(mat[2][2], 9);
+  mat[2][2] = 42;
+  EXPECT_EQ(mat[2][2], 42);
+}
+
+TEST(Matrix, ConstAccess)
+{
+  std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
+  const Matrix<double, 3, 3> mat {data};
+
+  EXPECT_EQ(mat[2][2], 9);
+  //mat[2][2] = 42;      // Doesn't compile, great! 
+  //mat.swap_rows(1, 2); // 
+}
+
+TEST(Matrix, RvalueAccess)
+{
+  std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+  double a = Matrix<double, 3, 3>{data}.swap_rows(0,1).swap_rows(1,2)[2][2];
+  EXPECT_EQ(a, 3);
 }
 
 TEST(Matrix, CopyCtorSwap)
