@@ -36,6 +36,8 @@ class Matrix
   // So we need to inherit the original row order by remapping copied/moved
   // rowproxys to current data buffer. remap_rows() does it.  
 
+  static_assert((n > 0) && (m > 0), "Wrong Matrix size");
+
   // Class that stores row offset ofs_ in data buffer buf_
   class RowProxy
   {
