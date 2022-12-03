@@ -53,11 +53,21 @@ class Matrix
       return *(buf_ + ofs_ + k);
     }
 
+    const T&  operator[] (size_t k) const &
+    {
+      if(k >= m) throw;
+      return *(buf_ + ofs_ + k);
+    }
+
+    // Question: This is a previous version and it caused segfaults.
+    /*
     const T& operator[] (size_t k) const &
     {
       return (*this)[k];
     }
-    
+    */
+    // Why current version works fine but previous didn't?
+
     T&& operator[] (size_t k) &&
     {
       return std::move((*this)[k]);
@@ -184,21 +194,16 @@ class Matrix
     if(i >= n) throw;
     return rows_.get()[i];
   }
-  
-  const RowProxy& operator[] (size_t i) const &
-  {
-    return (*this)[i];
-  }
 
-  // Question: This is a previous version and it caused segfaults.
-  /* 
   const RowProxy& operator[] (size_t i) const &
   {
     if(i >= n) throw;
     return rows_.get()[i];
   }
-  
-  RowProxy& operator[] (size_t i) &
+
+  // Question: This is a previous version and it caused segfaults.
+  /*
+  const RowProxy& operator[] (size_t i) const &
   {
     return (*this)[i];
   }
