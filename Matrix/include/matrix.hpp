@@ -59,15 +59,6 @@ class Matrix
       return *(buf_ + ofs_ + k);
     }
 
-    // Question: This is a previous version and it caused segfaults.
-    /*
-    const T& operator[] (size_t k) const &
-    {
-      return (*this)[k];
-    }
-    */
-    // Why current version works fine but previous didn't?
-
     T&& operator[] (size_t k) &&
     {
       return std::move((*this)[k]);
@@ -211,15 +202,6 @@ class Matrix
     if(i >= n_) throw;
     return rows_.get()[i];
   }
-
-  // Question: This is a previous version and it caused segfaults.
-  /*
-  const RowProxy& operator[] (size_t i) const &
-  {
-    return (*this)[i];
-  }
-  */
-  // Why current version works fine but previous didn't?
 
   // Return row proxy rvalue if needed
   RowProxy&& operator[] (size_t i) &&
