@@ -232,6 +232,21 @@ class Matrix
   {
     return std::move(swap_rows(r1, r2));
   }
+
+  std::ostream& dump(std::ostream& os) const
+  {
+    for (size_t i = 0; i < n_; ++i)
+    {
+      os << "{ ";
+      for (size_t k = 0; k < m_; ++k)
+      {
+        os << (*this)[i][k] << " ";
+      }
+      os << "}" << std::endl;
+    }
+
+    return os;
+  }
 };
 
 template<typename T>
@@ -285,22 +300,9 @@ double det(const Matrix<T>& mat)
 
 // Just a dump
 template<typename T>
-std::ostream& operator<<(std::ostream& os, Matrix<T>& mat)
+std::ostream& operator<<(std::ostream& os, const Matrix<T>& mat)
 {
-
-  size_t n_ = mat.dims().n;
-  size_t m_ = mat.dims().m;
-
-  for (size_t i = 0; i < n_; ++i)
-  {
-    os << "{ ";
-    for (size_t k = 0; k < m_; ++k)
-    {
-      os << mat[i][k] << " ";
-    }
-    os << "}" << std::endl;
-  }
-  return os;
+  return mat.dump(os);
 }
 
 }
