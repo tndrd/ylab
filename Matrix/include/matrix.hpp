@@ -76,8 +76,8 @@ class Matrix
   };
   
   private:
-  std::unique_ptr<T> data_;         // Buffer that stores all the matrice content
-  std::unique_ptr<RowProxy> rows_;  // Array of Proxys that point to beginning of each row inside the data_
+  std::unique_ptr<T[]> data_;         // Buffer that stores all the matrice content
+  std::unique_ptr<RowProxy[]> rows_;  // Array of Proxys that point to beginning of each row inside the data_
   size_t n_;  // Dimensions
   size_t m_;  //
   
@@ -127,7 +127,7 @@ class Matrix
   bool is_sqare() const noexcept {return n_ == m_;}
 
   // Constructs empty matrix
-  Matrix(size_t n, size_t m): n_(n), m_(m), data_{new T[n*m]}, rows_{new RowProxy[n]}
+  Matrix(size_t n, size_t m): n_(n), m_(m), data_{std::make_unique<T[]>(n*m)}, rows_{std::make_unique<RowProxy[]>(n)}
   {
     if((n == 0) || (m == 0)) throw;
 
@@ -151,7 +151,7 @@ class Matrix
   // Question: how to avoid calling default constructor here? I mean, is there a way to construct objects inside std::copy with their copy ctor?
   //                                                                      |
   //                                                                      ⌄
-  Matrix(const Matrix& other): n_(other.n_), m_(other.m_), data_{new T[other.size()]}, rows_{new RowProxy[other.n_]}
+  Matrix(const Matrix& other): n_(other.n_), m_(other.m_), data_{std::make_unique<T[]>(other.size())}, rows_{std::make_unique<RowProxy[]>(other.n_)}
   {
     DEBUG_PRINT("Matrix copy ctor");
     deepcopy_from(other);
@@ -166,13 +166,17 @@ class Matrix
     if (this == &other)
       return *this;
 
-    if((n_ != other.n_) || (m_ != other.m_)) throw;
+    if((n_ != other.n_) || (m_ != other.m_))
+    {
+      n_ = other.n_;
+      m_ = other.m_;
+      data_ = std::move(std::make_unique<T[]>(size()));
+      rows_ = std::move(std::make_unique<RowProxy[]>(n_));  
+    }
 
-    //delete[] rows_;         // No need for that
-    //delete[] data_;         // sizeof(T), n_ , m_ are equal for both matrices,
-                              // so we do not need to allocate new buffers.
-    //data_{new T[size()]};   // We can simply rewrite the old ones    
-    //rows_{new RowProxy[n_]}; // Again, remap_rows saves the original row order
+    // No need for reallocation if sizeof(T), n_ , m_ are equal for both matrices
+    // We can simply rewrite the old ones in this case
+    // Again, remap_rows saves the original row order
 
     deepcopy_from(other);
     remap_rows();
