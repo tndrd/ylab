@@ -209,10 +209,6 @@ class Matrix
     return std::move((*this)[i]);
   }
 
-  // Question: do i need
-  // const RowProxy&& operator[] (size_t i) const &&
-  // And therefore const T&& RowProxy::operator[] const && ?
-
   // And here's the main feature of this complicated matrix:
   // O(1) row swap!
   Matrix& swap_rows(size_t r1, size_t r2) &
