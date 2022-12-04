@@ -148,7 +148,7 @@ class Matrix
   }
 
   // Copy constructor. Deep copies all the data and then remaps recieved RowProxys to current buffer. This way it saves the original row order.
-  // Question: how to avoid calling base constructor here? I mean, is there a way to construct objects inside std::copy with their copy ctor?
+  // Question: how to avoid calling default constructor here? I mean, is there a way to construct objects inside std::copy with their copy ctor?
   //                                                                      |
   //                                                                      ⌄
   Matrix(const Matrix& other): n_(other.n_), m_(other.m_), data_{new T[other.size()]}, rows_{new RowProxy[other.n_]}
