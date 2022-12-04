@@ -58,6 +58,25 @@ TEST(Matrix, CopyCtorSwap)
   EXPECT_EQ(copy2[0][0], 7);
 }
 
+TEST(Matrix, CopyAssignDifferentDims)
+{
+  std::vector<double> data1 {1, 2, 3, 4, 5, 6, 7, 8, 9};
+  std::vector<double> data2 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+  Matrix<double> mat_old {3, 3, data1};
+  Matrix<double> mat_new {5, 2, data2};
+
+  mat_old.swap_rows(0,1).swap_rows(1,2);
+  mat_new.swap_rows(0,4).swap_rows(0,2);
+
+  mat_old = mat_new;
+  
+  EXPECT_EQ(mat_old[2][1], 1);
+  EXPECT_EQ(mat_old[4][1], 0);
+
+  EXPECT_EQ(mat_new[2][1], 1);
+  EXPECT_EQ(mat_new[4][1], 0);
+}
+
 TEST(Matrix, CopyAssignSwap)
 {
   std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9};
