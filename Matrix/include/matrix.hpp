@@ -44,24 +44,28 @@ class Matrix
     size_t sz_;
     T* buf_;
 
+    T& at(size_t k) const
+    {
+      if(k >= sz_) throw;
+      return *(buf_ + ofs_ + k);
+    }
+
     public:
     RowProxy(T* parent_buf=nullptr, size_t ofs=0, size_t sz=0) noexcept: ofs_(ofs), buf_(parent_buf), sz_(sz) {}
 
     T&  operator[] (size_t k) &
     {
-      if(k >= sz_) throw;
-      return *(buf_ + ofs_ + k);
+      return at(k);
     }
 
     const T&  operator[] (size_t k) const &
     {
-      if(k >= sz_) throw;
-      return *(buf_ + ofs_ + k);
+      return at(k);
     }
 
     T&& operator[] (size_t k) &&
     {
-      return std::move((*this)[k]);
+      return std::move(at(k));
     }
 
     // Switches to another buffer without losing its order in row array
@@ -101,6 +105,13 @@ class Matrix
     assert((other.n_ == n_) && (other.m_ == m_));
     std::copy(other.data_.get(), other.data_.get() + size(), data_.get());
     std::copy(other.rows_.get(), other.rows_.get() + n_, rows_.get());
+  }
+
+  // Returns row proxy lvalue ref so the row can be acessed
+  RowProxy& at(size_t i) const
+  {
+    if(i >= n_) throw;
+    return rows_.get()[i];
   }
 
   public:
@@ -190,23 +201,22 @@ class Matrix
     return *this;
   }
 
-  // Returns row proxy lvalue so the row can be acessed
+  // Returns lvalue ref if called by non-const matrix
   RowProxy& operator[] (size_t i) &
   {
-    if(i >= n_) throw;
-    return rows_.get()[i];
+    return at(i);
   }
 
+  // Returns const lvalue ref if called by const matrix
   const RowProxy& operator[] (size_t i) const &
   {
-    if(i >= n_) throw;
-    return rows_.get()[i];
+    return at(i);
   }
 
-  // Return row proxy rvalue if needed
+  // Returns row proxy rvalue rvalue if called by rvalue matrix
   RowProxy&& operator[] (size_t i) &&
   {
-    return std::move((*this)[i]);
+    return std::move(at(i));
   }
 
   // And here's the main feature of this complicated matrix:
