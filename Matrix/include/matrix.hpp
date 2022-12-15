@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <cassert>
+#include <exception>
 
 namespace HWMatrix
 {
@@ -46,7 +47,7 @@ class Matrix
 
     T& at(size_t k) const
     {
-      if(k >= sz_) throw;
+      if(k >= sz_) throw std::out_of_range("Column index out of range");
       return *(buf_ + ofs_ + k);
     }
 
@@ -110,7 +111,7 @@ class Matrix
   // Returns row proxy lvalue ref so the row can be acessed
   RowProxy& at(size_t i) const
   {
-    if(i >= n_) throw;
+    if(i >= n_) throw std::out_of_range("Row index out of range");
     return rows_.get()[i];
   }
 
@@ -129,7 +130,7 @@ class Matrix
   // Constructs empty matrix
   Matrix(size_t n, size_t m): n_(n), m_(m), data_{std::make_unique<T[]>(n*m)}, rows_{std::make_unique<RowProxy[]>(n)}
   {
-    if((n == 0) || (m == 0)) throw;
+    if((n == 0) || (m == 0)) throw std::invalid_argument("Attempt to create an object with incorrect dimensions");
 
     DEBUG_PRINT("Matrix ctor");
     order_rows();
@@ -138,7 +139,7 @@ class Matrix
   // Constructs empty matrix and fills it with values in row-major order
   Matrix(size_t n, size_t m, std::vector<T>& values): Matrix(n, m)
   {
-    if (values.size() != size()) throw;
+    if (values.size() != size()) throw std::invalid_argument("Vector size does not fit matrix dimensions");;
     std::copy(values.begin(), values.end(), data_.get());
   }
 
@@ -256,7 +257,8 @@ class Matrix
 template<typename T>
 double det(const Matrix<T>& mat)
 {
-  if(!mat.is_sqare()) throw;
+  if(!mat.is_sqare())
+    throw std::invalid_argument("Input Matrix object is not square");
 
   size_t n_ = mat.dims().n;
 
