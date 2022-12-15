@@ -78,7 +78,7 @@ class Matrix
     }
   }
 
-  // Remaps rowproxys to current data_ buffer
+  // Remaps rowproxys to current data_buffer
   void remap_rows()
   {
     for (size_t row = 0; row < n_; ++row)
@@ -175,24 +175,10 @@ class Matrix
   }
 
   // Move ctor
-  Matrix(Matrix&& other) noexcept: n_(other.n_), m_(other.m_), data_(std::move(other.data_)), rows_(std::move(other.rows_))
-  {
-
-  }
+  Matrix(Matrix&& other) noexcept = default;
 
   // Move assignment
-  Matrix& operator= (Matrix&& other) noexcept
-  {
-    if (this == &other)
-      return *this;
-    
-    std::swap(n_, other.n_);
-    std::swap(m_, other.m_);
-    data_ = std::move(other.data_);
-    rows_ = std::move(other.rows_);
-
-    return *this;
-  }
+  Matrix& operator= (Matrix&& other) noexcept = default;
 
   // Returns lvalue ref if called by non-const matrix
   RowProxy& operator[] (size_t i) &
