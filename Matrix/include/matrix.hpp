@@ -9,19 +9,6 @@
 namespace HWMatrix
 {
 
-//#define DEBUG
-
-#ifdef DEBUG
-inline void DEBUG_PRINT(const char* str)
-{
-  std::cout << str << std::endl;
-}
-#endif
-
-#ifndef DEBUG
-inline void DEBUG_PRINT(const char* str) {}
-#endif
-
 template<typename T>
 class Matrix
 {
@@ -134,7 +121,6 @@ class Matrix
     if((n == 0) || (m == 0))
       throw std::invalid_argument("Attempt to create an object with incorrect dimensions");
 
-    DEBUG_PRINT("Matrix ctor");
     order_rows();
   }
 
@@ -153,10 +139,7 @@ class Matrix
     read_from(values);
   }
 
-  ~Matrix()
-  {
-    DEBUG_PRINT("Matrix dtor");
-  }
+  virtual ~Matrix() { }
 
   // Copy constructor. Deep copies all the data and then remaps recieved RowProxys to current buffer. This way it saves the original row order.
   // Question: how to avoid calling default constructor here? I mean, is there a way to construct objects inside std::copy with their copy ctor?
@@ -164,7 +147,6 @@ class Matrix
   //                                                                      ⌄
   Matrix(const Matrix& other): n_(other.n_), m_(other.m_), data_{std::make_unique<T[]>(other.size())}, rows_{std::make_unique<RowProxy[]>(other.n_)}
   {
-    DEBUG_PRINT("Matrix copy ctor");
     deepcopy_from(other);
     remap_rows();
   }
@@ -172,8 +154,6 @@ class Matrix
   // Copy assignment
   Matrix& operator= (const Matrix& other)
   {
-    DEBUG_PRINT("Matrix copy=");
-
     if (this == &other)
       return *this;
 
@@ -197,14 +177,12 @@ class Matrix
   // Move ctor
   Matrix(Matrix&& other) noexcept: n_(other.n_), m_(other.m_), data_(std::move(other.data_)), rows_(std::move(other.rows_))
   {
-    DEBUG_PRINT("Matrix move ctor");
+
   }
 
   // Move assignment
   Matrix& operator= (Matrix&& other) noexcept
   {
-    DEBUG_PRINT("Matrix move=");
-
     if (this == &other)
       return *this;
     
