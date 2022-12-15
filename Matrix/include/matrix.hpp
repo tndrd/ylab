@@ -124,6 +124,7 @@ class Matrix
     order_rows();
   }
 
+  // Fills the matrix with values in row-major order
   Matrix& read_from(const std::vector<T>& values)
   {
     if (values.size() != size())
@@ -139,10 +140,11 @@ class Matrix
     read_from(values);
   }
 
+  // Virtual dtor
   virtual ~Matrix() { }
 
   // Copy constructor. Deep copies all the data and then remaps recieved RowProxys to current buffer. This way it saves the original row order.
-  // Question: how to avoid calling default constructor here? I mean, is there a way to construct objects inside std::copy with their copy ctor?
+  // Future feature: make some magic with new to avoid calling default constructor here.
   //                                                                      |
   //                                                                      ⌄
   Matrix(const Matrix& other): n_(other.n_), m_(other.m_), data_{std::make_unique<T[]>(other.size())}, rows_{std::make_unique<RowProxy[]>(other.n_)}
