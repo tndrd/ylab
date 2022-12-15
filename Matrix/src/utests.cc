@@ -120,6 +120,100 @@ TEST(Matrix, MoveAssignSwap)
   EXPECT_EQ(newm[2][0], 1);
 }
 
+TEST(Matrix, ConstructExceptions)
+{
+  EXPECT_THROW(({
+    Matrix<double> newm {0, 1};
+  }), std::invalid_argument);
+
+  EXPECT_THROW(({
+    Matrix<double> newm {1, 0};
+  }), std::invalid_argument);
+
+  EXPECT_THROW(({
+    Matrix<double> newm {0, 0};
+  }), std::invalid_argument);  
+}
+
+TEST(Matrix, VectorConstructExceptions)
+{
+  std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+
+  EXPECT_NO_THROW(({
+    Matrix<double> newm {1, 12, data};
+  }));
+
+  EXPECT_NO_THROW(({
+    Matrix<double> newm {12, 1, data};
+  }));
+
+  EXPECT_NO_THROW(({
+    Matrix<double> newm {6, 2, data};
+  }));
+
+  EXPECT_NO_THROW(({
+    Matrix<double> newm {2, 6, data};
+  }));
+
+  EXPECT_NO_THROW(({
+    Matrix<double> newm {3, 4, data};
+  }));
+
+  EXPECT_NO_THROW(({
+    Matrix<double> newm {4, 3, data};
+  }));
+
+  EXPECT_THROW(({
+    Matrix<double> newm {1, 1, data};
+  }), std::invalid_argument);
+
+  EXPECT_THROW(({
+    Matrix<double> newm {5, 2, data};
+  }), std::invalid_argument);
+
+  EXPECT_THROW(({
+    Matrix<double> newm {42, 13, data};
+  }), std::invalid_argument);  
+}
+
+TEST(Matrix, AccessExceptions)
+{
+  Matrix<double> test {3, 4};
+
+  EXPECT_THROW(({
+    test[3][2];
+  }), std::out_of_range);
+
+  EXPECT_THROW(({
+    test[2][4];
+  }), std::out_of_range);
+
+  EXPECT_THROW(({
+    test[0][42];
+  }), std::out_of_range);
+
+  EXPECT_THROW(({
+    test[42][0];
+  }), std::out_of_range);
+
+  EXPECT_NO_THROW(({
+    test[0][0];
+  }));
+
+  EXPECT_NO_THROW(({
+    test[2][3];
+  }));
+}
+
+TEST(Matrix, DeterminantExceptions)
+{
+  Matrix<double> test {3, 4};
+
+  EXPECT_THROW(({
+    det(test);
+  }), std::invalid_argument);
+}
+
 // GENERATED TESTS
 
 TEST(Matrix, Determinant1)
