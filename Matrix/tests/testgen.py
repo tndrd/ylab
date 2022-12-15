@@ -6,7 +6,7 @@ def gen_test(dim, val, res, suite, name):
   print_val(val)
   print(";")
   print(f"  Matrix<double> mat ({dim}, {dim}, data);")
-  print(f"  EXPECT_FIT(det(mat), {res});")
+  print(f"  EXPECT_NEAR(det(mat), {res}, ABS_ERROR);")
   print("}")
 
 def print_val(val):
