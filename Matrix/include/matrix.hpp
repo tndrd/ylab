@@ -5,6 +5,7 @@
 #include <vector>
 #include <cassert>
 #include <exception>
+#include <type_traits>
 
 namespace HWMatrix
 {
@@ -24,6 +25,9 @@ class Matrix
   // We want to save the original row order after copying/moving
   // So we need to inherit the original row order by remapping copied/moved
   // rowproxys to current data buffer. remap_rows() does it.  
+
+  // Stored type must be default constructible to create empty matrix
+  static_assert(std::is_default_constructible<T>::value, "Type must be default constructible");
 
   // Class that stores row offset ofs_ in data buffer buf_
   class RowProxy
@@ -64,7 +68,7 @@ class Matrix
   };
   
   private:
-  std::unique_ptr<T[]> data_;         // Buffer that stores all the matrice content
+  std::unique_ptr<T[]> data_;         // Buffer that stores all the matrix content
   std::unique_ptr<RowProxy[]> rows_;  // Array of Proxys that point to beginning of each row inside the data_
   size_t n_;  // Dimensions
   size_t m_;  //
