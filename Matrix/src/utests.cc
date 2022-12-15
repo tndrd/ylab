@@ -3,14 +3,7 @@
 
 using namespace HWMatrix;
 
-static double FIT_TOLERANCE = 0.00001; 
-
-static bool fit(double a, double b)
-{
-  return std::abs(a - b) < FIT_TOLERANCE;
-}
-
-#define EXPECT_FIT(a,b) EXPECT_TRUE(fit((a), (b)))
+static const double ABS_ERROR = 0.000001; 
 
 TEST(Matrix, Access)
 {
@@ -133,7 +126,7 @@ TEST(Matrix, Determinant1)
 {
   std::vector<double> data  { 42.0 };
   Matrix<double> mat (1, 1, data);
-  EXPECT_FIT(det(mat), 42.0);
+  EXPECT_NEAR(det(mat), 42.0, ABS_ERROR);
 }
 
 
@@ -141,7 +134,7 @@ TEST(Matrix, Determinant2)
 {
   std::vector<double> data  { -42.0 };
   Matrix<double> mat (1, 1, data);
-  EXPECT_FIT(det(mat), -42.0);
+  EXPECT_NEAR(det(mat), -42.0, ABS_ERROR);
 }
 
 
@@ -149,7 +142,7 @@ TEST(Matrix, Determinant3)
 {
   std::vector<double> data  { 0.0 };
   Matrix<double> mat (1, 1, data);
-  EXPECT_FIT(det(mat), 0.0);
+  EXPECT_NEAR(det(mat), 0.0, ABS_ERROR);
 }
 
 
@@ -157,7 +150,7 @@ TEST(Matrix, Determinant4)
 {
   std::vector<double> data  { 1.0,  0.0,  0.0,  1.0 };
   Matrix<double> mat (2, 2, data);
-  EXPECT_FIT(det(mat), 1.0);
+  EXPECT_NEAR(det(mat), 1.0, ABS_ERROR);
 }
 
 
@@ -165,7 +158,7 @@ TEST(Matrix, Determinant5)
 {
   std::vector<double> data  { 0.0,  1.0,  1.0,  0.0 };
   Matrix<double> mat (2, 2, data);
-  EXPECT_FIT(det(mat), -1.0);
+  EXPECT_NEAR(det(mat), -1.0, ABS_ERROR);
 }
 
 
@@ -173,7 +166,7 @@ TEST(Matrix, Determinant6)
 {
   std::vector<double> data  { 1.0,  0.0,  0.0,  0.0 };
   Matrix<double> mat (2, 2, data);
-  EXPECT_FIT(det(mat), 0.0);
+  EXPECT_NEAR(det(mat), 0.0, ABS_ERROR);
 }
 
 
@@ -181,7 +174,7 @@ TEST(Matrix, Determinant7)
 {
   std::vector<double> data  { 11.0,  -2.0,  7.0,  5.0 };
   Matrix<double> mat (2, 2, data);
-  EXPECT_FIT(det(mat), 69.0);
+  EXPECT_NEAR(det(mat), 69.0, ABS_ERROR);
 }
 
 
@@ -189,7 +182,7 @@ TEST(Matrix, Determinant8)
 {
   std::vector<double> data  { 1.0,  0.0,  0.0,  0.0,  1.0,  0.0,  0.0,  0.0,  1.0 };
   Matrix<double> mat (3, 3, data);
-  EXPECT_FIT(det(mat), 1.0);
+  EXPECT_NEAR(det(mat), 1.0, ABS_ERROR);
 }
 
 
@@ -197,7 +190,7 @@ TEST(Matrix, Determinant9)
 {
   std::vector<double> data  { 0.0,  0.0,  1.0,  1.0,  0.0,  0.0,  0.0,  1.0,  0.0 };
   Matrix<double> mat (3, 3, data);
-  EXPECT_FIT(det(mat), 1.0);
+  EXPECT_NEAR(det(mat), 1.0, ABS_ERROR);
 }
 
 
@@ -205,7 +198,7 @@ TEST(Matrix, Determinant10)
 {
   std::vector<double> data  { 3.0,  3.0,  -1.0,  4.0,  1.0,  3.0,  1.0,  -2.0,  -2.0 };
   Matrix<double> mat (3, 3, data);
-  EXPECT_FIT(det(mat), 54.0);
+  EXPECT_NEAR(det(mat), 54.0, ABS_ERROR);
 }
 
 
@@ -213,7 +206,7 @@ TEST(Matrix, Determinant11)
 {
   std::vector<double> data  { 1.0,  2.0,  3.0,  4.0,  5.0,  6.0,  7.0,  8.0,  9.0 };
   Matrix<double> mat (3, 3, data);
-  EXPECT_FIT(det(mat), 0.0);
+  EXPECT_NEAR(det(mat), 0.0, ABS_ERROR);
 }
 
 
@@ -221,7 +214,7 @@ TEST(Matrix, Determinant12)
 {
   std::vector<double> data  { 1.0,  0.0,  0.0,  0.0,  0.0,  1.0,  0.0,  0.0,  0.0,  0.0,  21.0,  0.0,  0.0,  0.0,  0.0,  2.0 };
   Matrix<double> mat (4, 4, data);
-  EXPECT_FIT(det(mat), 42.0);
+  EXPECT_NEAR(det(mat), 42.0, ABS_ERROR);
 }
 
 
@@ -229,7 +222,7 @@ TEST(Matrix, Determinant13)
 {
   std::vector<double> data  { -2.0,  1.0,  3.0,  2.0,  3.0,  0.0,  -1.0,  2.0,  -5.0,  2.0,  3.0,  0.0,  4.0,  -1.0,  2.0,  -3.0 };
   Matrix<double> mat (4, 4, data);
-  EXPECT_FIT(det(mat), -80.0);
+  EXPECT_NEAR(det(mat), -80.0, ABS_ERROR);
 }
 
 
@@ -237,7 +230,7 @@ TEST(Matrix, Determinant14)
 {
   std::vector<double> data  { -1.0,  -4.0,  0.0,  -2.0,  0.0,  1.0,  5.0,  4.0,  3.0,  1.0,  1.0,  0.0,  -1.0,  0.0,  2.0,  2.0 };
   Matrix<double> mat (4, 4, data);
-  EXPECT_FIT(det(mat), -12.0);
+  EXPECT_NEAR(det(mat), -12.0, ABS_ERROR);
 }
 
 
@@ -245,7 +238,7 @@ TEST(Matrix, Determinant15)
 {
   std::vector<double> data  { -1.0,  -4.0,  0.0,  0.0,  0.0,  1.0,  1.0,  5.0,  3.0,  1.0,  7.0,  1.0,  -1.0,  0.0,  4.0,  2.0 };
   Matrix<double> mat (4, 4, data);
-  EXPECT_FIT(det(mat), 324.0);
+  EXPECT_NEAR(det(mat), 324.0, ABS_ERROR);
 }
 
 
@@ -253,7 +246,7 @@ TEST(Matrix, Determinant16)
 {
   std::vector<double> data  { -1.0,  -4.0,  0.0,  0.0,  -2.0,  0.0,  1.0,  1.0,  5.0,  4.0,  3.0,  1.0,  7.0,  1.0,  0.0,  0.0,  0.0,  2.0,  0.0,  -3.0,  -1.0,  0.0,  4.0,  2.0,  2.0 };
   Matrix<double> mat (5, 5, data);
-  EXPECT_FIT(det(mat), 996.0);
+  EXPECT_NEAR(det(mat), 996.0, ABS_ERROR);
 }
 
 int main(int argc, char **argv) {
