@@ -32,7 +32,7 @@ class Matrix
   // Class that stores row offset ofs_ in data buffer buf_
   class RowProxy
   {
-    size_t  ofs_;
+    size_t ofs_;
     size_t sz_;
     T* buf_;
 
@@ -43,14 +43,15 @@ class Matrix
     }
 
     public:
-    RowProxy(T* parent_buf=nullptr, size_t ofs=0, size_t sz=0) noexcept: ofs_(ofs), buf_(parent_buf), sz_(sz) {}
+    RowProxy(T* parent_buf=nullptr, size_t ofs=0, size_t sz=0) noexcept:
+      ofs_{ofs}, buf_{parent_buf}, sz_{sz} {}
 
-    T&  operator[] (size_t k) &
+    T& operator[] (size_t k) &
     {
       return at(k);
     }
 
-    const T&  operator[] (size_t k) const &
+    const T& operator[] (size_t k) const &
     {
       return at(k);
     }
@@ -73,7 +74,9 @@ class Matrix
   size_t n_;  // Dimensions
   size_t m_;  //
   
-  // Fills rows so first row proxy point to first row in data_ and so on 
+  // Fills rows so first row proxy points to first row in data_ and so on 
+  // Disclaimer: I know that this method is not except-safe and copy&swap trick may be used here, but I don't want to
+  // use it and create excessive copies due to privacy that grants that this method will be used in an except-safe way
   void order_rows()
   {
     for (size_t row = 0; row < n_; ++row)
@@ -83,6 +86,8 @@ class Matrix
   }
 
   // Remaps rowproxys to current data_buffer
+  // Disclaimer: I know that this method is not except-safe and copy&swap trick may be used here, but I don't want to
+  // use it and create excessive copies due to privacy that grants that this method will be used in an except-safe way
   void remap_rows()
   {
     for (size_t row = 0; row < n_; ++row)
@@ -92,12 +97,26 @@ class Matrix
   }
 
   // Deep copies all the content and all the proxies from other matrix
+  // Disclaimer: I know that this method is not except-safe and copy&swap trick may be used here, but I don't want to
+  // use it and create excessive copies due to privacy that grants that this method will be used in an except-safe way
   void deepcopy_from(const Matrix& other)
   {
-    if((other.n_ != n_) || (other.m_ != m_))
+    if ((other.n_ != n_) || (other.m_ != m_))
       throw std::invalid_argument("Attempt to deepcopy from Matrix with another size");
+    
     std::copy(other.data_.get(), other.data_.get() + size(), data_.get());
-    std::copy(other.rows_.get(), other.rows_.get() + n_, rows_.get());
+    std::copy(other.rows_.get(), other.rows_.get() + n_,     rows_.get());
+  }
+
+  // Fills the matrix with values in row-major order
+  // Disclaimer: I know that this method is not except-safe and copy&swap trick may be used here, but I don't want to
+  // use it and create excessive copies due to privacy that grants that this method will be used in an except-safe way
+  void read_from(const std::vector<T>& values)
+  {
+    if (values.size() != size())
+      throw std::invalid_argument("Vector size does not fit the matrix dimensions");;
+    
+    std::copy(values.begin(), values.end(), data_.get());
   }
 
   // Returns row proxy lvalue ref so the row can be acessed
@@ -120,22 +139,16 @@ class Matrix
   bool is_sqare() const noexcept {return n_ == m_;}
 
   // Constructs empty matrix
-  Matrix(size_t n, size_t m): n_(n), m_(m), data_{std::make_unique<T[]>(n*m)}, rows_{std::make_unique<RowProxy[]>(n)}
+  Matrix(size_t n, size_t m):
+    n_(n),
+    m_(m),
+    data_{std::make_unique<T[]>(n * m)},
+    rows_{std::make_unique<RowProxy[]>(n)}
   {
     if((n == 0) || (m == 0))
       throw std::invalid_argument("Attempt to create an object with incorrect dimensions");
 
     order_rows();
-  }
-
-  // Fills the matrix with values in row-major order
-  Matrix& read_from(const std::vector<T>& values)
-  {
-    if (values.size() != size())
-      throw std::invalid_argument("Vector size does not fit matrix dimensions");;
-    
-    std::copy(values.begin(), values.end(), data_.get());
-    return *this;
   }
 
   // Constructs empty matrix and fills it with values in row-major order
@@ -144,47 +157,33 @@ class Matrix
     read_from(values);
   }
 
-  // Virtual dtor
-  virtual ~Matrix() { }
-
   // Copy constructor. Deep copies all the data and then remaps recieved RowProxys to current buffer. This way it saves the original row order.
-  // Future feature: make some magic with new to avoid calling default constructor here.
-  //                                                                      |
-  //                                                                      ⌄
-  Matrix(const Matrix& other): n_(other.n_), m_(other.m_), data_{std::make_unique<T[]>(other.size())}, rows_{std::make_unique<RowProxy[]>(other.n_)}
+  // Future feature: make some magic with new to avoid calling default constructor for each item.
+  Matrix(const Matrix& other): Matrix(other.n_, other.m_)
   {
     deepcopy_from(other);
     remap_rows();
   }
 
   // Copy assignment
+  // Exception-safe, copy&swap trick is used
   Matrix& operator= (const Matrix& other)
   {
     if (this == &other)
       return *this;
 
-    if((n_ != other.n_) || (m_ != other.m_))
-    {
-      n_ = other.n_;
-      m_ = other.m_;
-      data_ = std::move(std::make_unique<T[]>(size()));
-      rows_ = std::move(std::make_unique<RowProxy[]>(n_));  
-    }
+    Matrix tmp {other};
+    std::swap(*this, tmp);
 
-    // No need for reallocation if sizeof(T), n_ , m_ are equal for both matrices
-    // We can simply rewrite the old ones in this case
-    // Again, remap_rows saves the original row order
-
-    deepcopy_from(other);
-    remap_rows();
     return *this;
   }
 
-  // Move ctor
+  // Move ctor & assignment
   Matrix(Matrix&& other) noexcept = default;
-
-  // Move assignment
   Matrix& operator= (Matrix&& other) noexcept = default;
+
+  // Virtual dtor
+  virtual ~Matrix() {}
 
   // Returns lvalue ref if called by non-const matrix
   RowProxy& operator[] (size_t i) &
@@ -198,7 +197,7 @@ class Matrix
     return at(i);
   }
 
-  // Returns row proxy rvalue rvalue if called by rvalue matrix
+  // Returns row proxy rvalue ref if called by rvalue matrix
   RowProxy&& operator[] (size_t i) &&
   {
     return std::move(at(i));
@@ -225,18 +224,16 @@ double det(const Matrix<T>& mat)
   if(!mat.is_sqare())
     throw std::invalid_argument("Input Matrix object is not square");
 
-  size_t n_ = mat.dims().n;
-
   Matrix<T> copy {mat};
+  size_t n = copy.dims().n;
+  size_t swaps = 0;
 
-  size_t n_swaps = 0;
-
-  for (size_t col = 0; col < n_; ++col)
+  for (size_t col = 0; col < n; ++col)
   {
     bool found = false; 
     size_t row = col;
 
-    for(; row < n_; ++row)
+    for(; row < n; ++row)
     {
       if (copy[row][col] != 0)
       {
@@ -245,24 +242,24 @@ double det(const Matrix<T>& mat)
       }
     }
 
-    if (!found) {return 0;}
+    if (!found) return 0;
 
     copy.swap_rows(col, row);
-    n_swaps += !!(col - row);
+    swaps += !!(col - row);
 
-    for (size_t lower_row = col + 1; lower_row < n_; ++lower_row)
+    for (size_t lower_row = col + 1; lower_row < n; ++lower_row)
     {
       T coeff = copy[lower_row][col] / copy[col][col]; 
-      for(int k = col; k < n_; ++k)
+      for(int k = col; k < n; ++k)
       {
         copy[lower_row][k] -= coeff * copy[col][k];
       }
     }
   }
 
-  double determinant = 1 - static_cast<int>(2 * (n_swaps % 2));
+  double determinant = 1 - static_cast<int>(2 * (swaps % 2));
 
-  for(size_t i = 0; i < n_; ++i)
+  for(size_t i = 0; i < n; ++i)
   {
     determinant *= copy[i][i];
   }
