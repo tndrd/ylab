@@ -87,7 +87,7 @@ class Matrix
   {
     for (size_t row = 0; row < n_; ++row)
     {
-      (*this)[row] = {(*this).data_.get(), row * m_, m_};
+      (*this)[row] = {data_.get(), row * m_, m_};
     }
   }
 
@@ -103,7 +103,8 @@ class Matrix
   // Deep copies all the content and all the proxies from other matrix
   void deepcopy_from(const Matrix& other)
   {
-    assert((other.n_ == n_) && (other.m_ == m_));
+    if((other.n_ != n_) || (other.m_ != m_))
+      throw std::invalid_argument("Attempt to deepcopy from Matrix with another size");
     std::copy(other.data_.get(), other.data_.get() + size(), data_.get());
     std::copy(other.rows_.get(), other.rows_.get() + n_, rows_.get());
   }
@@ -130,17 +131,26 @@ class Matrix
   // Constructs empty matrix
   Matrix(size_t n, size_t m): n_(n), m_(m), data_{std::make_unique<T[]>(n*m)}, rows_{std::make_unique<RowProxy[]>(n)}
   {
-    if((n == 0) || (m == 0)) throw std::invalid_argument("Attempt to create an object with incorrect dimensions");
+    if((n == 0) || (m == 0))
+      throw std::invalid_argument("Attempt to create an object with incorrect dimensions");
 
     DEBUG_PRINT("Matrix ctor");
     order_rows();
   }
 
-  // Constructs empty matrix and fills it with values in row-major order
-  Matrix(size_t n, size_t m, std::vector<T>& values): Matrix(n, m)
+  Matrix& read_from(const std::vector<T>& values)
   {
-    if (values.size() != size()) throw std::invalid_argument("Vector size does not fit matrix dimensions");;
+    if (values.size() != size())
+      throw std::invalid_argument("Vector size does not fit matrix dimensions");;
+    
     std::copy(values.begin(), values.end(), data_.get());
+    return *this;
+  }
+
+  // Constructs empty matrix and fills it with values in row-major order
+  Matrix(size_t n, size_t m, const std::vector<T>& values): Matrix(n, m)
+  {
+    read_from(values);
   }
 
   ~Matrix()
