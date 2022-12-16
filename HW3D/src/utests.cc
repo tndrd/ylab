@@ -3,7 +3,7 @@
 
 using namespace HW3D;
 
-#define EXPECT_FIT(a, b) EXPECT_TRUE(fit((a) , (b)))
+#define EXPECT_FIT(a, b) EXPECT_NEAR((a), (b), (FIT_TOLERANCE))
 
 //--------------------------------------------------------------------
 
