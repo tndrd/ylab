@@ -71,7 +71,6 @@ std::vector<int> count_intersections(const std::vector<Triangle3D>& triangles)
         intersections.push_back(i);
         break;
       }
-
     }
   }
 
