@@ -24,7 +24,7 @@ class Triangle3D final
   }
 
   // Returns plane of triangle
-  Plane3D get_plane() const noexcept
+  Plane3D get_plane() const
   {
     return {vertices_[0], vertices_[1], vertices_[2]};
   }
