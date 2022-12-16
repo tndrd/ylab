@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 #include "task_algorithm.hpp"
+#include "task.hpp"
+#include <fstream>
 
 using namespace HW3D;
 
@@ -1607,7 +1609,7 @@ TEST(AllTriangles, Intersection5)
 
 //--------------------------------------------------------------------
 
-TEST(Task, E2E)
+TEST(Task, E2E_0)
 {
   Point3D a1 {1, 0, 0};
   Point3D b1 {0, 1, 0};
@@ -1685,4 +1687,31 @@ TEST(Task, E2E)
   std::vector<int> answers_r {0, 2, 3, 4, 5, 6, 7, 8, 9};
 
   ASSERT_EQ(answers_c, answers_r);
+}
+
+TEST(Task, E2E_1)
+{
+  std::ifstream input("tests/intersections.test");
+  std::stringstream output;
+
+  size_t expected_output_length;
+  std::stringstream expected_output;
+  
+  task_e2e(input, output);  
+  input >> expected_output_length;
+
+  size_t result;
+  for (int i = 0; i < expected_output_length - 1; ++i)
+  {
+    input >> result;
+    expected_output << result << " ";
+  }
+
+  input >> result;
+  expected_output << result << std::endl;
+
+  auto got      = output.str();
+  auto expected = expected_output.str(); 
+
+  EXPECT_EQ(got, expected);
 }
