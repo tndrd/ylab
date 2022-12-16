@@ -11,7 +11,7 @@ namespace HW3D
 // Also contains intersection params (if exist)
 // Is returned by get_relation() function
 // This class is well-incapsulated, user won't ocassionaly change it
-class LineRelation
+class LineRelation final
 {
   public:
   enum State
@@ -22,27 +22,27 @@ class LineRelation
     NON_INTERSECTING 
   };
 
-  LineRelation(State state, double t1=NAN, double t2=NAN):
+  LineRelation(State state, double t1=NAN, double t2=NAN) noexcept:
   state_(state), t1_(t1), t2_(t2) {}
 
   private:
   State state_;
 
-  double t1_ = NAN;
-  double t2_ = NAN;
+  double t1_;
+  double t2_;
   
   public:
-  State  get_state() const { return state_; }
-  double get_t1()    const { return t1_; }
-  double get_t2()    const { return t2_; }
+  State  get_state() const noexcept { return state_; }
+  double get_t1()    const noexcept { return t1_; }
+  double get_t2()    const noexcept { return t2_; }
 };
 
 
-// Info about relationship between two lines
+// Info about relationship between two planes
 // Also contains intersection params (if exist)
 // Is returned by get_relation() function
 // This class is well-incapsulated, user won't ocassionaly change it
-class PlaneRelation
+class PlaneRelation final
 {
   public:
   enum State
@@ -52,20 +52,19 @@ class PlaneRelation
     INTERSECTING
   };
 
-  PlaneRelation(State state, double a=NAN, double b=NAN):
+  PlaneRelation(State state, double a=NAN, double b=NAN) noexcept:
   state_(state), a_(a), b_(b) {}
 
   private:
-
   State state_;
 
-  double a_ = NAN;
-  double b_ = NAN;
+  double a_;
+  double b_;
 
   public:
-  State  get_state() const { return state_; }
-  double get_a()     const { return a_; }
-  double get_b()     const { return b_; }
+  State  get_state() const noexcept { return state_; }
+  double get_a()     const noexcept { return a_; }
+  double get_b()     const noexcept { return b_; }
 };
 
 
@@ -76,7 +75,7 @@ class PlaneRelation
 // Otherwise they do not
 // Returns relationship info and intersection params (if exist)
 template<typename LineT1, typename LineT2>
-LineRelation get_line_relation(const LineT1& l1, const LineT2& l2)
+inline LineRelation get_line_relation(const LineT1& l1, const LineT2& l2) noexcept
 {
   using state_t = LineRelation;
 
@@ -100,8 +99,8 @@ LineRelation get_line_relation(const LineT1& l1, const LineT2& l2)
   double E = a2 * u;
   double F = u * u;
 
-  double t1 =  (B*E - C*D) / (A*C - B*B);
-  double t2 = -(B*D - A*E) / (A*C - B*B);
+  double t1 =  (B*E - C*D) / (A*C - B*B); // Zero-division is not possible, 
+  double t2 = -(B*D - A*E) / (A*C - B*B); // lines are not parallel
 
   if (!l1.check_param(t1) || !l2.check_param(t2))
     return {state_t::NON_INTERSECTING, t1, t2};
@@ -124,7 +123,7 @@ LineRelation get_line_relation(const LineT1& l1, const LineT2& l2)
 // We can find the intersection line with som formulas [Reference: GCT page 530]
 // Returns relationship info and intersection params (if exist)
 template<typename PlaneT1, typename PlaneT2>
-PlaneRelation get_plane_relation(const PlaneT1& p1, const PlaneT2& p2)
+inline PlaneRelation get_plane_relation(const PlaneT1& p1, const PlaneT2& p2) noexcept
 {
   using state_t = PlaneRelation;
 
@@ -143,24 +142,28 @@ PlaneRelation get_plane_relation(const PlaneT1& p1, const PlaneT2& p2)
   double a1  = s2 * (n1 * n2) - s1 * (n2 * n2);
   double b1  = s1 * (n1 * n2) - s2 * (n1 * n1);
 
-  double den = (n1 * n2) * (n1 * n2) - (n1 * n1) * (n2 * n2);
+  double den = (n1 * n2) * (n1 * n2) - (n1 * n1) * (n2 * n2); // Zero-division error is not possible,
+                                                              // planes are not parallel
 
-  return {state_t::INTERSECTING, a1/den, b1/den};
+  return {state_t::INTERSECTING, a1 / den, b1 / den};
 }
 
 // Returns the intersection point of two lines. Given lines should really intersect
 template<typename LineT1, typename LineT2>
-Point3D get_line_intersection(const LineT1& l1, const LineT2& l2, const LineRelation& relation)
+inline Point3D get_line_intersection(const LineT1& l1, const LineT2& l2, const LineRelation& relation)
 {
-  if (relation.get_state() != relation.INTERSECTING) throw;
+  if (relation.get_state() != relation.INTERSECTING)
+    throw std::invalid_argument("Attempt to intersect non-intersecting lines");
+  
   return l1.point_from_param(relation.get_t1());
 }
 
 // Returns the intersection line of two planes. Given planes should really intersect
 template<typename PlaneT1, typename PlaneT2>
-LineInf3D get_plane_intersection(const PlaneT1& p1, const PlaneT2& p2, const PlaneRelation& relation)
+inline LineInf3D get_plane_intersection(const PlaneT1& p1, const PlaneT2& p2, const PlaneRelation& relation)
 {
-  if (relation.get_state() != relation.INTERSECTING) throw;
+  if (relation.get_state() != relation.INTERSECTING)
+    throw std::invalid_argument("Attempt to intersect non-intersecting planes");
 
   Vec3D n1 = p1.get_n();
   Vec3D n2 = p2.get_n();

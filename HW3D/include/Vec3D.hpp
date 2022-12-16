@@ -11,7 +11,7 @@ namespace HW3D
 
 // Just a regular 3D vector
 // With overloaded vector operations
-struct Vec3D
+struct Vec3D final
 {
   double x = NAN;
   double y = NAN;

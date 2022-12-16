@@ -4,11 +4,10 @@ namespace HW3D
 {
 
 // Reference: [GCT page 265]
-bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
+bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2) noexcept
 {
-  
-  auto normals1 = tr1.get_edge_normals();
-  auto normals2 = tr2.get_edge_normals();
+  auto normals1 = get_edge_normals(tr1);
+  auto normals2 = get_edge_normals(tr2);
 
   for (int i = 0; i < 3; i++)
   {
@@ -45,6 +44,9 @@ bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
 
 std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& direction)
 {
+  if (direction == Vec3D{0, 0, 0})
+    throw std::invalid_argument("Given direction is zero");
+
   std::vector<double> projections;
 
   for (int i = 0; i < 3; i++)
@@ -60,7 +62,7 @@ std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& directio
 }
 
 // Reference: [GCT page 541]
-bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
+bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2) noexcept
 {
   Plane3D p1 = tr1.get_plane();
   Plane3D p2 = tr2.get_plane();
@@ -69,8 +71,8 @@ bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& t
 
   LineInf3D pil = get_plane_intersection(p1, p2, pi);
 
-  std::vector<double> intrs1 = tr1.intersect_with(pil);
-  std::vector<double> intrs2 = tr2.intersect_with(pil);
+  std::vector<double> intrs1 = intersect_with(tr1, pil);
+  std::vector<double> intrs2 = intersect_with(tr2, pil);
 
   // If triangle intersects infinite pil line, intersection count can be zero, two or three
   if (intrs1.size() < 2 || intrs2.size() < 2)
@@ -86,7 +88,7 @@ bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& t
   return intervals_intersect(min1, max1, min2, max2);
 }
 
-bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
+bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2) noexcept
 {
   Plane3D p1 = tr1.get_plane();
   Plane3D p2 = tr2.get_plane();
@@ -110,9 +112,9 @@ bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
     {
       return intersect_noncomplanar_triangles(tr1, tr2);
     }
-    default: throw;
   } 
 
+  return false;
 }
 
 

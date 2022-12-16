@@ -768,7 +768,7 @@ TEST(Triangle3D, Intersection1)
 
   LineInf3D li {p2 - p1, p1}; 
 
-  std::vector<double> intr_c = t.intersect_with(li);
+  std::vector<double> intr_c = intersect_with(t, li);
 
   ASSERT_EQ(intr_c.size(), 2);
   Point3D pi1 = li.point_from_param(intr_c[0]);
@@ -790,7 +790,7 @@ TEST(Triangle3D, Intersection2)
 
   LineInf3D li {p2 - p1, p1 + ofs}; 
 
-  std::vector<double> intr_c = t.intersect_with(li);
+  std::vector<double> intr_c = intersect_with(t, li);
 
   EXPECT_EQ(intr_c.size(), 0);
 }
@@ -805,7 +805,7 @@ TEST(Triangle3D, Intersection3)
 
   LineSeg3D ls {{-2, -2, -2}, {1, 1, 1}}; 
 
-  std::vector<double> intr_c = t.intersect_with(ls);
+  std::vector<double> intr_c = intersect_with(t, ls);
 
   EXPECT_EQ(intr_c.size(), 0);
 }
@@ -823,7 +823,7 @@ TEST(Triangle3D, Intersection4)
 
   LineInf3D li {p2 - p1, p1}; 
 
-  std::vector<double> intr_c = t.intersect_with(li);
+  std::vector<double> intr_c = intersect_with(t, li);
 
   ASSERT_EQ(intr_c.size(), 2);
 
@@ -849,7 +849,7 @@ TEST(Triangle3D, Intersection5)
 
   LineSeg3D li {p2 - (a / 2), p1 - (a / 2)}; 
 
-  std::vector<double> intr_c = t.intersect_with(li);
+  std::vector<double> intr_c = intersect_with(t, li);
 
   ASSERT_EQ(intr_c.size(), 1);
 
@@ -871,7 +871,7 @@ TEST(Triangle3D, Intersection6)
 
   LineInf3D li {p2 - p1, pt3}; 
 
-  std::vector<double> intr_c = t.intersect_with(li);
+  std::vector<double> intr_c = intersect_with(t, li);
 
   ASSERT_EQ(intr_c.size(), 2);
   
@@ -894,7 +894,7 @@ TEST(Triangle3D, Intersection7)
 
   LineInf3D li {p4 - p3, p3}; 
 
-  std::vector<double> intr_c = t.intersect_with(li);
+  std::vector<double> intr_c = intersect_with(t, li);
 
   ASSERT_EQ(intr_c.size(), 3);
 
@@ -917,7 +917,7 @@ TEST(Triangle3D, EdgeNormals1)
 
   Triangle3D t {pt1, pt2, pt3};
 
-  std::vector<Vec3D> normals = t.get_edge_normals();
+  std::vector<Vec3D> normals = get_edge_normals(t);
 
   ASSERT_EQ(normals.size(), 3);
 
@@ -938,7 +938,7 @@ TEST(Triangle3D, EdgeNormals2)
 
   Triangle3D t {pt1, pt2, pt3};
 
-  std::vector<Vec3D> normals = t.get_edge_normals();
+  std::vector<Vec3D> normals = get_edge_normals(t);
 
   ASSERT_EQ(normals.size(), 3);
 

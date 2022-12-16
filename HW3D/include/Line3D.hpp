@@ -27,28 +27,25 @@ class Line3D
   // The constructor is protected too
   // User needs to create one of childs to create a line
 
-  Line3D(const Vec3D& a, const Point3D& p): a_(a), p_(p) {}
+  Line3D(const Vec3D& a, const Point3D& p): a_(a), p_(p)
+  {
+    if (a_ == Vec3D{0, 0, 0}) throw std::invalid_argument("Line direction vector can not be zero");
+  }
+
+  // Protected dtor
+  ~Line3D() { }
 
   public:
 
-  Vec3D   get_a() const {return a_;}
-  Point3D get_p() const {return p_;}
+  Vec3D   get_a() const noexcept {return a_;}
+  Point3D get_p() const noexcept {return p_;}
 
-  Point3D point_from_param(double t) const
+  Point3D point_from_param(double t) const noexcept
   {
     return p_ + (a_ * t);
   }
 
-  double param_from_point(const Point3D& p) const
-  {
-    double t = ((p - p_) * a_) / (a_ * a_);
-
-    if (!(p == point_from_param(t))) throw;
-
-    return t;
-  }
-
-  bool is_parallel(const Line3D& l2) const
+  bool is_parallel(const Line3D& l2) const noexcept
   {
     return abseq(a_.normalize(), l2.a_.normalize());
   }
