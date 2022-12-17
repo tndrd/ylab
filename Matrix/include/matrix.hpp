@@ -272,6 +272,17 @@ inline double det(const Matrix<T>& mat)
   return determinant;
 }
 
+template<typename T>
+inline Matrix<T> identity_matrix(size_t n)
+{
+  Matrix<T> idmt(n, n);
+
+  for (int i = 0; i < n; ++i)
+    idmt[i][i] = 1;
+  
+  return idmt;
+}
+
 // Just a dump
 template<typename T>
 inline std::ostream& operator<<(std::ostream& os, const Matrix<T>& mat)
