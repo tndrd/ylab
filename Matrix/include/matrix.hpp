@@ -30,7 +30,7 @@ class Matrix
   static_assert(std::is_default_constructible<T>::value, "Type must be default constructible");
 
   // Class that stores row offset ofs_ in data buffer buf_
-  class RowProxy
+  class RowProxy final
   {
     size_t ofs_;
     size_t sz_;
@@ -126,6 +126,14 @@ class Matrix
     return rows_.get()[i];
   }
 
+  // And here's the main feature of this complicated matrix:
+  // O(1) row swap!
+  Matrix& basic_swap_rows(size_t r1, size_t r2) &
+  {
+    std::swap((*this)[r1], (*this)[r2]);
+    return *this;
+  }
+
   public:
 
   struct Dim
@@ -203,18 +211,16 @@ class Matrix
     return std::move(at(i));
   }
 
-  // And here's the main feature of this complicated matrix:
-  // O(1) row swap!
+  // lvalue Matrix rowswap
   Matrix& swap_rows(size_t r1, size_t r2) &
   {
-    std::swap((*this)[r1], (*this)[r2]);
-    return *this;
+    return basic_swap_rows(r1, r2);
   }
 
-  // The same but with rvalue matrix
+  // rvalue Matrix rowswap
   Matrix&& swap_rows(size_t r1, size_t r2) &&
   {
-    return std::move(swap_rows(r1, r2));
+    return std::move(basic_swap_rows(r1, r2));
   }
 };
 
