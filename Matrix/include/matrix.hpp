@@ -6,6 +6,7 @@
 #include <cassert>
 #include <exception>
 #include <type_traits>
+#include <cmath>
 
 namespace HWMatrix
 {
@@ -225,7 +226,7 @@ class Matrix
 };
 
 template<typename T>
-inline double det(const Matrix<T>& mat)
+inline double ge_det(const Matrix<T>& mat)
 {
   if(!mat.is_sqare())
     throw std::invalid_argument("Input Matrix object is not square");
@@ -272,6 +273,13 @@ inline double det(const Matrix<T>& mat)
   return determinant;
 }
 
+inline const double FIT_TOLERANCE = 0.00001;
+
+inline bool fit(double a, double b) noexcept
+{
+  return std::abs(a - b) < FIT_TOLERANCE;
+}
+
 template<typename T>
 inline Matrix<T> identity_matrix(size_t n)
 {
@@ -281,6 +289,98 @@ inline Matrix<T> identity_matrix(size_t n)
     idmt[i][i] = 1;
   
   return idmt;
+}
+
+template<typename T>
+inline double lu_det(const Matrix<T>& mat)
+{
+  if(!mat.is_sqare())
+    throw std::invalid_argument("Input Matrix object is not square");
+
+  size_t n = mat.dims().n;
+
+  Matrix<T> L = identity_matrix<T>(n); 
+  Matrix<T> U {n, n};
+
+  for (int i = 0; i < n; ++i)
+  {
+    for (int j = 0; j < n; ++j)
+    {
+      if (i <= j)
+      {
+        T val = mat[i][j];
+        for (int k = 0; k < i; ++k)
+          val -= L[i][k] * U[k][j];
+
+        if (i == j && val == 0) return 0;
+        
+        U[i][j] = val;
+      }
+      else
+      {
+        T val = mat[i][j];
+        for (int k = 0; k < j; ++k)
+          val -= L[i][k] * U[k][j];
+
+        L[i][j] = val / U[j][j];
+      }
+    }
+  }
+
+  double determinant = 1;
+
+  for (int i = 0; i < n; ++i)
+  {
+    determinant *= U[i][i];
+  }
+
+  return determinant;
+}
+
+template<typename T>
+inline double qr_det(const Matrix<T>& mat)
+{
+  if(!mat.is_sqare())
+    throw std::invalid_argument("Input Matrix object is not square");
+
+  size_t n = mat.dims().n;
+
+  Matrix<T> a {mat};
+  Matrix<T> q {n, n}; 
+  Matrix<T> r {n, n};
+
+  for (int k = 0; k < n; ++k)
+  {
+    T s = 0;
+    for (int j = 0; j < n; ++j) s += a[j][k] * a[j][k];
+    r[k][k] = std::sqrt(s);
+
+    for (int j = 0; j < n; ++j) q[j][k] = a[j][k] / r[k][k];
+
+    for (int i = k + 1; i < n; ++i)
+    {
+      T s = 0;
+      for (int j = 0; j < n; ++j) s += a[j][i] * q[j][k];
+      r[k][i] = s;
+
+      for (int j = 0; j < n; ++j) a[j][i] = a[j][i] - r[k][i] * q[j][k];
+    }
+  }
+
+  double determinant = 1;
+
+  for (int i = 0; i < n; ++i)
+  {
+    determinant *= r[i][i];
+  }
+
+  return determinant * qdet / std::abs(qdet);
+}
+
+template<typename T>
+inline double det(const Matrix<T>& mat)
+{
+  return qr_det(mat);
 }
 
 // Just a dump
