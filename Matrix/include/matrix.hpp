@@ -225,7 +225,7 @@ class Matrix
 };
 
 template<typename T>
-double det(const Matrix<T>& mat)
+inline double det(const Matrix<T>& mat)
 {
   if(!mat.is_sqare())
     throw std::invalid_argument("Input Matrix object is not square");
@@ -274,7 +274,7 @@ double det(const Matrix<T>& mat)
 
 // Just a dump
 template<typename T>
-std::ostream& operator<<(std::ostream& os, const Matrix<T>& mat)
+inline std::ostream& operator<<(std::ostream& os, const Matrix<T>& mat)
 {
   size_t n = mat.dims().n;
   size_t m = mat.dims().m;
