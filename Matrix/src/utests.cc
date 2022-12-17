@@ -1,9 +1,14 @@
 #include <gtest/gtest.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include "task.hpp"
 
 using namespace HWMatrix;
 
 static const double ABS_ERROR = 0.000001; 
+
+#define GTEST_COUT std::cerr << "[          ] [ INFO ]"
 
 TEST(Matrix, Access)
 {
@@ -216,131 +221,30 @@ TEST(Matrix, DeterminantExceptions)
 
 // GENERATED TESTS
 
-TEST(Matrix, Determinant1)
+TEST(Matrix, Determinant)
 {
-  std::vector<double> data  { 42.0 };
-  Matrix<double> mat (1, 1, data);
-  EXPECT_NEAR(det(mat), 42.0, ABS_ERROR);
-}
+  std::ifstream input("tests/build.test");
+  ASSERT_TRUE(input.good());
+  std::stringstream output;
+  
+  size_t n_tests;
+  input >> n_tests;
 
+  GTEST_COUT << "Testing " << n_tests << " determinant calculations" << std::endl;
 
-TEST(Matrix, Determinant2)
-{
-  std::vector<double> data  { -42.0 };
-  Matrix<double> mat (1, 1, data);
-  EXPECT_NEAR(det(mat), -42.0, ABS_ERROR);
-}
+  for (int i = 0; i < n_tests; ++i)
+  {
+    task(input, output);
+    
+    double result = std::stod(output.str());
+    output.clear();
+    output.str("");
 
+    double expected;
+    input >> expected;
 
-TEST(Matrix, Determinant3)
-{
-  std::vector<double> data  { 0.0 };
-  Matrix<double> mat (1, 1, data);
-  EXPECT_NEAR(det(mat), 0.0, ABS_ERROR);
-}
-
-
-TEST(Matrix, Determinant4)
-{
-  std::vector<double> data  { 1.0,  0.0,  0.0,  1.0 };
-  Matrix<double> mat (2, 2, data);
-  EXPECT_NEAR(det(mat), 1.0, ABS_ERROR);
-}
-
-
-TEST(Matrix, Determinant5)
-{
-  std::vector<double> data  { 0.0,  1.0,  1.0,  0.0 };
-  Matrix<double> mat (2, 2, data);
-  EXPECT_NEAR(det(mat), -1.0, ABS_ERROR);
-}
-
-
-TEST(Matrix, Determinant6)
-{
-  std::vector<double> data  { 1.0,  0.0,  0.0,  0.0 };
-  Matrix<double> mat (2, 2, data);
-  EXPECT_NEAR(det(mat), 0.0, ABS_ERROR);
-}
-
-
-TEST(Matrix, Determinant7)
-{
-  std::vector<double> data  { 11.0,  -2.0,  7.0,  5.0 };
-  Matrix<double> mat (2, 2, data);
-  EXPECT_NEAR(det(mat), 69.0, ABS_ERROR);
-}
-
-
-TEST(Matrix, Determinant8)
-{
-  std::vector<double> data  { 1.0,  0.0,  0.0,  0.0,  1.0,  0.0,  0.0,  0.0,  1.0 };
-  Matrix<double> mat (3, 3, data);
-  EXPECT_NEAR(det(mat), 1.0, ABS_ERROR);
-}
-
-
-TEST(Matrix, Determinant9)
-{
-  std::vector<double> data  { 0.0,  0.0,  1.0,  1.0,  0.0,  0.0,  0.0,  1.0,  0.0 };
-  Matrix<double> mat (3, 3, data);
-  EXPECT_NEAR(det(mat), 1.0, ABS_ERROR);
-}
-
-
-TEST(Matrix, Determinant10)
-{
-  std::vector<double> data  { 3.0,  3.0,  -1.0,  4.0,  1.0,  3.0,  1.0,  -2.0,  -2.0 };
-  Matrix<double> mat (3, 3, data);
-  EXPECT_NEAR(det(mat), 54.0, ABS_ERROR);
-}
-
-
-TEST(Matrix, Determinant11)
-{
-  std::vector<double> data  { 1.0,  2.0,  3.0,  4.0,  5.0,  6.0,  7.0,  8.0,  9.0 };
-  Matrix<double> mat (3, 3, data);
-  EXPECT_NEAR(det(mat), 0.0, ABS_ERROR);
-}
-
-
-TEST(Matrix, Determinant12)
-{
-  std::vector<double> data  { 1.0,  0.0,  0.0,  0.0,  0.0,  1.0,  0.0,  0.0,  0.0,  0.0,  21.0,  0.0,  0.0,  0.0,  0.0,  2.0 };
-  Matrix<double> mat (4, 4, data);
-  EXPECT_NEAR(det(mat), 42.0, ABS_ERROR);
-}
-
-
-TEST(Matrix, Determinant13)
-{
-  std::vector<double> data  { -2.0,  1.0,  3.0,  2.0,  3.0,  0.0,  -1.0,  2.0,  -5.0,  2.0,  3.0,  0.0,  4.0,  -1.0,  2.0,  -3.0 };
-  Matrix<double> mat (4, 4, data);
-  EXPECT_NEAR(det(mat), -80.0, ABS_ERROR);
-}
-
-
-TEST(Matrix, Determinant14)
-{
-  std::vector<double> data  { -1.0,  -4.0,  0.0,  -2.0,  0.0,  1.0,  5.0,  4.0,  3.0,  1.0,  1.0,  0.0,  -1.0,  0.0,  2.0,  2.0 };
-  Matrix<double> mat (4, 4, data);
-  EXPECT_NEAR(det(mat), -12.0, ABS_ERROR);
-}
-
-
-TEST(Matrix, Determinant15)
-{
-  std::vector<double> data  { -1.0,  -4.0,  0.0,  0.0,  0.0,  1.0,  1.0,  5.0,  3.0,  1.0,  7.0,  1.0,  -1.0,  0.0,  4.0,  2.0 };
-  Matrix<double> mat (4, 4, data);
-  EXPECT_NEAR(det(mat), 324.0, ABS_ERROR);
-}
-
-
-TEST(Matrix, Determinant16)
-{
-  std::vector<double> data  { -1.0,  -4.0,  0.0,  0.0,  -2.0,  0.0,  1.0,  1.0,  5.0,  4.0,  3.0,  1.0,  7.0,  1.0,  0.0,  0.0,  0.0,  2.0,  0.0,  -3.0,  -1.0,  0.0,  4.0,  2.0,  2.0 };
-  Matrix<double> mat (5, 5, data);
-  EXPECT_NEAR(det(mat), 996.0, ABS_ERROR);
+    EXPECT_EQ(expected, result);
+  }
 }
 
 int main(int argc, char **argv) {
