@@ -6,7 +6,7 @@
 
 using namespace HWMatrix;
 
-static const double ABS_ERROR = 0.000001; 
+static const double ABS_ERROR = 0.01; 
 
 #define GTEST_COUT std::cerr << "[          ] [ INFO ]"
 
@@ -243,7 +243,7 @@ TEST(Matrix, Determinant)
     double expected;
     input >> expected;
 
-    EXPECT_EQ(expected, result);
+    EXPECT_NEAR(expected, result, ABS_ERROR);
   }
 }
 
