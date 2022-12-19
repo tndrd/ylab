@@ -3,16 +3,16 @@
 namespace HWMatrix
 {
 
-Matrix<long double> read_matrix(std::istream& input)
+Matrix<double> read_matrix(std::istream& input)
 {
   size_t dim;
   input >> dim;
   assert(input.good());
 
   size_t size = dim * dim;
-  std::vector<long double> data;
+  std::vector<double> data;
 
-  long double val;
+  double val;
   for(int i = 0; i < size; ++i)
   {
     input >> val;
@@ -25,7 +25,7 @@ Matrix<long double> read_matrix(std::istream& input)
 
 void task(std::istream& input, std::ostream& output)
 {
-  Matrix<long double> mat = read_matrix(input);
+  Matrix<double> mat = read_matrix(input);
   output << det(mat) << std::endl;
 }
 
