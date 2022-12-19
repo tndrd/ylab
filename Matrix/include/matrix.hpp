@@ -7,6 +7,7 @@
 #include <exception>
 #include <type_traits>
 #include <cmath>
+#include <algorithm>
 
 namespace HWMatrix
 {
@@ -225,6 +226,13 @@ class Matrix
   }
 };
 
+inline const double FIT_TOLERANCE = 0.0001;
+
+inline bool fit(double a, double b) noexcept
+{
+  return std::abs(a - b) < FIT_TOLERANCE;
+}
+
 template<typename T>
 inline double ge_det(const Matrix<T>& mat)
 {
@@ -234,7 +242,8 @@ inline double ge_det(const Matrix<T>& mat)
   Matrix<T> copy {mat};
   size_t n = copy.dims().n;
   size_t swaps = 0;
-
+  double determinant = 1;
+  
   for (size_t col = 0; col < n; ++col)
   {
     bool found = false; 
@@ -242,18 +251,18 @@ inline double ge_det(const Matrix<T>& mat)
 
     for(; row < n; ++row)
     {
-      if (copy[row][col] != 0)
+      if (!fit(copy[row][col], 0))
       {
         found = true;
         break;
       }
     }
-
     if (!found) return 0;
 
     copy.swap_rows(col, row);
     swaps += !!(col - row);
-
+    determinant *= copy[col][col];
+    
     for (size_t lower_row = col + 1; lower_row < n; ++lower_row)
     {
       T coeff = copy[lower_row][col] / copy[col][col]; 
@@ -264,20 +273,8 @@ inline double ge_det(const Matrix<T>& mat)
     }
   }
 
-  double determinant = 1 - static_cast<int>(2 * (swaps % 2));
-
-  for(size_t i = 0; i < n; ++i)
-  {
-    determinant *= copy[i][i];
-  }
+  determinant *= 1 - static_cast<int>(2 * (swaps % 2));
   return determinant;
-}
-
-inline const double FIT_TOLERANCE = 0.00001;
-
-inline bool fit(double a, double b) noexcept
-{
-  return std::abs(a - b) < FIT_TOLERANCE;
 }
 
 template<typename T>
@@ -312,8 +309,7 @@ inline double lu_det(const Matrix<T>& mat)
         for (int k = 0; k < i; ++k)
           val -= L[i][k] * U[k][j];
 
-        if (i == j && val == 0) return 0;
-        
+        if (i == j && fit(val, 0)) return 0;
         U[i][j] = val;
       }
       else
@@ -366,8 +362,7 @@ inline double qr_det(const Matrix<T>& mat)
       for (int j = 0; j < n; ++j) a[j][i] = a[j][i] - r[k][i] * q[j][k];
     }
   }
-
-  double determinant = 1;
+  double determinant = 1 - 2*std::signbit(ge_det(q));
 
   for (int i = 0; i < n; ++i)
   {
@@ -380,7 +375,7 @@ inline double qr_det(const Matrix<T>& mat)
 template<typename T>
 inline double det(const Matrix<T>& mat)
 {
-  return qr_det(mat);
+  return ge_det(mat);
 }
 
 // Just a dump
