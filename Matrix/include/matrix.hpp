@@ -374,7 +374,7 @@ inline double qr_det(const Matrix<T>& mat)
     determinant *= r[i][i];
   }
 
-  return determinant * qdet / std::abs(qdet);
+  return determinant;
 }
 
 template<typename T>
