@@ -20,11 +20,6 @@ class Matrix
   // If we swap rows_[i] and rows_[j], rows_[i][k] will point to data_[j][k]
   // Wow! Rows i and j are now logically swapped (But physically not)!
 
-  // The next important part is copying/moving
-  // We want to save the original row order after copying/moving
-  // So we need to inherit the original row order by remapping copied/moved
-  // rowproxys to current data buffer. remap_rows() does it.  
-
   // Stored type must be default constructible to create empty matrix
   static_assert(std::is_default_constructible<T>::value, "Type must be default constructible");
 
@@ -59,12 +54,6 @@ class Matrix
     {
       return std::move(at(k));
     }
-
-    // Switches to another buffer without losing its order in row array
-    void change_parent(Matrix& new_parent) noexcept
-    {
-      buf_ = new_parent.data_.get();
-    }
   };
   
   private:
@@ -72,51 +61,6 @@ class Matrix
   std::unique_ptr<RowProxy[]> rows_;  // Array of Proxys that point to beginning of each row inside the data_
   size_t n_;  // Dimensions
   size_t m_;  //
-  
-  // Fills rows so first row proxy points to first row in data_ and so on 
-  // Disclaimer: I know that this method is not except-safe and copy&swap trick may be used here, but I don't want to
-  // use it and create excessive copies due to privacy that grants that this method will be used in an except-safe way
-  void order_rows()
-  {
-    for (size_t row = 0; row < n_; ++row)
-    {
-      (*this)[row] = {data_.get(), row * m_, m_};
-    }
-  }
-
-  // Remaps rowproxys to current data_buffer
-  // Disclaimer: I know that this method is not except-safe and copy&swap trick may be used here, but I don't want to
-  // use it and create excessive copies due to privacy that grants that this method will be used in an except-safe way
-  void remap_rows()
-  {
-    for (size_t row = 0; row < n_; ++row)
-    {
-      (*this)[row].change_parent(*this);
-    }
-  }
-
-  // Deep copies all the content and all the proxies from other matrix
-  // Disclaimer: I know that this method is not except-safe and copy&swap trick may be used here, but I don't want to
-  // use it and create excessive copies due to privacy that grants that this method will be used in an except-safe way
-  void deepcopy_from(const Matrix& other)
-  {
-    if ((other.n_ != n_) || (other.m_ != m_))
-      throw std::invalid_argument("Attempt to deepcopy from Matrix with another size");
-    
-    std::copy(other.data_.get(), other.data_.get() + size(), data_.get());
-    std::copy(other.rows_.get(), other.rows_.get() + n_,     rows_.get());
-  }
-
-  // Fills the matrix with values in row-major order
-  // Disclaimer: I know that this method is not except-safe and copy&swap trick may be used here, but I don't want to
-  // use it and create excessive copies due to privacy that grants that this method will be used in an except-safe way
-  void read_from(const std::vector<T>& values)
-  {
-    if (values.size() != size())
-      throw std::invalid_argument("Vector size does not fit the matrix dimensions");;
-    
-    std::copy(values.begin(), values.end(), data_.get());
-  }
 
   // Returns row proxy lvalue ref so the row can be acessed
   RowProxy& at(size_t i) const
@@ -131,6 +75,16 @@ class Matrix
   {
     std::swap((*this)[r1], (*this)[r2]);
     return *this;
+  }
+
+  template<typename CopyT>
+  void copy_from(const CopyT& other)
+  {
+    for (int i = 0; i < n_; ++i)
+    {
+      for(int k = 0; k < m_; ++k)
+        (*this)[i][k] = other[i][k];
+    }
   }
 
   public:
@@ -155,21 +109,33 @@ class Matrix
     if((n == 0) || (m == 0))
       throw std::invalid_argument("Attempt to create an object with incorrect dimensions");
 
-    order_rows();
+    for (size_t row = 0; row < n_; ++row)
+    {
+      (*this)[row] = {data_.get(), row * m_, m_};
+    }
   }
 
   // Constructs empty matrix and fills it with values in row-major order
   Matrix(size_t n, size_t m, const std::vector<T>& values): Matrix(n, m)
   {
-    read_from(values);
+    if (values.size() != size())
+      throw std::invalid_argument("Vector size does not fit the matrix dimensions");;
+    
+    std::copy(values.begin(), values.end(), data_.get());
   }
-
-  // Copy constructor. Deep copies all the data and then remaps recieved RowProxys to current buffer. This way it saves the original row order.
-  // Future feature: make some magic with new to avoid calling default constructor for each item.
+  
   Matrix(const Matrix& other): Matrix(other.n_, other.m_)
   {
-    deepcopy_from(other);
-    remap_rows();
+    copy_from(other);
+  }
+
+  template<typename CopyT>
+  Matrix& copy(const Matrix<CopyT>& src)
+  {
+    Matrix newm(src.dims().n, src.dims().m);
+    newm.copy_from(src);
+    std::swap(*this, newm);
+    return *this;
   }
 
   // Copy assignment
@@ -225,7 +191,7 @@ class Matrix
 
 // Just a dump
 template<typename T>
-inline std::ostream& operator<<(std::ostream& os, const Matrix<T>& mat)
+std::ostream& operator<<(std::ostream& os, const Matrix<T>& mat)
 {
   size_t n = mat.dims().n;
   size_t m = mat.dims().m;
