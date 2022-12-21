@@ -9,7 +9,7 @@ def gen_test(mat, det):
 
   for i in mat:
     for k in i:
-      test += f"{k} "
+      test += f"{int(k)} "
 
   test += str(det)
 
@@ -19,7 +19,7 @@ def gen_hardcoded_test(dim, val, res):
   test = f"{dim} "
   
   for v in val:
-    test += f"{v} "
+    test += f"{int(v)} "
   
   test += str(res)
   
