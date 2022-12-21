@@ -1,6 +1,7 @@
 #pragma once
 
-#include "matrix.hpp"
+#include "matrix_algorithm.hpp"
+#include <cassert>
 
 namespace HWMatrix {
 namespace Task {

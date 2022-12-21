@@ -1,6 +1,5 @@
 #include "e2etest.hpp"
 
-
 using namespace HWMatrix;
 
 TEST(Matrix, Access)
