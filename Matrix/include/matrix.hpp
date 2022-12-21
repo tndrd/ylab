@@ -80,6 +80,8 @@ class Matrix
 
   // Copies content from another type matrix
   // Is not except-safe, but used in an except-safe way in copy() and copy ctor
+  // Better implementation uses iterators and std::copy, but I am not confident
+  // that I properly know the details of implementing custom iterator
   template<typename CopyT>
   void copy_from(const Matrix<CopyT>& other)
   {
