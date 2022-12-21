@@ -1,14 +1,7 @@
-#include <gtest/gtest.h>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include "task.hpp"
+#include "e2etest.hpp"
+
 
 using namespace HWMatrix;
-
-static const double ABS_ERROR = 0.01; 
-
-#define GTEST_COUT std::cerr << "[          ] [ INFO ]"
 
 TEST(Matrix, Access)
 {
@@ -221,30 +214,10 @@ TEST(Matrix, DeterminantExceptions)
 
 // GENERATED TESTS
 
+static const double DOUBLE_DETERMINANT_TOLERANCE = 0.01;
 TEST(Matrix, Determinant)
 {
-  std::ifstream input("tests/build.test");
-  ASSERT_TRUE(input.good());
-  std::stringstream output;
-  
-  size_t n_tests;
-  input >> n_tests;
-
-  GTEST_COUT << "Testing " << n_tests << " determinant calculations" << std::endl;
-
-  for (int i = 0; i < n_tests; ++i)
-  {
-    task(input, output);
-    
-    double result = std::stod(output.str());
-    output.clear();
-    output.str("");
-
-    double expected;
-    input >> expected;
-
-    EXPECT_NEAR(expected, result, ABS_ERROR);
-  }
+  Testing::e2e_test<double>("tests/build.test", DOUBLE_DETERMINANT_TOLERANCE);
 }
 
 int main(int argc, char **argv) {
