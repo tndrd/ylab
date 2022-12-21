@@ -15,28 +15,15 @@ static bool fit(double a, double b) noexcept
 }
 
 template<typename T, typename EvalT=double>
-Matrix<EvalT> eval_matrix(const Matrix<T>& mat)
-{
-  size_t n = mat.dims().n;
-  Matrix<EvalT> eval {n, n};
-
-  for (int i = 0; i < n; ++i)
-  {
-    for(int k = 0; k < n; ++k)
-      eval[i][k] = mat[i][k];
-  }
-
-  return eval;
-}
-
-template<typename T, typename EvalT=double>
 EvalT ge_det(const Matrix<T>& mat)
 {
   if(!mat.is_sqare())
     throw std::invalid_argument("Input Matrix object is not square");
 
-  Matrix<EvalT> copy = eval_matrix(mat);
   size_t n = mat.dims().n;
+  
+  Matrix<EvalT> eval {n, n};
+  eval.copy(mat);
 
   size_t swaps = 0;
   EvalT determinant = 1;
@@ -48,7 +35,7 @@ EvalT ge_det(const Matrix<T>& mat)
 
     for(; row < n; ++row)
     {
-      if (!fit(copy[row][col], 0))
+      if (!fit(eval[row][col], 0))
       {
         found = true;
         break;
@@ -56,16 +43,16 @@ EvalT ge_det(const Matrix<T>& mat)
     }
     if (!found) return 0;
 
-    copy.swap_rows(col, row);
+    eval.swap_rows(col, row);
     swaps += !!(col - row);
-    determinant *= copy[col][col];
+    determinant *= eval[col][col];
     
     for (size_t lower_row = col + 1; lower_row < n; ++lower_row)
     {
-      EvalT coeff = copy[lower_row][col] / copy[col][col]; 
+      EvalT coeff = eval[lower_row][col] / eval[col][col]; 
       for(int k = col; k < n; ++k)
       {
-        copy[lower_row][k] -= coeff * copy[col][k];
+        eval[lower_row][k] -= coeff * eval[col][k];
       }
     }
   }
@@ -138,7 +125,8 @@ EvalT qr_det(const Matrix<T>& mat)
 
   size_t n = mat.dims().n;
 
-  Matrix<EvalT> a = eval_matrix(mat);
+  Matrix<EvalT> a {n, n};
+  a.copy(mat);
   Matrix<EvalT> q {n, n}; 
   Matrix<EvalT> r {n, n};
 
