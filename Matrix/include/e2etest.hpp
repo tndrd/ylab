@@ -21,7 +21,7 @@ void e2e_test(const std::string& tests_file, const double tolerance)
 
   for (int i = 0; i < n_tests; ++i)
   {
-    task(input, output);
+    Task::task<T>(input, output);
     
     double result = std::stod(output.str());
     output.clear();

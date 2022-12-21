@@ -215,7 +215,7 @@ TEST(Matrix, DeterminantExceptions)
 // GENERATED TESTS
 
 static const double DOUBLE_DETERMINANT_TOLERANCE = 0.01;
-TEST(Matrix, Determinant)
+TEST(Matrix, DeterminantDouble)
 {
   Testing::e2e_test<double>("tests/build.test", DOUBLE_DETERMINANT_TOLERANCE);
 }

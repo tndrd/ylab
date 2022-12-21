@@ -2,6 +2,6 @@
 
 int main()
 {
-  HWMatrix::task(std::cin, std::cout);
+  HWMatrix::Task::task<double>(std::cin, std::cout);
   return 0;
 }
