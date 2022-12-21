@@ -213,27 +213,43 @@ TEST(Matrix, DeterminantExceptions)
 
 // GENERATED TESTS
 
-static const double DETERMINANT_TOLERANCE = 0.001;
+
 static const char*  TESTS_FILE = "tests/build.test"; 
+
+// Determinant tests with standard precision (EvalT = double) 
+static const double DOUBLE_DETERMINANT_TOLERANCE = 0.001;
 
 TEST(Matrix, DeterminantDouble)
 {
-  Testing::e2e_test<double>(TESTS_FILE, DETERMINANT_TOLERANCE);
+  Testing::e2e_test<double, double>(TESTS_FILE, DOUBLE_DETERMINANT_TOLERANCE);
 }
 
 TEST(Matrix, DeterminantFloat)
 {
-  Testing::e2e_test<float>(TESTS_FILE, DETERMINANT_TOLERANCE);
-}
-
-TEST(Matrix, DeterminantLongDouble)
-{
-  Testing::e2e_test<long double>(TESTS_FILE, DETERMINANT_TOLERANCE);
+  Testing::e2e_test<float, double>(TESTS_FILE, DOUBLE_DETERMINANT_TOLERANCE);
 }
 
 TEST(Matrix, DeterminantInt)
 {
-  Testing::e2e_test<int>(TESTS_FILE, DETERMINANT_TOLERANCE);
+  Testing::e2e_test<int, double>(TESTS_FILE, DOUBLE_DETERMINANT_TOLERANCE);
+}
+
+// Determinant tests with high precision (EvalT = long double)
+static const double LONG_DOUBLE_DETERMINANT_TOLERANCE = 0.00000001;
+
+TEST(Matrix, DeterminantDoubleHighPrecision)
+{
+  Testing::e2e_test<double, long double>(TESTS_FILE, LONG_DOUBLE_DETERMINANT_TOLERANCE);
+}
+
+TEST(Matrix, DeterminantFloatHighPrecision)
+{
+  Testing::e2e_test<float, long double>(TESTS_FILE, LONG_DOUBLE_DETERMINANT_TOLERANCE);
+}
+
+TEST(Matrix, DeterminantIntHighPrecision)
+{
+  Testing::e2e_test<int, long double>(TESTS_FILE, LONG_DOUBLE_DETERMINANT_TOLERANCE);
 }
 
 int main(int argc, char **argv) {
