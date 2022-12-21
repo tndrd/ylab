@@ -14,16 +14,32 @@ static bool fit(double a, double b) noexcept
   return std::abs(a - b) < FIT_TOLERANCE;
 }
 
-template<typename T>
-inline double ge_det(const Matrix<T>& mat)
+template<typename T, typename EvalT=double>
+Matrix<EvalT> eval_matrix(const Matrix<T>& mat)
+{
+  size_t n = mat.dims().n;
+  Matrix<EvalT> eval {n, n};
+
+  for (int i = 0; i < n; ++i)
+  {
+    for(int k = 0; k < n; ++k)
+      eval[i][k] = mat[i][k];
+  }
+
+  return eval;
+}
+
+template<typename T, typename EvalT=double>
+EvalT ge_det(const Matrix<T>& mat)
 {
   if(!mat.is_sqare())
     throw std::invalid_argument("Input Matrix object is not square");
 
-  Matrix<T> copy {mat};
-  size_t n = copy.dims().n;
+  Matrix<EvalT> copy = eval_matrix(mat);
+  size_t n = mat.dims().n;
+
   size_t swaps = 0;
-  double determinant = 1;
+  EvalT determinant = 1;
   
   for (size_t col = 0; col < n; ++col)
   {
@@ -46,7 +62,7 @@ inline double ge_det(const Matrix<T>& mat)
     
     for (size_t lower_row = col + 1; lower_row < n; ++lower_row)
     {
-      T coeff = copy[lower_row][col] / copy[col][col]; 
+      EvalT coeff = copy[lower_row][col] / copy[col][col]; 
       for(int k = col; k < n; ++k)
       {
         copy[lower_row][k] -= coeff * copy[col][k];
@@ -59,7 +75,7 @@ inline double ge_det(const Matrix<T>& mat)
 }
 
 template<typename T>
-inline Matrix<T> identity_matrix(size_t n)
+Matrix<T> identity_matrix(size_t n)
 {
   Matrix<T> idmt(n, n);
 
@@ -69,16 +85,16 @@ inline Matrix<T> identity_matrix(size_t n)
   return idmt;
 }
 
-template<typename T>
-inline double lu_det(const Matrix<T>& mat)
+template<typename T, typename EvalT=double>
+EvalT lu_det(const Matrix<T>& mat)
 {
   if(!mat.is_sqare())
     throw std::invalid_argument("Input Matrix object is not square");
 
   size_t n = mat.dims().n;
 
-  Matrix<T> L = identity_matrix<T>(n); 
-  Matrix<T> U {n, n};
+  Matrix<EvalT> L = identity_matrix<EvalT>(n); 
+  Matrix<EvalT> U {n, n};
 
   for (int i = 0; i < n; ++i)
   {
@@ -86,7 +102,7 @@ inline double lu_det(const Matrix<T>& mat)
     {
       if (i <= j)
       {
-        T val = mat[i][j];
+        EvalT val = mat[i][j];
         for (int k = 0; k < i; ++k)
           val -= L[i][k] * U[k][j];
 
@@ -95,7 +111,7 @@ inline double lu_det(const Matrix<T>& mat)
       }
       else
       {
-        T val = mat[i][j];
+        EvalT val = mat[i][j];
         for (int k = 0; k < j; ++k)
           val -= L[i][k] * U[k][j];
 
@@ -104,7 +120,7 @@ inline double lu_det(const Matrix<T>& mat)
     }
   }
 
-  double determinant = 1;
+  EvalT determinant = 1;
 
   for (int i = 0; i < n; ++i)
   {
@@ -114,21 +130,21 @@ inline double lu_det(const Matrix<T>& mat)
   return determinant;
 }
 
-template<typename T>
-inline double qr_det(const Matrix<T>& mat)
+template<typename T, typename EvalT=double>
+EvalT qr_det(const Matrix<T>& mat)
 {
   if(!mat.is_sqare())
     throw std::invalid_argument("Input Matrix object is not square");
 
   size_t n = mat.dims().n;
 
-  Matrix<T> a {mat};
-  Matrix<T> q {n, n}; 
-  Matrix<T> r {n, n};
+  Matrix<EvalT> a = eval_matrix(mat);
+  Matrix<EvalT> q {n, n}; 
+  Matrix<EvalT> r {n, n};
 
   for (int k = 0; k < n; ++k)
   {
-    T s = 0;
+    EvalT s = 0;
     for (int j = 0; j < n; ++j) s += a[j][k] * a[j][k];
     r[k][k] = std::sqrt(s);
 
@@ -136,14 +152,14 @@ inline double qr_det(const Matrix<T>& mat)
 
     for (int i = k + 1; i < n; ++i)
     {
-      T s = 0;
+      EvalT s = 0;
       for (int j = 0; j < n; ++j) s += a[j][i] * q[j][k];
       r[k][i] = s;
 
       for (int j = 0; j < n; ++j) a[j][i] = a[j][i] - r[k][i] * q[j][k];
     }
   }
-  double determinant = 1 - 2*std::signbit(ge_det(q));
+  EvalT determinant = 1 - 2*std::signbit(ge_det(q));
 
   for (int i = 0; i < n; ++i)
   {
@@ -153,8 +169,8 @@ inline double qr_det(const Matrix<T>& mat)
   return determinant;
 }
 
-template<typename T>
-inline double det(const Matrix<T>& mat)
+template<typename T, typename EvalT=double>
+EvalT det(const Matrix<T>& mat)
 {
   return ge_det(mat);
 }

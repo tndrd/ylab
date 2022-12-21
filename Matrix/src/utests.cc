@@ -213,28 +213,27 @@ TEST(Matrix, DeterminantExceptions)
 
 // GENERATED TESTS
 
-static const double DOUBLE_DETERMINANT_TOLERANCE = 0.01;
+static const double DETERMINANT_TOLERANCE = 0.001;
+static const char*  TESTS_FILE = "tests/build.test"; 
+
 TEST(Matrix, DeterminantDouble)
 {
-  Testing::e2e_test<double>("tests/build.test", DOUBLE_DETERMINANT_TOLERANCE);
+  Testing::e2e_test<double>(TESTS_FILE, DETERMINANT_TOLERANCE);
 }
 
-static const double FLOAT_DETERMINANT_TOLERANCE = 0.01;
 TEST(Matrix, DeterminantFloat)
 {
-  Testing::e2e_test<float>("tests/build.test", DOUBLE_DETERMINANT_TOLERANCE);
+  Testing::e2e_test<float>(TESTS_FILE, DETERMINANT_TOLERANCE);
 }
 
-static const double LONGDOUBLE_DETERMINANT_TOLERANCE = 0.000001;
 TEST(Matrix, DeterminantLongDouble)
 {
-  Testing::e2e_test<long double>("tests/build.test", LONGDOUBLE_DETERMINANT_TOLERANCE);
+  Testing::e2e_test<long double>(TESTS_FILE, DETERMINANT_TOLERANCE);
 }
 
-static const double INT_DETERMINANT_TOLERANCE = 0.000001;
 TEST(Matrix, DeterminantInt)
 {
-  Testing::e2e_test<int>("tests/build.test", INT_DETERMINANT_TOLERANCE);
+  Testing::e2e_test<int>(TESTS_FILE, DETERMINANT_TOLERANCE);
 }
 
 int main(int argc, char **argv) {
