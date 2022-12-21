@@ -8,7 +8,7 @@
 namespace HWMatrix
 {
 
-static const double FIT_TOLERANCE = 0.0001;
+static const double FIT_TOLERANCE = 0.00001;
 static bool fit(double a, double b) noexcept
 {
   return std::abs(a - b) < FIT_TOLERANCE;
