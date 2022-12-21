@@ -6,6 +6,7 @@
 namespace HWMatrix {
 namespace Task {
 
+// Reads matrix of type T from istream
 template<typename T>
 Matrix<T> read_matrix(std::istream& input)
 {
@@ -27,11 +28,12 @@ Matrix<T> read_matrix(std::istream& input)
   return {dim, dim, data};
 }
 
-template<typename T>
+// Executes calculation of determinant with subsequent output
+template<typename T, typename EvalT=double>
 void task(std::istream& input, std::ostream& output)
 {
   Matrix<T> mat = read_matrix<T>(input);
-  output << det(mat) << std::endl;
+  output << det<T, EvalT>(mat) << std::endl;
 }
 
 }

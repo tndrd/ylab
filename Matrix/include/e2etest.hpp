@@ -7,7 +7,8 @@
 namespace HWMatrix {
 namespace Testing  {
 
-template<typename T>
+// Reads generated tests file, calculates determinants and compares them with expected values
+template<typename T, typename EvalT>
 void e2e_test(const std::string& tests_file, const double tolerance)
 {
   std::ifstream input(tests_file);
@@ -21,7 +22,7 @@ void e2e_test(const std::string& tests_file, const double tolerance)
 
   for (int i = 0; i < n_tests; ++i)
   {
-    Task::task<T>(input, output);
+    Task::task<T, EvalT>(input, output);
     
     double result = std::stod(output.str());
     output.clear();

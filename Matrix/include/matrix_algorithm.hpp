@@ -8,12 +8,22 @@
 namespace HWMatrix
 {
 
+// Floating point comparison tolerance
 static const double FIT_TOLERANCE = 0.00001;
-static bool fit(double a, double b) noexcept
+
+// Floating point comparison function
+template<typename T>
+bool fit(T a, T b) noexcept
 {
   return std::abs(a - b) < FIT_TOLERANCE;
 }
 
+// Gauss elimination-based determinant calculation
+// Creates a local copy of given matrix, performs gauss elimination
+// and calculates determinant. Given matrix doesn't change
+// Template params:
+//   T     - matrix' values type
+//   EvalT - type of values of local matrix copy
 template<typename T, typename EvalT=double>
 EvalT ge_det(const Matrix<T>& mat)
 {
@@ -35,7 +45,7 @@ EvalT ge_det(const Matrix<T>& mat)
 
     for(; row < n; ++row)
     {
-      if (!fit(eval[row][col], 0))
+      if (!fit(eval[row][col], EvalT(0)))
       {
         found = true;
         break;
@@ -61,6 +71,7 @@ EvalT ge_det(const Matrix<T>& mat)
   return determinant;
 }
 
+// Creates identity matrix with size n
 template<typename T>
 Matrix<T> identity_matrix(size_t n)
 {
@@ -72,6 +83,12 @@ Matrix<T> identity_matrix(size_t n)
   return idmt;
 }
 
+// LU-factorization-based determinant calculation
+// Creates a local copy of given matrix, performs LU-factorization
+// and calculates determinant. Given matrix doesn't change
+// Template params:
+//   T     - matrix' values type
+//   EvalT - type of values of local matrix copy
 template<typename T, typename EvalT=double>
 EvalT lu_det(const Matrix<T>& mat)
 {
@@ -93,7 +110,7 @@ EvalT lu_det(const Matrix<T>& mat)
         for (int k = 0; k < i; ++k)
           val -= L[i][k] * U[k][j];
 
-        if (i == j && fit(val, 0)) return 0;
+        if (i == j && fit(val, EvalT(0))) return 0;
         U[i][j] = val;
       }
       else
@@ -117,6 +134,13 @@ EvalT lu_det(const Matrix<T>& mat)
   return determinant;
 }
 
+// QR-factorization-based determinant calculation
+// Creates a local copy of given matrix, performs QR-factorization
+// and calculates determinant. Given matrix doesn't change
+// Template params:
+//   T     - matrix' values type
+//   EvalT - type of values of local matrix copy
+// Calculates only absolute value of determinant
 template<typename T, typename EvalT=double>
 EvalT qr_det(const Matrix<T>& mat)
 {
@@ -157,10 +181,11 @@ EvalT qr_det(const Matrix<T>& mat)
   return determinant;
 }
 
+// Default determinant algorithm
 template<typename T, typename EvalT=double>
 EvalT det(const Matrix<T>& mat)
 {
-  return ge_det(mat);
+  return ge_det<T, EvalT>(mat);
 }
 
 }

@@ -5,6 +5,7 @@
 #include <vector>
 #include <exception>
 #include <type_traits>
+#include <cassert>
 
 namespace HWMatrix
 {
@@ -77,9 +78,14 @@ class Matrix
     return *this;
   }
 
+  // Copies content from another type matrix
+  // Is not except-safe, but used in an except-safe way in copy() and copy ctor
   template<typename CopyT>
-  void copy_from(const CopyT& other)
+  void copy_from(const Matrix<CopyT>& other)
   {
+    assert(other.dims().n == n_); // This function is private so
+    assert(other.dims().m == m_); // We assume that it is called correctly
+    
     for (int i = 0; i < n_; ++i)
     {
       for(int k = 0; k < m_; ++k)
@@ -109,6 +115,7 @@ class Matrix
     if((n == 0) || (m == 0))
       throw std::invalid_argument("Attempt to create an object with incorrect dimensions");
 
+    // Orders rows in straight order
     for (size_t row = 0; row < n_; ++row)
     {
       (*this)[row] = {data_.get(), row * m_, m_};
@@ -124,18 +131,10 @@ class Matrix
     std::copy(values.begin(), values.end(), data_.get());
   }
   
+  // Copy ctor
   Matrix(const Matrix& other): Matrix(other.n_, other.m_)
   {
     copy_from(other);
-  }
-
-  template<typename CopyT>
-  Matrix& copy(const Matrix<CopyT>& src)
-  {
-    Matrix newm(src.dims().n, src.dims().m);
-    newm.copy_from(src);
-    std::swap(*this, newm);
-    return *this;
   }
 
   // Copy assignment
@@ -148,6 +147,22 @@ class Matrix
     Matrix tmp {other};
     std::swap(*this, tmp);
 
+    return *this;
+  }
+
+  // I'd like to use something like
+  // template<typename U> Matrix(const Matrix<U>&)
+  // to copy matrix which value type is different
+  // But template parameters can't be specified in ctor
+  // So this is a function that copies values from another matrix
+  // with other value type
+  // Copy&swap, except-safe
+  template<typename CopyT>
+  Matrix& copy(const Matrix<CopyT>& src)
+  {
+    Matrix newm(src.dims().n, src.dims().m);
+    newm.copy_from(src);
+    std::swap(*this, newm);
     return *this;
   }
 
