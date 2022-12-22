@@ -172,5 +172,5 @@ def A4_3_2():
 def gen(gen_foo):
   triangle = gen_foo()
   while not validate_triangle(triangle):
-    triangle = gen(gen_foo)
+    triangle = gen_foo()
   return triangle
