@@ -5,7 +5,9 @@
 !tests/
 !src/*
 !include/*
-!tests/*
+!tests/intersections.test
+!tests/testgen.py
+!tests/TestGenDemo.ipynb
 
 !CMakeLists.txt
 !.gitignore
