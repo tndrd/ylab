@@ -7,7 +7,7 @@
 !include/*
 !tests/intersections.test
 !tests/testgen.py
-!tests/TestGenDemo.ipynb
+!tests/2DGenDemo.ipynb
 
 !CMakeLists.txt
 !.gitignore
