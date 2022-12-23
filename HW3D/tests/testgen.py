@@ -1,24 +1,33 @@
 from random import randint, sample
 import numpy as np
-from math import sin, cos
+from math import sin, cos, sqrt
 
 BASE_LEN = 5
 RANDPOINT_BORDER = 2 * BASE_LEN
 RANDPOINT_COEFF = 100
-PERIMETER_TO_AREA_TOLERANCE = ((2 + 2**0.5) / BASE_LEN) / 3
+PERIMETER_TO_AREA_TOLERANCE = ((2 + sqrt(2)) / BASE_LEN) / 3
 A4_OFFSET = BASE_LEN * 0.1
-A3_OFFSET = BASE_LEN * 0.3
 
 LBORDER = -RANDPOINT_BORDER + BASE_LEN / 2
 RBORDER =  RANDPOINT_BORDER + BASE_LEN / 2
 TBORDER =  RANDPOINT_BORDER + BASE_LEN * 2
 BBORDER = -RANDPOINT_BORDER - BASE_LEN
 
+ZBORDER_T = RANDPOINT_BORDER
+ZBORDER_B = -RANDPOINT_BORDER
+ORTH_OFFSET = ZBORDER_T * 0.2
+DCOEFF = (RBORDER - LBORDER) * sqrt(2) / 2
+
+DIRECTION_LEN_MAX = 2
+
 def xlim():
   return (LBORDER, RBORDER)
 
 def ylim():
   return (BBORDER, TBORDER)
+
+def zlim():
+  return (ZBORDER_B, ZBORDER_T)
 
 def create_base():
   a = (0, 0, 0)
@@ -88,14 +97,17 @@ def base_circum_point(angle):
   y = BASE_LEN / 2 + sin(angle) * BASE_LEN * 2**(-0.5)
   return np.array([x, y, 0])
 
-def point_from_seg(nseg):
+def angle_from_seg(nseg):
   angle = None
   if nseg == 1: angle = from_seg1() 
   if nseg == 2: angle = from_seg2()
   if nseg == 3: angle = from_seg3()
-  return base_circum_point(angle) 
+  return angle 
 
-def A3():
+def generate_A3_point(n_seg):
+  return base_circum_point(angle_from_seg(n_seg))
+
+def generate_intersection_segments():
   segments = set([1, 2, 3])
 
   seg_a = sample(segments, 1)[0]
@@ -103,9 +115,14 @@ def A3():
   segments.remove(seg_a)
   seg_c = sample(segments, 1)[0]
 
-  point_a = point_from_seg(seg_a)
-  point_b = point_from_seg(seg_b)
-  point_c = point_from_seg(seg_c)
+  return seg_a, seg_b, seg_c
+
+def A3():
+  seg_a, seg_b, seg_c = generate_intersection_segments()
+
+  point_a = generate_A3_point(seg_a)
+  point_b = generate_A3_point(seg_b)
+  point_c = generate_A3_point(seg_c)
 
   return np.array([point_a, point_b, point_c])
   
@@ -170,6 +187,73 @@ def A4_3_1():
 
 def A4_3_2():
   return gen_template(generate_A4_3_2_point)
+
+def A4():
+  n = randint(1, 6)
+  if n == 1: return A4_1_1()
+  if n == 2: return A4_1_2()
+  if n == 3: return A4_2_1()
+  if n == 4: return A4_2_2()
+  if n == 5: return A4_3_1()
+  if n == 6: return A4_3_2()
+
+def length(vec):
+  return sqrt(np.dot(vec, vec))
+
+def normalize(vec):
+  return vec / length(vec)
+
+def orth_point(pa, pb):
+
+  norm = np.cross(pa, pb)
+  norm = normalize(norm)
+
+  direction = pb - pa
+  direction = normalize(direction)
+
+  zcoeff = (1 - 2 * randint(0,1)) * rand(ORTH_OFFSET, ZBORDER_T)
+  
+  dcoeff = rand(0, DCOEFF)
+
+  point = pa + norm * zcoeff + direction * dcoeff
+  return point
+
+def rand_line_seg(p1, p2):
+  direction = p2 - p1
+  direction_l = length(direction)
+  point = p1 + normalize(direction) * rand(direction_l, direction_l * DIRECTION_LEN_MAX)
+  return point  
+
+def orth_triangle(p1, p2):
+  point_a = orth_point(p1,p2)
+  point_b = rand_line_seg(point_a, p1)
+  point_c = rand_line_seg(point_a, p2)
+
+  triangle = np.array([point_a, point_b, point_c]) 
+  return triangle, (p1, p2)
+
+def B1():
+  p1, p2, _ = A4()
+  return orth_triangle(p1, p2)
+
+def B2():
+  seg_a, seg_b = sample(set([1, 2, 3]), 2)
+
+  p1 = generate_A3_point(seg_a)
+  p2 = generate_A3_point(seg_b)
+
+  return orth_triangle(p1, p2)
+
+def B3():
+  p1 = point_in_base()
+  p2 = base_plane_point()
+  return orth_triangle(p1, p2)
+
+def gen3D(gen_foo):
+  triangle, info = gen_foo()
+  while not validate_triangle(triangle):
+    triangle, info = gen_foo()
+  return triangle, info  
 
 def gen(gen_foo):
   triangle = gen_foo()
