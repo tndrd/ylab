@@ -1,5 +1,6 @@
-from random import randint
+from random import randint, sample
 import numpy as np
+from math import sin, cos
 
 BASE_LEN = 5
 RANDPOINT_BORDER = 2 * BASE_LEN
@@ -73,40 +74,41 @@ def A2():
   return triangle
 
 
-def A3_1():
-  xa = rand(LBORDER, -A3_OFFSET)
-  ya = randy()
-  xb = rand(xa, RBORDER)
-  yb = randy()
+def from_seg1():
+  return rand(-np.pi * 1/4, np.pi * 3/4)
 
-  k1 = (1 - ya) / -xa
-  k2 = -ya / -xa
+def from_seg2():
+  return rand(np.pi * 3/4, np.pi * 5/4)
 
-  xc = rand(0, RBORDER)
-  yc = rand(k2 * xc, k1 * xc + 1)
+def from_seg3():
+  return rand(np.pi * 5/4, np.pi * 7/4)
 
-  a = np.array([xa, ya, 0])
-  b = np.array([xb, yb, 0])
-  c = np.array([xc, yc, 0])
-  return np.array([a, b, c])
+def base_circum_point(angle):
+  x = BASE_LEN / 2 + cos(angle) * BASE_LEN * 2**(-0.5)
+  y = BASE_LEN / 2 + sin(angle) * BASE_LEN * 2**(-0.5)
+  return np.array([x, y, 0])
 
-def A3_2():
-  ya = rand(BBORDER, -A3_OFFSET)
-  xa = randx()
-  yb = rand(ya, -A3_OFFSET)
-  xb = randx()
+def point_from_seg(nseg):
+  angle = None
+  if nseg == 1: angle = from_seg1() 
+  if nseg == 2: angle = from_seg2()
+  if nseg == 3: angle = from_seg3()
+  return base_circum_point(angle) 
 
-  k1 = -xa / -ya
-  k2 = (1 - xa) / -ya
+def A3():
+  segments = set([1, 2, 3])
 
-  yc = rand(0, TBORDER)
-  xc = rand(k1 * yc, k2 * yc + 1)
+  seg_a = sample(segments, 1)[0]
+  seg_b = sample(segments, 1)[0]
+  segments.remove(seg_a)
+  seg_c = sample(segments, 1)[0]
 
-  a = np.array([xa, ya, 0])
-  b = np.array([xb, yb, 0])
-  c = np.array([xc, yc, 0])
-  return np.array([a, b, c])
+  point_a = point_from_seg(seg_a)
+  point_b = point_from_seg(seg_b)
+  point_c = point_from_seg(seg_c)
 
+  return np.array([point_a, point_b, point_c])
+  
 def generate_A4_1_1_point():
   x = rand(LBORDER + A4_OFFSET, RBORDER)
   y0 = BASE_LEN - x + A4_OFFSET
