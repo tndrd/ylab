@@ -44,6 +44,12 @@ def randx():
 def randy():
   return rand(BBORDER, TBORDER)
 
+def randz():
+  return rand(ZBORDER_B, ZBORDER_T)
+
+def randpoint():
+  return np.array([randx(), randy(), randz()])
+
 def base_plane_point():
   return np.array([randx(), randy(), 0])
 
@@ -260,3 +266,16 @@ def gen(gen_foo):
   while not validate_triangle(triangle):
     triangle = gen_foo()
   return triangle
+
+def randpair2D():
+  base = create_base()
+  gen_foo   = None
+  intersect = None
+  n = randint(1,4)
+
+  if n == 1: gen_foo, intersect = A1, True
+  if n == 2: gen_foo, intersect = A2, True
+  if n == 3: gen_foo, intersect = A3, True
+  if n == 4: gen_foo, intersect = A4, False
+  
+  return intersect, base, gen(gen_foo) 
