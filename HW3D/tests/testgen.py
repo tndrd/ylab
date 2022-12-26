@@ -279,3 +279,26 @@ def randpair2D():
   if n == 4: gen_foo, intersect = A4, False
   
   return intersect, base, gen(gen_foo) 
+
+def randpair3D():
+  base = create_base()
+  gen_foo   = None
+  intersect = None
+  n = randint(1,7)
+
+  if n == 1: gen_foo, intersect = A1, True
+  if n == 2: gen_foo, intersect = A2, True
+  if n == 3: gen_foo, intersect = A3, True
+  if n == 4: gen_foo, intersect = A4, False
+  if n == 5: gen_foo, intersect = B1, False
+  if n == 6: gen_foo, intersect = B2, True
+  if n == 7: gen_foo, intersect = B3, True
+  
+  triangle = None
+  if n < 5:
+    triangle = gen(gen_foo)
+  else:
+    triangle, _ = gen3D(gen_foo)
+
+
+  return intersect, base, triangle 

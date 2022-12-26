@@ -9,6 +9,7 @@
 !tests/testgen.py
 !tests/2DGenDemo.ipynb
 !tests/3DGenDemo.ipynb
+!tests/scramble.py
 
 !CMakeLists.txt
 !.gitignore
