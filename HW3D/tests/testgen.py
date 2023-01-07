@@ -3,7 +3,7 @@ import scramble
 from tqdm import tqdm
 import numpy as np
 
-N_SCRAMBLES = 3
+N_SCRAMBLES = 10
 
 X_STEP = (pairgen.RBORDER - pairgen.LBORDER) * 2
 Y_STEP = (pairgen.TBORDER - pairgen.BBORDER) * 2
