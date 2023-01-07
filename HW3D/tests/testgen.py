@@ -10,16 +10,18 @@ Z_STEP = (pairgen.ZBORDER_T - pairgen.ZBORDER_B) * 2
 
 TESTFILE = "triangles.test"
 
-def dump_triangle(f, tr):
+def dump_triangle(tests, tr):
   for i in range(len(tr)):
     for k in range(len(tr[i])):
-      f.write(f'{tr[i][k]} ')
+      tests = tests + f'{tr[i][k]} '
+  return tests
 
-def dump_test(f, test_n, intersection, tr1, tr2):
-  f.write(f'{test_n} ')
-  dump_triangle(f, tr1)
-  dump_triangle(f, tr2)
-  f.write(f'{int(intersection)}\n')
+def dump_test(tests, test_n, intersection, tr1, tr2):
+  tests = tests + f'{test_n} '
+  tests = dump_triangle(tests, tr1)
+  tests = dump_triangle(tests, tr2)
+  tests = tests + f'{int(intersection)}\n'
+  return tests
 
 def pair():
   intersection, tr1, tr2 = pairgen.randpair3D()
@@ -41,21 +43,22 @@ def offset(tr1, tr2, x, y, z):
 
   return tr1, tr2
 
-def generate_tests(f, x_n, y_n, z_n):
+def generate_tests(x_n, y_n, z_n):
   test_n = 1
-  
+  tests = ""
   for z in range(-z_n, z_n):
     for y in range(-y_n, y_n):
       for x in range(-x_n, x_n):
         intersection, tr1, tr2 = pair()
         tr1, tr2 = offset(tr1, tr2, x, y, z)
-        dump_test(f, test_n, intersection, tr1, tr2)
+        tests = dump_test(tests, test_n, intersection, tr1, tr2)
         test_n = test_n + 1
 
-  return test_n
+  return test_n, tests
 
 if __name__ == "__main__":
   with open(TESTFILE, "w") as f:
-    x_n, y_n, z_n = map(int, input().split())
-    test_n = generate_tests(f, x_n, y_n, z_n)
+    x_n, y_n, z_n = map(int, input("Enter dimensions: ").split())
+    test_n, tests = generate_tests(x_n, y_n, z_n)
+    f.write(f'{test_n}\n' + tests)
   print(f"Successfuly generated {test_n} triangle pairs")
