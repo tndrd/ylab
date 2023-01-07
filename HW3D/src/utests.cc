@@ -1607,6 +1607,26 @@ TEST(AllTriangles, Intersection5)
   EXPECT_FALSE(intersect_triangles(tr2, tr1));
 }
 
+TEST(AllTriangles, Generated)
+{
+  std::ifstream input("tests/triangles.test");
+  ASSERT_TRUE(input.good());
+  size_t n_tests;
+
+  input >> n_tests;
+
+  for(int i = 0; i < n_tests; ++i)
+  {
+    int result;
+    Triangle3D tr1 = read_triangle(input);
+    Triangle3D tr2 = read_triangle(input);
+    
+    input >> result;
+
+    EXPECT_EQ(intersect_triangles(tr1, tr2), result) << "On test #" << i + 1 << std::endl;
+  }
+}
+
 //--------------------------------------------------------------------
 
 TEST(Task, E2E_0)
@@ -1692,6 +1712,7 @@ TEST(Task, E2E_0)
 TEST(Task, E2E_1)
 {
   std::ifstream input("tests/intersections.test");
+  ASSERT_TRUE(input.good());
   std::stringstream output;
 
   size_t expected_output_length;
