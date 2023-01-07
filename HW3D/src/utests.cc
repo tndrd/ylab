@@ -1629,7 +1629,7 @@ TEST(AllTriangles, Generated)
 
 //--------------------------------------------------------------------
 
-TEST(Task, E2E_0)
+TEST(Task, E2E_Hardcoded)
 {
   Point3D a1 {1, 0, 0};
   Point3D b1 {0, 1, 0};
@@ -1709,9 +1709,37 @@ TEST(Task, E2E_0)
   ASSERT_EQ(answers_c, answers_r);
 }
 
-TEST(Task, E2E_1)
+TEST(Task, E2E_Hardcoded_from_file)
 {
-  std::ifstream input("tests/intersections.test");
+  std::ifstream input("tests/hardcoded.test");
+  ASSERT_TRUE(input.good());
+  std::stringstream output;
+
+  size_t expected_output_length;
+  std::stringstream expected_output;
+  
+  task_e2e(input, output);  
+  input >> expected_output_length;
+
+  size_t result;
+  for (int i = 0; i < expected_output_length - 1; ++i)
+  {
+    input >> result;
+    expected_output << result << " ";
+  }
+
+  input >> result;
+  expected_output << result << std::endl;
+
+  auto got      = output.str();
+  auto expected = expected_output.str(); 
+
+  EXPECT_EQ(got, expected);
+}
+
+TEST(Task, E2E_Generated)
+{
+  std::ifstream input("tests/e2e.test");
   ASSERT_TRUE(input.good());
   std::stringstream output;
 
