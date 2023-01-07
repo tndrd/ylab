@@ -1,4 +1,4 @@
-from testgen import *
+from pairgen import *
 from math import acos
 import quaternion as quat
 
