@@ -15,9 +15,6 @@ PLANE_STRETCH_MAX = 1 / LINE_STRETCH_MIN
 
 # POINT STRETCH
 
-def randsign():
-  return 1 - 2 * randint(0, 1)
-
 def point_point_stretch(stretchpoint, point, coeff):
   return stretchpoint + (point - stretchpoint) * coeff
 
@@ -191,4 +188,16 @@ def scramble(tr1, tr2, scramble_foo):
   #print(f"Angle was {angle_between(tr1, tr2)}, {baseangle(tr1)}")
   #print(f"Angle got {angle_between(new_tr1, new_tr2)}, {baseangle(new_tr1)}")
 
+  return new_tr1, new_tr2
+
+def rand_scramble(tr1, tr2):
+  n_scramble   = randint(0, 3)
+  scramble_foo = None
+
+  if n_scramble == 0: scramble_foo = point_stretch
+  if n_scramble == 1: scramble_foo = line_stretch
+  if n_scramble == 2: scramble_foo = plane_stretch
+  if n_scramble == 3: scramble_foo = rotation
+
+  new_tr1, new_tr2 = scramble(tr1, tr2, scramble_foo)
   return new_tr1, new_tr2
