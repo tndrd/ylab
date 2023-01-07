@@ -190,7 +190,7 @@ def scramble(tr1, tr2, scramble_foo):
 
   return new_tr1, new_tr2
 
-def rand_scramble(tr1, tr2):
+def randscramble(tr1, tr2):
   n_scramble   = randint(0, 3)
   scramble_foo = None
 
