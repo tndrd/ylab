@@ -185,6 +185,9 @@ def baseangle(tr):
 def scramble(tr1, tr2, scramble_foo):
   new_tr1, new_tr2 = scramble_foo(tr1, tr2)
 
+  while not (validate_triangle(new_tr1) and validate_triangle(new_tr2)):
+    new_tr1, new_tr2 = scramble_foo(tr1, tr2)
+
   #print(f"Angle was {angle_between(tr1, tr2)}, {baseangle(tr1)}")
   #print(f"Angle got {angle_between(new_tr1, new_tr2)}, {baseangle(new_tr1)}")
 
