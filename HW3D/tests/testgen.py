@@ -1,5 +1,6 @@
 import pairgen
 import scramble
+from tqdm import tqdm
 import numpy as np
 
 N_SCRAMBLES = 3
@@ -16,8 +17,7 @@ def dump_triangle(tests, tr):
       tests = tests + f'{tr[i][k]} '
   return tests
 
-def dump_test(tests, test_n, intersection, tr1, tr2):
-  tests = tests + f'{test_n} '
+def dump_test(tests, intersection, tr1, tr2):
   tests = dump_triangle(tests, tr1)
   tests = dump_triangle(tests, tr2)
   tests = tests + f'{int(intersection)}\n'
@@ -44,14 +44,14 @@ def offset(tr1, tr2, x, y, z):
   return tr1, tr2
 
 def generate_tests(x_n, y_n, z_n):
-  test_n = 1
+  test_n = 0
   tests = ""
-  for z in range(-z_n, z_n):
-    for y in range(-y_n, y_n):
+  for z in tqdm(range(-z_n, z_n)):
+    for y in tqdm(range(-y_n, y_n), leave=False):
       for x in range(-x_n, x_n):
         intersection, tr1, tr2 = pair()
         tr1, tr2 = offset(tr1, tr2, x, y, z)
-        tests = dump_test(tests, test_n, intersection, tr1, tr2)
+        tests = dump_test(tests, intersection, tr1, tr2)
         test_n = test_n + 1
 
   return test_n, tests

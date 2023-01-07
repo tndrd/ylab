@@ -6,12 +6,11 @@ mpl.rcParams['figure.dpi'] = 300
 mpl.rcParams["animation.html"] = "jshtml"
 mpl.rcParams["animation.embed_limit"] = 100
 
-def load_triangles(line):
+def load_test(line):
   line = line.split()
-  test_n = int(line[0])
-  result = bool(line[-1])
+  result = bool(int(line[-1]))
 
-  line = list(map(float, line[1:-1]))
+  line = list(map(float, line[:-1]))
 
   xs = []
   ys = []
@@ -28,10 +27,8 @@ def load_triangles(line):
 
   tr1 = (xs[0:3], ys[0:3], zs[0:3])
   tr2 = (xs[3:6], ys[3:6], zs[3:6])
-
-  print(f"Loaded test #{test_n}, intersection: {result}")
   
-  return tr1, tr2
+  return (tr1, tr2), result
 
 def draw_triangle(subplot, triangle, color):
   triangle[0].append(triangle[0][0])
@@ -43,15 +40,16 @@ def draw_triangle(subplot, triangle, color):
 def draw_test(triangles):
   fig = plt.figure(figsize=(20,20))
   subplot = fig.add_subplot(1, 1, 1, projection='3d')
-  tr1 = draw_triangle(subplot, triangles[0], "red")
+  tr1 = draw_triangle(subplot, triangles[0], "blue")
   tr2 = draw_triangle(subplot, triangles[1], "orange")
   plt.show()
 
 if __name__ == "__main__":
   with open(TESTFILE, "r") as f:
     test_n = int(input("Enter test number: "))
-    line = f.readlines()[test_n - 1]
-    triangles = load_triangles(line)
+    line = f.readlines()[test_n]
+    triangles, result = load_test(line)
+    print(f"Loaded test #{test_n}, intersection: {result}")
     print("Rendering...", end=" ")
     draw_test(triangles)
     print("Done")
