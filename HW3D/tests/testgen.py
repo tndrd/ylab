@@ -20,6 +20,9 @@ DCOEFF = (RBORDER - LBORDER) * sqrt(2) / 2
 
 DIRECTION_LEN_MAX = 2
 
+B4_RANGE  = (ZBORDER_T - ZBORDER_B) / 2
+B4_OFFSET = (ZBORDER_T - ZBORDER_B) * 0.1
+
 def xlim():
   return (LBORDER, RBORDER)
 
@@ -37,6 +40,9 @@ def create_base():
 
 def rand(a, b):
   return a + randint(0, int((b - a) * RANDPOINT_COEFF)) / RANDPOINT_COEFF
+
+def randsign():
+  return 1 - 2 * randint(0, 1)
 
 def randx():
   return rand(LBORDER, RBORDER)
@@ -255,6 +261,18 @@ def B3():
   p2 = base_plane_point()
   return orth_triangle(p1, p2)
 
+def B4():
+  offset = randsign() * rand(B4_OFFSET, B4_RANGE)
+
+  p1 = base_plane_point()
+  p2 = base_plane_point()
+  p3 = base_plane_point()
+
+  p1[2], p2[2], p3[2] = offset, offset, offset
+
+  p0 = np.array([0, 0, 0])
+  return np.array([p1, p2, p3]), (p0, p0)
+
 def gen3D(gen_foo):
   triangle, info = gen_foo()
   while not validate_triangle(triangle):
@@ -284,7 +302,7 @@ def randpair3D():
   base = create_base()
   gen_foo   = None
   intersect = None
-  n = randint(1,7)
+  n = randint(1,8)
 
   if n == 1: gen_foo, intersect = A1, True
   if n == 2: gen_foo, intersect = A2, True
@@ -293,12 +311,12 @@ def randpair3D():
   if n == 5: gen_foo, intersect = B1, False
   if n == 6: gen_foo, intersect = B2, True
   if n == 7: gen_foo, intersect = B3, True
+  if n == 8: gen_foo, intersect = B4, False
   
   triangle = None
   if n < 5:
     triangle = gen(gen_foo)
   else:
     triangle, _ = gen3D(gen_foo)
-
 
   return intersect, base, triangle 
