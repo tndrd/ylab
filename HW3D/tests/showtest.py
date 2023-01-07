@@ -1,4 +1,4 @@
-from testgen import TESTFILE
+from testgen import UNIT_TEST_FILE
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 import matplotlib as mpl
@@ -45,7 +45,7 @@ def draw_test(triangles):
   plt.show()
 
 if __name__ == "__main__":
-  with open(TESTFILE, "r") as f:
+  with open(UNIT_TEST_FILE, "r") as f:
     test_n = int(input("Enter test number: "))
     line = f.readlines()[test_n]
     triangles, result = load_test(line)
