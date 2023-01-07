@@ -6,7 +6,7 @@
 !src/*
 !include/*
 !tests/intersections.test
-!tests/testgen.py
+!tests/pairgen.py
 !tests/2DGenDemo.ipynb
 !tests/3DGenDemo.ipynb
 !tests/scramble.py
