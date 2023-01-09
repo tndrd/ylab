@@ -1709,10 +1709,8 @@ TEST(Task, E2E_Hardcoded)
   ASSERT_EQ(answers_c, answers_r);
 }
 
-TEST(Task, E2E_Hardcoded_from_file)
+bool read_and_compare(std::istream& input)
 {
-  std::ifstream input("tests/hardcoded.test");
-  ASSERT_TRUE(input.good());
   std::stringstream output;
 
   size_t expected_output_length;
@@ -1722,45 +1720,37 @@ TEST(Task, E2E_Hardcoded_from_file)
   input >> expected_output_length;
 
   size_t result;
-  for (int i = 0; i < expected_output_length - 1; ++i)
+  for (int i = 0; i < expected_output_length; ++i)
   {
     input >> result;
     expected_output << result << " ";
   }
 
-  input >> result;
-  expected_output << result << std::endl;
+  expected_output << std::endl;
 
   auto got      = output.str();
   auto expected = expected_output.str(); 
 
-  EXPECT_EQ(got, expected);
+  return got == expected;
+}
+
+TEST(Task, E2E_Hardcoded_from_file)
+{
+  std::ifstream input("tests/hardcoded.test");
+  ASSERT_TRUE(input.good());
+  
+  size_t n_tests;
+  input >> n_tests;
+  
+  for (int i = 0; i < n_tests; ++i)
+  {
+    EXPECT_TRUE(read_and_compare(input)) << "On test #" << i << std::endl;
+  }
 }
 
 TEST(Task, E2E_Generated)
 {
   std::ifstream input("tests/e2e.test");
   ASSERT_TRUE(input.good());
-  std::stringstream output;
-
-  size_t expected_output_length;
-  std::stringstream expected_output;
-  
-  task_e2e(input, output);  
-  input >> expected_output_length;
-
-  size_t result;
-  for (int i = 0; i < expected_output_length - 1; ++i)
-  {
-    input >> result;
-    expected_output << result << " ";
-  }
-
-  input >> result;
-  expected_output << result << std::endl;
-
-  auto got      = output.str();
-  auto expected = expected_output.str(); 
-
-  EXPECT_EQ(got, expected);
+  EXPECT_TRUE(read_and_compare(input));
 }
