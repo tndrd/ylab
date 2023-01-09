@@ -81,12 +81,12 @@ void write_intersections(std::ostream& stream, const std::vector<int>& intersect
 {
   size_t N = intersections.size();
 
-  for (int i = 0; i < N - 1; ++i)
+  for (int i = 0; i < N; ++i)
   {
     stream << intersections[i] << " ";
   }
 
-  stream << intersections[N - 1] << std::endl;
+  stream << std::endl;
 }
 
 void task_e2e(std::istream& in, std::ostream& out)
