@@ -3,7 +3,6 @@
 
 int main()
 {
-  int hits = count_hits_from_stdin<caches::LRU<int>>();
-  std::cout << hits << std::endl;
+  HWCache::task_hit_count<HWCache::LRU<int>>(std::cin, std::cout);
   return 0;
 }

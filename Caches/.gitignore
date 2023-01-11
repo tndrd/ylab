@@ -1,10 +1,10 @@
 *
 
 !.gitignore
+!include
 !include/*
+!src
 !src/*
-!tests/*/*
 !tests/*
 !tests/
-!src/testers/*
 !CMakeLists.txt

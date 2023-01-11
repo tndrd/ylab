@@ -5,7 +5,6 @@
 
 int main()
 {
-  int hits = count_hits_from_stdin<caches::ideal<int>>();
-  std::cout << hits << std::endl;
+  HWCache::task_hit_count<HWCache::ideal<int>>(std::cin, std::cout);
   return 0;
 }
