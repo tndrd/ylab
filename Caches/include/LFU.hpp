@@ -4,26 +4,24 @@
 #include <unordered_map>
 #include <iterator>
 
-namespace caches
+namespace HWCache
 {
-
-  template<typename PageT, typename KeyT, typename CountT=size_t>
-  struct LFU_unit
-  {
-    PageT  content_; // Page content
-    KeyT   key_;     // Corresponding unordered_map key
-    CountT count_;   // Frequency counter  
-  };
-
   template <typename PageT, typename KeyT=int> struct LFU
   {
+
+    struct LFU_unit
+    {
+      PageT  content_; // Page content
+      KeyT   key_;     // Corresponding unordered_map key
+      size_t count_;   // Frequency counter  
+    };
+
     size_t sz_;
     
-    using LFU_unitT = typename caches::LFU_unit<PageT, KeyT, size_t>;
-    std::list<LFU_unitT> cache_;
+    std::list<LFU_unit> cache_;
     
-    using ListIt      = typename std::list<LFU_unitT>::iterator;
-    using ConstListIt = typename std::list<LFU_unitT>::const_iterator;
+    using ListIt      = typename std::list<LFU_unit>::iterator;
+    using ConstListIt = typename std::list<LFU_unit>::const_iterator;
 
     std::unordered_map<KeyT, ListIt> hash_;
 
@@ -61,7 +59,7 @@ namespace caches
           cache_.erase(least_frequent);
         }
 
-        LFU_unitT new_unit = { slow_get_page(key), key, 1 };
+        LFU_unit new_unit = { slow_get_page(key), key, 1 };
         
         cache_.push_front(new_unit);
         hash_[key] = cache_.begin();

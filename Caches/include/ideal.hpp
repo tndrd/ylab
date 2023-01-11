@@ -5,7 +5,7 @@
 #include <iterator>
 #include <vector>
 
-namespace caches
+namespace HWCache
 {
 
   template <typename PageT, typename KeyT=int> struct ideal

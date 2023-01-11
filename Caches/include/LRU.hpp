@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <iterator>
 
-namespace caches
+namespace HWCache
 {
 
   template <typename PageT, typename KeyT=size_t> struct LRU
