@@ -1,6 +1,4 @@
 #include "ideal.hpp"
-#include <iostream>
-#include <cassert>
 #include "hit_count.hpp"
 
 int main()

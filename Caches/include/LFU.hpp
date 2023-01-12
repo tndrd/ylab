@@ -25,11 +25,9 @@ namespace HWCache
 
     std::unordered_map<KeyT, ListIt> hash_;
 
-
     LFU(size_t sz) : sz_(sz) {}
 
     bool full() const { return (cache_.size() == sz_); }
-
 
     // Finds least frequent element in cache [O(n)]
     // May be optimized
@@ -44,7 +42,6 @@ namespace HWCache
 
       return least_frequent;
     }
-
 
     template<typename F> bool lookup_update(KeyT key, F slow_get_page)
     {
