@@ -13,12 +13,12 @@ TEST(LRU, E2E)
 
 TEST(LFU, E2E)
 {
-  test_cache<LRU<int>>("tests/LFU.test");
+  test_cache<LFU<int>>("tests/LFU.test");
 }
 
 TEST(ideal, E2E)
 {
-  test_cache<LRU<int>>("tests/ideal.test");
+  test_cache<ideal<int>>("tests/ideal.test");
 }
 
 int main(int argc, char **argv) {
