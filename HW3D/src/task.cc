@@ -66,7 +66,7 @@ std::vector<int> count_intersections(const std::vector<Triangle3D>& triangles)
     for (int k = 0; k < N; k++)
     {
       if (k == i) continue;
-      if (intersect_triangles(triangles[i], triangles[k]))
+      if (intersect(triangles[i], triangles[k]))
       {
         intersections.push_back(i);
         break;

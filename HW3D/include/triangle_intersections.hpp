@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Triangle3D.hpp"
-#include "intersections.hpp"
+#include "primitive_intersections.hpp"
 #include <cassert>
 
 namespace HW3D
 {
-std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& direction);
+std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& direction) noexcept;
 
 bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2) noexcept;
 

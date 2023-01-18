@@ -1,4 +1,4 @@
-#include "task_algorithm.hpp"
+#include "triangle_intersections.hpp"
 
 namespace HW3D
 {
@@ -42,7 +42,7 @@ bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
   return true;
 }
 
-std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& direction)
+std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& direction) noexcept
 {
   assert(direction != (Vec3D{0, 0, 0}));
 

@@ -2,7 +2,7 @@
 
 #include "Plane3D.hpp"
 #include "LineSeg3D.hpp"
-#include "intersections.hpp"
+#include "primitive_intersections.hpp"
 #include <array>
 #include <vector>
 #include <algorithm>
@@ -20,7 +20,7 @@ class Triangle3D final
   Triangle3D(const Point3D& p1, const Point3D& p2, const Point3D& p3):
   vertices_({p1, p2, p3})
   {
-    get_plane(); // Will throw an exception if any two points coincide
+    //get_plane(); // Will throw an exception if any two points coincide
   }
 
   // Returns plane of triangle
@@ -39,6 +39,24 @@ class Triangle3D final
   Vec3D get_vertice(u_char i) const
   {
     return vertices_[i]; // Will throw an exception if index out of range
+  }
+
+  std::vector<Point3D> unique() const noexcept
+  {
+    std::vector<Point3D> unique_points;
+    for (int i = 0; i < 3; ++i)
+    {
+      bool is_unique = true;
+      for (int k = 0; k < unique_points.size(); ++k)
+        if (get_vertice(i) == unique_points[k])
+        {
+          is_unique = false;
+          break;
+        }
+      if (is_unique)
+        unique_points.push_back(get_vertice(i));
+    }
+    return unique_points;
   }
 };
 
