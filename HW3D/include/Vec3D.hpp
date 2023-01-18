@@ -28,12 +28,7 @@ struct Vec3D final
       throw std::invalid_argument("Vec3D construction with NAN"); // just for safety purposes
   }
 
-  Vec3D(const Vec3D& vec)
-  {
-    x = vec.x;
-    y = vec.y;
-    z = vec.z;
-  }
+  Vec3D(const Vec3D& vec): Vec3D(vec.x, vec.y, vec.z) {}
 
   double length() const noexcept
   {
@@ -105,6 +100,11 @@ struct Vec3D final
   bool operator== (const Vec3D& rhs) const noexcept
   {
     return fit(x, rhs.x) && fit(y, rhs.y) && fit(z, rhs.z);
+  }
+
+  bool operator!= (const Vec3D& rhs) const noexcept
+  {
+    return !(operator==(rhs));
   }
 
   Vec3D operator- () const noexcept
