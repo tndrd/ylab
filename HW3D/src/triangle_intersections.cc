@@ -4,7 +4,7 @@ namespace HW3D
 {
 
 // Reference: [GCT page 265]
-bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2) noexcept
+bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
 {
   auto normals1 = get_edge_normals(tr1);
   auto normals2 = get_edge_normals(tr2);
@@ -42,7 +42,7 @@ bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
   return true;
 }
 
-std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& direction) noexcept
+std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& direction)
 {
   assert(direction != (Vec3D{0, 0, 0}));
 
@@ -61,7 +61,7 @@ std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& directio
 }
 
 // Reference: [GCT page 541]
-bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2) noexcept
+bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
 {
   Plane3D p1 = tr1.get_plane();
   Plane3D p2 = tr2.get_plane();
@@ -87,7 +87,7 @@ bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& t
   return intervals_intersect(min1, max1, min2, max2);
 }
 
-bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2) noexcept
+bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
 {
   Plane3D p1 = tr1.get_plane();
   Plane3D p2 = tr2.get_plane();
