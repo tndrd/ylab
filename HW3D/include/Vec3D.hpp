@@ -28,7 +28,13 @@ struct Vec3D final
       throw std::invalid_argument("Vec3D construction with NAN"); // just for safety purposes
   }
 
-  Vec3D(const Vec3D& vec): Vec3D(vec.x, vec.y, vec.z) {}
+  // cppcheck-suppress syntaxError
+  Vec3D(const Vec3D& vec)
+  {
+    x = vec.x;
+    y = vec.y;
+    z = vec.z;
+  }
 
   double length() const noexcept
   {
