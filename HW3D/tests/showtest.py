@@ -35,13 +35,13 @@ def draw_triangle(subplot, triangle, color):
   triangle[1].append(triangle[1][0])
   triangle[2].append(triangle[2][0])
   
-  return subplot.plot(triangle[0], triangle[1], triangle[2], color=color)[0]
+  return subplot.plot(triangle[0], triangle[1], triangle[2], f"{color}o-")[0]
 
 def draw_test(triangles):
   fig = plt.figure(figsize=(20,20))
   subplot = fig.add_subplot(1, 1, 1, projection='3d')
-  tr1 = draw_triangle(subplot, triangles[0], "blue")
-  tr2 = draw_triangle(subplot, triangles[1], "orange")
+  tr1 = draw_triangle(subplot, triangles[0], "b")
+  tr2 = draw_triangle(subplot, triangles[1], "r")
   plt.show()
 
 if __name__ == "__main__":
