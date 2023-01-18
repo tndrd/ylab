@@ -6,6 +6,7 @@
 #include <array>
 #include <vector>
 #include <algorithm>
+#include <cassert>
 
 namespace HW3D
 {
@@ -40,7 +41,7 @@ class Triangle3D final
   {
     return vertices_[i]; // Will throw an exception if index out of range
   }
-
+  
   std::vector<Point3D> unique() const noexcept
   {
     std::vector<Point3D> unique_points;
@@ -55,6 +56,32 @@ class Triangle3D final
         }
       if (is_unique)
         unique_points.push_back(get_vertice(i));
+    }
+    return unique_points;
+  }
+  
+
+  std::vector<Point3D> simplify() const noexcept
+  {
+    std::vector<Point3D> unique_points = unique();
+    if (unique_points.size() < 3) return unique_points;
+    
+    for (int i = 0; i < 3; ++i)
+    {
+      Vec3D edge      = get_vertice((i + 1) % 3) - get_vertice(i);
+      Vec3D direction = get_vertice((i + 2) % 3) - get_vertice(i);
+
+      assert(edge.length() != 0);
+      assert(direction.length() != 0);
+
+      if (edge.normalize() == direction.normalize())
+      {
+        double t = direction.length() / edge.length();
+        if (interval_fit(t, 0, 1))
+        {
+          return {unique_points[i], unique_points[(i + 1) % 3]};
+        }
+      }
     }
     return unique_points;
   }
