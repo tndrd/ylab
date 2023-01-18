@@ -9,7 +9,7 @@ namespace HW3D
 
 // Info about relationship between two lines
 // Also contains intersection params (if exist)
-// Is returned by get_relation() function
+// Is returned by get_line_relation() function
 // This class is well-incapsulated, user won't ocassionaly change it
 class LineRelation final
 {
@@ -40,7 +40,7 @@ class LineRelation final
 
 // Info about relationship between two planes
 // Also contains intersection params (if exist)
-// Is returned by get_relation() function
+// Is returned by get_plane_relation() function
 // This class is well-incapsulated, user won't ocassionaly change it
 class PlaneRelation final
 {
@@ -67,6 +67,33 @@ class PlaneRelation final
   double get_b()     const noexcept { return b_; }
 };
 
+// Info about relationship between line and plane
+// Also contains intersection params (if exist)
+// Is returned by get_relation() function
+// This class is well-incapsulated, user won't ocassionaly change it
+class LinePlaneRelation final
+{
+  public:
+  enum State
+  {
+    COINCIDENT,
+    PARALLEL,
+    INTERSECTING,
+    NON_INTERSECTING 
+  };
+
+  LinePlaneRelation(State state, double t=NAN) noexcept:
+  state_(state), t_(t) {}
+
+  private:
+  State state_;
+
+  double t_;
+  
+  public:
+  State  get_state() const noexcept { return state_; }
+  double get_t()    const noexcept { return t_; }
+};
 
 // Check the lines relationship (coincident, parallel, intersecting, non-intersecting)
 // If lines are not coincident or parallel then check for virtual intersection [Reference: GCT page 409]
@@ -118,6 +145,47 @@ inline LineRelation get_line_relation(const LineT1& l1, const LineT2& l2) noexce
   }
 }
 
+// Check the lines relationship (coincident, parallel, intersecting, non-intersecting)
+// If lines are not coincident or parallel then check for virtual intersection [Reference: GCT page 409]
+// Check the parameter restrictions (t=any for inf.line, 0<t<1 for line segment and t>0 for ray).
+// If the parameter t fits both lines' restrictions, then they really intersect
+// Otherwise they do not
+// Returns relationship info and intersection params (if exist)
+template<typename LineT>
+inline LinePlaneRelation get_line_plane_relation(const LineT& l, const Plane3D& pl) noexcept
+{
+  using state_t = LinePlaneRelation;
+
+  Point3D p = l.get_p();
+  Vec3D   a = l.get_a();
+
+  Vec3D  n = pl.get_n();
+  double s = pl.get_s();
+
+  if (fit(a * n, 0))
+  {
+    if (fit(p * n, s))
+    {
+      return {state_t::COINCIDENT};
+    }
+    else
+    {
+      return {state_t::PARALLEL};
+    }
+  }
+
+  double t = (s - (n * p)) / (n * a);
+
+  if (l.check_param(t))
+  {
+    return {state_t::INTERSECTING, t};
+  }
+  else
+  {
+    return {state_t::NON_INTERSECTING};
+  } 
+}
+
 // Check the planes relationship (coincident, parallel or intersecting)
 // If planes are not coincident or parallel then they do intersect with each other
 // We can find the intersection line with som formulas [Reference: GCT page 530]
@@ -156,6 +224,15 @@ inline Point3D get_line_intersection(const LineT1& l1, const LineT2& l2, const L
     throw std::invalid_argument("Attempt to intersect non-intersecting lines");
   
   return l1.point_from_param(relation.get_t1());
+}
+
+template<typename LineT>
+inline Point3D get_line_plane_intersection(const LineT& l, const Plane3D& pl, const LinePlaneRelation& relation)
+{
+  if (relation.get_state() != relation.INTERSECTING)
+    throw std::invalid_argument("Attempt to intersect non-intersecting lines");
+  
+  return l.point_from_param(relation.get_t());
 }
 
 // Returns the intersection line of two planes. Given planes should really intersect
