@@ -2,16 +2,16 @@ from pairgen import *
 from math import acos
 import quaternion as quat
 
-POINT_STRETCH_MIN = 0.5
-POINT_STRETCH_MAX = 2
+POINT_STRETCH_MIN = 0.8
+POINT_STRETCH_MAX = 1.5
 
 LINE_POINT_COEFF = 0.2
-LINE_STRETCH_MIN = 0.2
+LINE_STRETCH_MIN = 0.8
 LINE_STRETCH_MAX = 1 / LINE_STRETCH_MIN
 
 PLANE_POINT_COEFF = 0.2
-PLANE_STRETCH_MIN = 0.2
-PLANE_STRETCH_MAX = 1 / LINE_STRETCH_MIN
+PLANE_STRETCH_MIN = 0.8
+PLANE_STRETCH_MAX = 1 / PLANE_STRETCH_MIN
 
 # POINT STRETCH
 
@@ -158,6 +158,15 @@ def rotation(tr1, tr2):
 
   return new_tr1, new_tr2
 
+# RECOMBINATION
+
+def recombine_triangle(tr):
+  np.random.shuffle(tr)
+  return tr
+
+def recombination(tr1, tr2):
+  return recombine_triangle(tr1), recombine_triangle(tr2)
+
 # GENERAL
 
 def triangle_normal(tr):
@@ -185,8 +194,8 @@ def baseangle(tr):
 def scramble(tr1, tr2, scramble_foo):
   new_tr1, new_tr2 = scramble_foo(tr1, tr2)
 
-  while not (validate_triangle(new_tr1) and validate_triangle(new_tr2)):
-    new_tr1, new_tr2 = scramble_foo(tr1, tr2)
+  #while not (validate_triangle(new_tr1) and validate_triangle(new_tr2)):
+  #  new_tr1, new_tr2 = scramble_foo(tr1, tr2)
 
   #print(f"Angle was {angle_between(tr1, tr2)}, {baseangle(tr1)}")
   #print(f"Angle got {angle_between(new_tr1, new_tr2)}, {baseangle(new_tr1)}")
@@ -194,13 +203,14 @@ def scramble(tr1, tr2, scramble_foo):
   return new_tr1, new_tr2
 
 def randscramble(tr1, tr2):
-  n_scramble   = randint(0, 3)
+  n_scramble   = randint(0, 4)
   scramble_foo = None
 
   if n_scramble == 0: scramble_foo = point_stretch
   if n_scramble == 1: scramble_foo = line_stretch
   if n_scramble == 2: scramble_foo = plane_stretch
   if n_scramble == 3: scramble_foo = rotation
+  if n_scramble == 4: scramble_foo = recombination
 
   new_tr1, new_tr2 = scramble(tr1, tr2, scramble_foo)
   return new_tr1, new_tr2
