@@ -2,6 +2,7 @@
 
 #include "Triangle3D.hpp"
 #include "intersections.hpp"
+#include <cassert>
 
 namespace HW3D
 {

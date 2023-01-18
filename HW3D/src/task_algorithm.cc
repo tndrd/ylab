@@ -44,8 +44,7 @@ bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
 
 std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& direction)
 {
-  if (direction == Vec3D{0, 0, 0})
-    throw std::invalid_argument("Given direction is zero");
+  assert(direction != (Vec3D{0, 0, 0}));
 
   std::vector<double> projections;
 
