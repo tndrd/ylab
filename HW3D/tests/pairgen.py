@@ -23,6 +23,16 @@ DIRECTION_LEN_MAX = 2
 B4_RANGE  = (ZBORDER_T - ZBORDER_B) / 2
 B4_OFFSET = (ZBORDER_T - ZBORDER_B) * 0.1
 
+PP2_OFFSET = (ZBORDER_T - ZBORDER_B) * 0.1
+PL2_OFFSET = (ZBORDER_T - ZBORDER_B) * 0.1
+
+LL1_COEFF = 2
+
+PT2_2_OFFSET = (ZBORDER_T - ZBORDER_B) * 0.1
+
+LT1_COEFF = 2
+LT2_COEFF = 2
+
 def xlim():
   return (LBORDER, RBORDER)
 
@@ -273,6 +283,110 @@ def B4():
   p0 = np.array([0, 0, 0])
   return np.array([p1, p2, p3]), (p0, p0)
 
+def PP1():
+  p1 = randpoint()
+  return np.array([p1, p1, p1]), np.array([p1, p1, p1]) 
+
+def PP2():
+  p1 = randpoint()
+  p2 = randpoint()
+  while (length(p1 - p2) < PP2_OFFSET):
+    p2 = randpoint()
+
+  return np.array([p1, p1, p1]), np.array([p2, p2, p2]) 
+
+def randbetween(p1, p2):
+  return p1 + (p2 - p1) * rand(0,1)
+
+def gen_base_line():
+  p1 = np.array([0, 0, 0])
+  p2 = np.array([BASE_LEN, 0, 0])
+  p3 = randbetween(p1, p2)
+  return np.array([p1, p2, p3])
+
+def base_line_point():
+  x = rand(0, BASE_LEN)
+  return np.array([x, 0, 0])
+
+def PL1():
+  line = gen_base_line()
+  pt = base_line_point()
+
+  return line, np.array([pt, pt, pt])
+
+def check_PL2(pt):
+  if abs(pt[1]) < PL2_OFFSET and (-PL2_OFFSET) < pt[0] < (BASE_LEN - PL2_OFFSET):
+    return False
+  return True
+
+def PL2():
+  line = gen_base_line()
+  pt = base_plane_point()
+  while not check_PL2(pt):
+    pt = base_plane_point()
+  return line, np.array([pt, pt, pt]) 
+
+def LL1():
+  line = gen_base_line()
+  pt = base_line_point()
+
+  p1 = base_plane_point()
+  p2 = p1 + (pt - p1) * rand(1, LL1_COEFF)
+  p3 = randbetween(p1, p2)
+
+  return line, np.array([p1, p2, p3])
+
+def LL2():
+  line = gen_base_line()
+  z = randz()
+  p1, p2, _ = A4()
+  p1[2] = z
+  p2[2] = z
+  p3 = randbetween(p1,p2)
+  
+  return line, np.array([p1, p2, p3])
+
+def PT1():
+  base = create_base()
+  pt = point_in_base()
+  return base, np.array([pt, pt, pt])
+
+def generate_PT2_1_point():
+  pt = A4()[0]
+  pt[2] = randz()
+  return pt
+
+def generate_PT2_2_point():
+  pt = point_in_base()
+  pt[2] = randz()
+  while abs(pt[2]) < PT2_2_OFFSET:
+    pt[2] = randz()
+  return pt
+
+def PT2():
+  base = create_base()
+  n = randint(1, 2)
+  pt = None
+  if n == 1: pt = generate_PT2_1_point()
+  if n == 2: pt = generate_PT2_2_point()
+  return base, np.array([pt, pt, pt])
+
+def LT1():
+  base = create_base()
+  pt = point_in_base()
+  p1 = randpoint()
+  p2 = p1 + (pt - p1) * rand(1, LT1_COEFF)
+  p3 = randbetween(p1, p2)
+  return base, np.array([p1, p2, p3])
+
+def LT2():
+  base = create_base()
+  pt = A4()[0]
+  p1 = randpoint()
+  p2 = p1 + (pt - p1) * rand(0.5, LT2_COEFF)
+  p3 = randbetween(p1, p2)
+  return base, np.array([p1, p2, p3])
+
 def gen3D(gen_foo):
   triangle, info = gen_foo()
   while not validate_triangle(triangle):
@@ -298,6 +412,16 @@ def randpair2D():
   
   return intersect, base, gen(gen_foo) 
 
+def randdegenerate():
+  n = randint(0,9)
+  triangles = None
+  intersect = None
+  
+  generators = [PP1, PP2, PL1, PL2, LL1, LL2, PT1, PT2, LT1, LT2]
+  intersects = [True, False, True, False, True, False, True, False, True, False]
+  return intersects[n], *generators[n]()
+
+
 def randpair3D():
   base = create_base()
   gen_foo   = None
@@ -320,3 +444,8 @@ def randpair3D():
     triangle, _ = gen3D(gen_foo)
 
   return intersect, base, triangle 
+
+def randpairgen():
+  n = randint(1, 4)
+  if n == 1: return randdegenerate()
+  else:      return randpair3D()

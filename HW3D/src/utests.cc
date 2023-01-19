@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include "task_algorithm.hpp"
 #include "task.hpp"
 #include <fstream>
 
@@ -1617,13 +1616,23 @@ TEST(AllTriangles, Generated)
 
   for(int i = 0; i < n_tests; ++i)
   {
-    int result;
+    bool expected;
+    bool result;
+
     Triangle3D tr1 = read_triangle(input);
     Triangle3D tr2 = read_triangle(input);
     
-    input >> result;
+    input >> expected;
 
-    EXPECT_EQ(intersect_triangles(tr1, tr2), result) << "On test #" << i + 1 << std::endl;
+    try
+    {
+      result = intersect(tr1, tr2);
+    }
+    catch(std::exception& e)
+    {
+      std::cerr << "Caught exception on test #" << i + 1 << ": " << e.what() << std::endl;
+    }
+    EXPECT_EQ(result, expected) << "On test #" << i + 1 << std::endl;
   }
 }
 

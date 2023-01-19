@@ -42,21 +42,21 @@ Triangle3D read_triangle(std::istream& stream)
   }
 }
 
-std::vector<Triangle3D> read_triangles(std::istream& stream)
+std::vector<std::vector<Point3D>> read_triangles(std::istream& stream)
 {
   size_t N = 0;
   stream >> N;
   assert(stream.good());
 
-  std::vector<Triangle3D> triangles;
+  std::vector<std::vector<Point3D>> triangles;
   for (int i = 0; i < N; i++) {
-    triangles.push_back(read_triangle(stream));
+    triangles.push_back(read_triangle(stream).simplify());
   }
 
   return triangles;
 }
 
-std::vector<int> count_intersections(const std::vector<Triangle3D>& triangles)
+std::vector<int> count_intersections(const std::vector<std::vector<Point3D>>& triangles)
 {
   size_t N = triangles.size();
   std::vector<int> intersections;
@@ -66,7 +66,7 @@ std::vector<int> count_intersections(const std::vector<Triangle3D>& triangles)
     for (int k = 0; k < N; k++)
     {
       if (k == i) continue;
-      if (intersect_triangles(triangles[i], triangles[k]))
+      if (intersect(triangles[i], triangles[k]))
       {
         intersections.push_back(i);
         break;
