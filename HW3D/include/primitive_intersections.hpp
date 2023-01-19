@@ -112,22 +112,24 @@ inline LineRelation get_line_relation(const LineT1& l1, const LineT2& l2) noexce
   if (l1.is_parallel(l2))
     return {state_t::PARALLEL};
 
-  Vec3D   a1 = l1.get_a();
-  Point3D p1 = l1.get_p();
+  const Vec3D   a1 = l1.get_a();
+  const Point3D p1 = l1.get_p();
 
-  Vec3D   a2 = l2.get_a();
-  Point3D p2 = l2.get_p();
+  const Vec3D   a2 = l2.get_a();
+  const Point3D p2 = l2.get_p();
 
-  Vec3D  u = p1 - p2;
-  double A = a1 * a1;
-  double B = a1 * a2;
-  double C = a2 * a2;
-  double D = a1 * u;
-  double E = a2 * u;
-  double F = u * u;
+  const Vec3D  u = p1 - p2;
+  const double A = a1 * a1;
+  const double B = a1 * a2;
+  const double C = a2 * a2;
+  const double D = a1 * u;
+  const double E = a2 * u;
+  const double F = u * u;
 
-  double t1 =  (B*E - C*D) / (A*C - B*B); // Zero-division is not possible, 
-  double t2 = -(B*D - A*E) / (A*C - B*B); // lines are not parallel
+  double denominator = (A*C - B*B);
+
+  double t1 =  (B*E - C*D) / denominator; // Zero-division is not possible, 
+  double t2 = -(B*D - A*E) / denominator; // lines are not parallel
 
   if (!l1.check_param(t1) || !l2.check_param(t2))
     return {state_t::NON_INTERSECTING, t1, t2};
@@ -135,7 +137,7 @@ inline LineRelation get_line_relation(const LineT1& l1, const LineT2& l2) noexce
   Point3D Q1 = l1.point_from_param(t1);
   Point3D Q2 = l2.point_from_param(t2);
 
-  if ((Q2 - Q1) == Vec3D{0, 0, 0})
+  if (Q2 == Q1)
   {
     return {state_t::INTERSECTING, t1, t2};
   }
