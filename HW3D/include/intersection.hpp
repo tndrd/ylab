@@ -92,11 +92,8 @@ inline bool base_intersect(const Triangle3D& tr1, const Triangle3D& tr2)
   return intersect_triangles(tr1, tr2);
 }
 
-inline bool intersect(const Triangle3D& tr1, const Triangle3D& tr2)
+inline bool intersect(const std::vector<Point3D>& unique1, const std::vector<Point3D>& unique2)
 {
-  std::vector<Point3D> unique1 = tr1.simplify();
-  std::vector<Point3D> unique2 = tr2.simplify();
-
   switch (unique1.size())
   {
     case 1: switch(unique2.size())
@@ -122,6 +119,13 @@ inline bool intersect(const Triangle3D& tr1, const Triangle3D& tr2)
             }
     default:  throw std::runtime_error("Incorrect unique size");
   }
+}
+
+inline bool intersect(const Triangle3D& tr1, const Triangle3D& tr2)
+{
+  std::vector<Point3D> unique1 = tr1.simplify();
+  std::vector<Point3D> unique2 = tr2.simplify();
+  return intersect(unique1, unique2);
 }
 
 }
