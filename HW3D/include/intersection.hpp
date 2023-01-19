@@ -11,44 +11,36 @@ namespace HW3D
 
 inline bool base_intersect(const Point3D& pt1, const Point3D& pt2) 
 {
-  std::cerr << "PP" << std::endl;
+  //std::cerr << "PP" << std::endl;
   return pt1 == pt2;
 }
 
 inline bool base_intersect(const Point3D& pt, const LineSeg3D& l) 
 {
-  std::cerr << "PL" << std::endl;
+  //std::cerr << "PL" << std::endl;
   Vec3D p = l.get_p();
   Vec3D a = l.get_a();
 
+  if (pt == p) return true;
+  
   Vec3D direction = (pt - p);
-  //std::cerr << direction.normalize();
-  //std::cerr << a.normalize() << std::endl;
+
   if (!abseq(direction.normalize(), a.normalize()))
-  {
-  //  std::cerr << "NO FIT" << std::endl;
     return false;
-  }
-  //std::cerr << direction;
-  //std::cerr << a << std::endl;
-  double t = direction.length() / a.length();
-  //std::cout << "T: " << t << std::endl; 
+  
+  double t = direction.length() / a.length(); 
   return l.check_param(t);
 }
 
 inline bool base_intersect(const Point3D& pt, const Triangle3D& tr) 
 {
-  std::cerr << "PT" << std::endl;
+  //std::cerr << "PT" << std::endl;
   Plane3D plane = tr.get_plane();
 
   double s0 = pt * plane.get_n();
   double s  = plane.get_s();
-  //std::cerr << s0 << s << std::endl;
-  if (!fit(s0, s))
-  {
-    //std::cout << "NO FIT" << std::endl;
-    return false;
-  }
+  if (!fit(s0, s)) return false;
+  
   auto normals = get_edge_normals(tr);
   for (int i = 0; i < 3; ++i)
   {
@@ -65,7 +57,7 @@ inline bool base_intersect(const Point3D& pt, const Triangle3D& tr)
 
 inline bool base_intersect(const LineSeg3D& l1, const LineSeg3D& l2) 
 {
-  std::cerr << "LL" << std::endl;
+  //std::cerr << "LL" << std::endl;
   LineRelation rel = get_line_relation(l1, l2);
   LineRelation::State state = rel.get_state();
   return state == LineRelation::INTERSECTING || state == LineRelation::COINCIDENT;
@@ -73,8 +65,7 @@ inline bool base_intersect(const LineSeg3D& l1, const LineSeg3D& l2)
 
 inline bool base_intersect(const LineSeg3D& l, const Triangle3D& tr) 
 {
-  std::cerr << "LT" << std::endl;
-
+  //std::cerr << "LT" << std::endl;
   Plane3D plane = tr.get_plane();
   LinePlaneRelation rel = get_line_plane_relation(l, plane);
 
@@ -96,7 +87,7 @@ inline bool base_intersect(const LineSeg3D& l, const Triangle3D& tr)
 
 inline bool base_intersect(const Triangle3D& tr1, const Triangle3D& tr2) 
 {
-  std::cerr << "TT" << std::endl;
+  //std::cerr << "TT" << std::endl;
   return intersect_triangles(tr1, tr2);
 }
 
