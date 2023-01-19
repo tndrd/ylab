@@ -24,7 +24,7 @@ def dump_test(tests, tr1, tr2):
   return tests
 
 def pair():
-  intersection, tr1, tr2 = pairgen.randpair3D()
+  intersection, tr1, tr2 = pairgen.randpairgen()
   
   for i in range(N_SCRAMBLES):
     tr1, tr2 = scramble.randscramble(tr1, tr2)

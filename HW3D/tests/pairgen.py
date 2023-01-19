@@ -423,7 +423,6 @@ def randdegenerate():
 
 
 def randpair3D():
-  return randdegenerate()
   base = create_base()
   gen_foo   = None
   intersect = None
@@ -445,3 +444,8 @@ def randpair3D():
     triangle, _ = gen3D(gen_foo)
 
   return intersect, base, triangle 
+
+def randpairgen():
+  n = randint(1, 4)
+  if n == 1: return randdegenerate()
+  else:      return randpair3D()
