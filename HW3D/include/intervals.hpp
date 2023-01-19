@@ -7,7 +7,7 @@
 namespace HW3D
 {
 
-inline const double FIT_TOLERANCE = 0.001;
+inline const double FIT_TOLERANCE = 0.00001;
 
 inline bool fit(double a, double b) noexcept
 {
