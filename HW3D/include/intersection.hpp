@@ -83,6 +83,7 @@ inline bool base_intersect(const LineSeg3D& l, const Triangle3D& tr)
     Point3D pt = get_line_plane_intersection(l, plane, rel);
     return base_intersect(pt, tr);
   }
+  return false;
 }
 
 inline bool base_intersect(const Triangle3D& tr1, const Triangle3D& tr2) 

@@ -42,6 +42,7 @@ class Triangle3D final
     return vertices_[i]; // Will throw an exception if index out of range
   }
   
+  // Returns vector of unique vertices
   std::vector<Point3D> unique() const noexcept
   {
     std::vector<Point3D> unique_points;
@@ -60,7 +61,8 @@ class Triangle3D final
     return unique_points;
   }
   
-
+  // Creates vector of unique vertices and deletes ones which lay
+  // on line between two other vertices
   std::vector<Point3D> simplify() const noexcept
   {
     std::vector<Point3D> unique_points = unique();
