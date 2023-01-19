@@ -1617,13 +1617,13 @@ TEST(AllTriangles, Generated)
   for(int i = 0; i < n_tests; ++i)
   {
     bool expected;
-    
+    bool result;
+
     Triangle3D tr1 = read_triangle(input);
     Triangle3D tr2 = read_triangle(input);
     
     input >> expected;
-    std::cerr << "Test #" << i + 1 << ": ";
-    bool result = false;
+
     try
     {
       result = intersect(tr1, tr2);
@@ -1632,7 +1632,6 @@ TEST(AllTriangles, Generated)
     {
       std::cerr << "Caught exception on test #" << i + 1 << ": " << e.what() << std::endl;
     }
-
     EXPECT_EQ(result, expected) << "On test #" << i + 1 << std::endl;
   }
 }
