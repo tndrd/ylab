@@ -92,6 +92,13 @@ inline bool base_intersect(const Triangle3D& tr1, const Triangle3D& tr2)
   return intersect_triangles(tr1, tr2);
 }
 
+
+// Recieves two vectors of unique points and applies intersection specific algorithm
+// corresponding to each vector's size
+//
+// I am not sure this is a best way to choose intersection algorithm
+// I think other implementations may use dynamical polymorhism but i
+// don't want to use it due to potential overhead
 inline bool intersect(const std::vector<Point3D>& unique1, const std::vector<Point3D>& unique2)
 {
   switch (unique1.size())
