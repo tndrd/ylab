@@ -29,12 +29,7 @@ struct Vec3D final
   }
 
   // cppcheck-suppress syntaxError
-  Vec3D(const Vec3D& vec)
-  {
-    x = vec.x;
-    y = vec.y;
-    z = vec.z;
-  }
+  Vec3D(const Vec3D& vec) = default;
 
   double length() const noexcept
   {

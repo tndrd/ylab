@@ -73,13 +73,13 @@ class Triangle3D final
       Vec3D edge      = get_vertice((i + 1) % 3) - get_vertice(i);
       Vec3D direction = get_vertice((i + 2) % 3) - get_vertice(i);
 
-      assert(edge.length() != 0);
-      assert(direction.length() != 0);
+      //assert(edge.length() != 0);
+      //assert(direction.length() != 0);
 
       if (edge.normalize() == direction.normalize())
       {
-        double t = direction.length() / edge.length();
-        if (interval_fit(t, 0, 1))
+        double t2 = (direction * direction) / (edge * edge);
+        if (interval_fit(std::sqrt(t2), 0, 1))
         {
           return {unique_points[i], unique_points[(i + 1) % 3]};
         }

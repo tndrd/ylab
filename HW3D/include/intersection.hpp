@@ -28,8 +28,8 @@ inline bool base_intersect(const Point3D& pt, const LineSeg3D& l)
   if (!abseq(direction.normalize(), a.normalize()))
     return false;
   
-  double t = direction.length() / a.length(); 
-  return l.check_param(t);
+  double t2 = (direction * direction) / (a * a); 
+  return l.check_param(std::sqrt(t2));
 }
 
 inline bool base_intersect(const Point3D& pt, const Triangle3D& tr) 

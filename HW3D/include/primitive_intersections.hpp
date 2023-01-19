@@ -135,7 +135,7 @@ inline LineRelation get_line_relation(const LineT1& l1, const LineT2& l2) noexce
   Point3D Q1 = l1.point_from_param(t1);
   Point3D Q2 = l2.point_from_param(t2);
 
-  if (fit((Q2 - Q1).length(), 0))
+  if ((Q2 - Q1) == Vec3D{0, 0, 0})
   {
     return {state_t::INTERSECTING, t1, t2};
   }
