@@ -10,13 +10,14 @@
 namespace HWMatrix
 {
 
+// Simple unique_ptr-like class
 template<typename T>
 class MyUniquePtr final
 {
   T* buf_;
 
   public:
-  // Ctor
+  
   MyUniquePtr(size_t sz = 0):
   buf_{(sz == 0) ? nullptr : new T[sz]} { }
 
