@@ -95,7 +95,6 @@ class Matrix
     }
   };
 
-  private:
   MyUniquePtr<T> data_;         // Buffer that stores all the matrix content
   MyUniquePtr<RowProxy> rows_;  // Array of Proxys that point to beginning of each row inside the data_
   size_t n_;  // Dimensions
@@ -194,8 +193,8 @@ class Matrix
   template<typename CopyT>
   Matrix& operator=(const Matrix<CopyT>& src)
   {
-    Matrix newm(src);
-    std::swap(*this, newm);
+    Matrix tmp {src};
+    std::swap(*this, tmp);
     return *this;
   }
 
