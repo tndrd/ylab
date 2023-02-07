@@ -11,6 +11,44 @@ namespace HWMatrix
 {
 
 template<typename T>
+class MyUniquePtr final
+{
+  T* buf_;
+
+  public:
+  // Ctor
+  MyUniquePtr(size_t sz = 0):
+  buf_{(sz == 0) ? nullptr : new T[sz]} { }
+
+  MyUniquePtr(const MyUniquePtr& rhs) = delete;
+  MyUniquePtr& operator=(const MyUniquePtr& rhs) = delete;
+
+  MyUniquePtr(MyUniquePtr&& rhs_) noexcept 
+  {
+    buf_ = rhs_.buf_;
+    rhs_.buf_ = nullptr;
+  }
+
+  MyUniquePtr& operator= (MyUniquePtr&& rhs_) noexcept
+  {
+    if (this != &rhs_)
+    {
+      T* tmp = rhs_.buf_;
+      rhs_.buf_ = buf_;
+      buf_ = tmp;
+    }
+    return *this;
+  }
+
+  ~MyUniquePtr()
+  {
+    delete[] buf_;
+  }
+
+  T* get() const noexcept { return buf_; }
+};
+
+template<typename T>
 class Matrix
 {
   // Brief: Matrix class with O(1) row swap possibility
@@ -56,10 +94,10 @@ class Matrix
       return std::move(at(k));
     }
   };
-  
+
   private:
-  std::unique_ptr<T[]> data_;         // Buffer that stores all the matrix content
-  std::unique_ptr<RowProxy[]> rows_;  // Array of Proxys that point to beginning of each row inside the data_
+  MyUniquePtr<T> data_;         // Buffer that stores all the matrix content
+  MyUniquePtr<RowProxy> rows_;  // Array of Proxys that point to beginning of each row inside the data_
   size_t n_;  // Dimensions
   size_t m_;  //
 
@@ -111,8 +149,8 @@ class Matrix
   Matrix(size_t n, size_t m):
     n_(n),
     m_(m),
-    data_{std::make_unique<T[]>(n * m)},
-    rows_{std::make_unique<RowProxy[]>(n)}
+    data_{n * m},
+    rows_{n}
   {
     if((n == 0) || (m == 0))
       throw std::invalid_argument("Attempt to create an object with incorrect dimensions");
@@ -152,20 +190,19 @@ class Matrix
     return *this;
   }
 
-  // I'd like to use something like
-  // template<typename U> Matrix(const Matrix<U>&)
-  // to copy matrix which value type is different
-  // But template parameters can't be specified in ctor
-  // So this is a function that copies values from another matrix
-  // with other value type
-  // Copy&swap, except-safe
   template<typename CopyT>
-  Matrix& copy(const Matrix<CopyT>& src)
+  Matrix& operator=(const Matrix<CopyT>& src)
   {
     Matrix newm(src.dims().n, src.dims().m);
     newm.copy_from(src);
     std::swap(*this, newm);
     return *this;
+  }
+
+  template<typename CopyMat>
+  Matrix(const CopyMat& src): Matrix(src.dims().n, src.dims().m)
+  {
+    copy_from(src);
   }
 
   // Move ctor & assignment
