@@ -190,15 +190,16 @@ class Matrix
     return *this;
   }
 
+  // Copy assign from another type matrix
   template<typename CopyT>
   Matrix& operator=(const Matrix<CopyT>& src)
   {
-    Matrix newm(src.dims().n, src.dims().m);
-    newm.copy_from(src);
+    Matrix newm(src);
     std::swap(*this, newm);
     return *this;
   }
 
+  // Copy ctor from another type matrix
   template<typename CopyMat>
   Matrix(const CopyMat& src): Matrix(src.dims().n, src.dims().m)
   {
