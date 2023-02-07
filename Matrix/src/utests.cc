@@ -100,8 +100,27 @@ TEST(Matrix, CopyAnotherType)
   mat[0][0] = 27;
   mat[0][1] = 42.42;
 
+  Matrix<int> newm = mat;
+  
+  EXPECT_EQ(newm[0][0], 27);
+  EXPECT_EQ(newm[0][0] / 2, 13);
+  EXPECT_EQ(newm[0][1], 42);
+  EXPECT_EQ(newm[2][0], 1);
+  EXPECT_EQ(newm[2][1], 2);
+}
+
+TEST(Matrix, CopyAssignAnotherType)
+{
+  std::vector<double> data {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  Matrix<double> mat {5, 2, data};
+  mat.swap_rows(0,1);
+  mat.swap_rows(1, 2);
+  mat[0][0] = 27;
+  mat[0][1] = 42.42;
+
   Matrix<int> newm {3, 3};
-  newm.copy(mat);
+  newm.swap_rows(1, 2);
+  newm = mat;
   
   EXPECT_EQ(newm[0][0], 27);
   EXPECT_EQ(newm[0][0] / 2, 13);

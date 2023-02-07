@@ -32,8 +32,10 @@ EvalT ge_det(const Matrix<T>& mat)
 
   size_t n = mat.dims().n;
   
-  Matrix<EvalT> eval {n, n};
-  eval.copy(mat);
+  //Matrix<EvalT> eval {n, n};
+  //eval = mat;
+
+  Matrix<EvalT> eval = mat;
 
   size_t swaps = 0;
   EvalT determinant = 1;
