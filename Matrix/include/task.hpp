@@ -32,8 +32,15 @@ Matrix<T> read_matrix(std::istream& input)
 template<typename T, typename EvalT=double>
 void task(std::istream& input, std::ostream& output)
 {
-  Matrix<T> mat = read_matrix<T>(input);
-  output << det<T, EvalT>(mat) << std::endl;
+  try
+  {
+    Matrix<T> mat = read_matrix<T>(input);
+    output << det<T, EvalT>(mat) << std::endl;
+  }
+  catch(const std::exception& e)
+  {
+    std::cerr << "Failed to process matrix: " << e.what() << '\n';
+  }
 }
 
 }
