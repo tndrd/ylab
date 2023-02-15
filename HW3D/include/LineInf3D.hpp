@@ -39,6 +39,6 @@ namespace HW3D
       return abseq(a_, li.get_a()) && p_ == li.get_p(); 
     }
 
-    bool check_param(double t) const noexcept { return true; }
+    static bool check_param(double t) noexcept { return true; }
   }; 
 }

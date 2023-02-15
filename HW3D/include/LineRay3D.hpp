@@ -21,7 +21,7 @@ namespace HW3D
       return a_ == lr.a_ && p_ == lr.p_; 
     }
 
-    bool check_param(double t) const noexcept
+    static bool check_param(double t) noexcept
     {
       return t >= 0; 
     }

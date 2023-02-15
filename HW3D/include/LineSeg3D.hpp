@@ -32,7 +32,7 @@ namespace HW3D
       return li.is_coincident(*this);
     }
 
-    bool check_param(double t) const noexcept
+    static bool check_param(double t) noexcept
     {
       return interval_fit(t, 0, 1); 
     }
