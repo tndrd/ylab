@@ -95,7 +95,7 @@ def line_stretch(tr1, tr2):
 def randplane():
   p = randx() * PLANE_POINT_COEFF 
   n = normalize(randpoint())
-  return np.array([n, p])
+  return (n, p)
 
 def point_plane_stretch(stretchplane, point, coeff):
   n, p = stretchplane
