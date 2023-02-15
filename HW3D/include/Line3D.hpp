@@ -63,4 +63,10 @@ inline std::ostream& operator<<(std::ostream& os, const Line3D& l)
     return os;
 }
 
+inline double dist(const Line3D& line, const Point3D& point)
+{
+  Point3D P = line.get_p() + project_v(point - line.get_p(), line.get_a());
+  return (P - point).length();
+}
+
 }
