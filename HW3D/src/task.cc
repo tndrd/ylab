@@ -1,5 +1,4 @@
 #include "task.hpp"
-#include <cassert>
 
 namespace HW3D
 {
@@ -42,36 +41,50 @@ Triangle3D read_triangle(std::istream& stream)
   }
 }
 
-std::vector<std::vector<Point3D>> read_triangles(std::istream& stream)
+std::list<PointsEntry> read_triangles(std::istream& stream)
 {
   size_t N = 0;
   stream >> N;
   assert(stream.good());
 
-  std::vector<std::vector<Point3D>> triangles;
+  std::list<PointsEntry> triangles;
   for (int i = 0; i < N; i++) {
-    triangles.push_back(read_triangle(stream).simplify());
+    PointsEntry entry {read_triangle(stream).simplify(), i};
+    triangles.push_back(std::move(entry));
   }
 
   return triangles;
 }
 
-std::vector<int> count_intersections(const std::vector<std::vector<Point3D>>& triangles)
+std::vector<int> count_intersections(std::list<PointsEntry>& triangles)
 {
   size_t N = triangles.size();
   std::vector<int> intersections;
 
-  for (int i = 0; i < N; i++)
+  auto p = triangles.begin();
+
+  while(p != triangles.end())
   {
-    for (int k = 0; k < N; k++)
+    auto q  = std::next(p);
+    bool in = false; // Shows if p will go to out
+
+    while(q != triangles.end())
     {
-      if (k == i) continue;
-      if (intersect(triangles[i], triangles[k]))
+      auto next = std::next(q);
+      if (intersect(p->pts, q->pts))
       {
-        intersections.push_back(i);
-        break;
+        if(!in)
+        {
+          intersections.push_back(p->n);
+          in = true;
+        }
+        intersections.push_back(q->n);
+        triangles.erase(q);
       }
+      q = next;
     }
+
+    p = std::next(p);
   }
 
   return intersections;
