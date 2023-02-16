@@ -15,6 +15,7 @@ bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& t
 bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2);
 
 bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2);
+bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2, const Plane3D& p1, const Plane3D& p2);
 
 struct MHIResult
 {

@@ -215,12 +215,11 @@ bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
 {
   Plane3D p1 = tr1.get_plane();
   Plane3D p2 = tr2.get_plane();
+  return intersect_triangles(tr1, tr2, p1, p2);
+}
 
-  //std::cout << "Planes: ";
-  //std::cout << p1;
-  //std::cout << " | " << p2;
-
-  // Intersect triangles' planes
+bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2, const Plane3D& p1, const Plane3D& p2)
+{
   PlaneRelation pi = get_plane_relation(p1, p2);
 
   switch(pi.get_state())
