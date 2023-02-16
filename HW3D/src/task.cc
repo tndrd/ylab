@@ -30,15 +30,8 @@ Triangle3D read_triangle(std::istream& stream)
   Point3D p2 {x2, y2, z2};
   Point3D p3 {x3, y3, z3};
 
-  try
-  {
-    Triangle3D tr {p1, p2, p3};
-    return tr;
-  }
-  catch (std::invalid_argument)
-  {
-    throw std::runtime_error("Attempt to create triangle with two or more coincident points");
-  }
+  Triangle3D tr {p1, p2, p3};
+  return tr;
 }
 
 std::list<PointsEntry> read_triangles(std::istream& stream)
@@ -48,10 +41,8 @@ std::list<PointsEntry> read_triangles(std::istream& stream)
   assert(stream.good());
 
   std::list<PointsEntry> triangles;
-  for (int i = 0; i < N; i++) {
-    PointsEntry entry {read_triangle(stream).simplify(), i};
-    triangles.push_back(std::move(entry));
-  }
+  for (int i = 0; i < N; i++)
+    triangles.push_back({{read_triangle(stream)}, i});
 
   return triangles;
 }
@@ -71,7 +62,7 @@ std::vector<int> count_intersections(std::list<PointsEntry>& triangles)
     while(q != triangles.end())
     {
       auto next = std::next(q);
-      if (intersect(p->pts, q->pts))
+      if (intersect(p->pgroup, q->pgroup))
       {
         if(!in)
         {

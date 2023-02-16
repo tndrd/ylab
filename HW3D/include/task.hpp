@@ -9,7 +9,7 @@ namespace HW3D
 
 struct PointsEntry
 {
-  std::vector<Point3D> pts;
+  PointGroup pgroup;
   int n;
 };
 
