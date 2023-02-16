@@ -37,7 +37,7 @@ class Triangle3D final
   }
 
   // Returns specified vertice of triangle
-  Vec3D get_vertice(u_char i) const
+  const Vec3D& get_vertice(u_char i) const
   {
     return vertices_[i]; // Will throw an exception if index out of range
   }
