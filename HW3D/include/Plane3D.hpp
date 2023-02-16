@@ -44,9 +44,9 @@ class Plane3D final
   }
 
   public:
-  Plane3D(const Vec3D& n, double s): n_(n), s_(s)
+  Plane3D(const Vec3D& n = {0,0,0}, double s=NAN): n_(n), s_(s)
   {
-    if (n_ == Vec3D{0, 0, 0}) throw std::invalid_argument("Plane normal vector can not be zero");
+    //if (n_ == Vec3D{0, 0, 0}) throw std::invalid_argument("Plane normal vector can not be zero");
     normalize();
   }
 
