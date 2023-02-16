@@ -77,11 +77,17 @@ class Plane3D final
   }
 };
 
+inline std::ostream& operator<<(std::ostream& os, const Plane3D& p)
+{
+    os << "n: " << p.get_n() << " s:" << p.get_s();
+    return os;
+}
+
 inline double dist(const Plane3D& plane, const Point3D& point)
 {
   Point3D S = plane.get_s() * plane.get_n();
   double d = plane.get_n() * (point - S);
-  return std::abs(d);
+  return d;
 }
 
 }
