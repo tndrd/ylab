@@ -10,6 +10,8 @@ std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& directio
 
 bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2);
 
+bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2, const Plane3D& p1, const Plane3D& p2, const PlaneRelation& pi);
+bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2, const Plane3D& p1, const Plane3D& p2);
 bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2);
 
 bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2);
@@ -19,9 +21,9 @@ struct MHIResult
   enum {
     FOUND,
     NONE,
-    SINGLE
+    SINGLE,
   } status;
-  std::array<double, 2> val;
+  std::array<double, 2> val = {0, 0};
 };
 
 struct ZeroSearch

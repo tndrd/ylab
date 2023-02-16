@@ -3,27 +3,30 @@
 namespace HW3D
 {
 
-int distsign(double dist) noexcept
+int sgn(double val) {
+    return lesser(double(0), val) - lesser(val, double(0));
+}
+
+int distsign(const double dist) noexcept
 {
-  return (fit(dist, 0)) ? 0 : 1 - (2 * std::signbit(dist));
-  //return std::signbit(dist);
+  //return (fit(dist, 0)) ? 0 : 1 - (2 * std::signbit(dist));
+  return sgn(dist);
 }
 
 int find_separate_point(const std::array<int, 3>& signs) noexcept
 {
   for (int i = 0; i < 3; ++i)
-  {
-    int s_i   = signs[i];
-    int s_i_r = signs[(i+1)%3];
-    int s_i_l = signs[(i+2)%3];
+  { 
+    int s_i = signs[i];
+    if (!s_i) continue;
     
-    bool cond1 = (s_i != s_i_r) || !s_i_r;
-    bool cond2 = (s_i != s_i_l) || !s_i_l;
+    int s_i_r = signs[(i+1)%3];
+    if(s_i == s_i_r) continue;
 
-    if (s_i && cond1 && cond2)
-    {
-      return i;
-    }
+    int s_i_l = signs[(i+2)%3];
+    if(s_i == s_i_l) continue;
+    
+    return i;
   }
   return -1;
 }
@@ -38,13 +41,17 @@ std::array<int, 3> get_dist_signs(const std::array<double, 3>& distances) noexce
   return signs;
 }
 
+double get_projection(const Point3D& vertice, const LineInf3D& line) noexcept
+{
+  return line.get_a() * (vertice - line.get_p());
+}
+
 std::array<double, 3> get_projections(const Triangle3D& tr, const LineInf3D& line) noexcept
 {
   std::array<double, 3> projections;
-  for (int i = 0; i < 3; i++)
+  for (int i = 0; i < 3; ++i)
   { 
-    double V = line.get_a() * (tr.get_vertice(i) - line.get_p());
-    projections[i] = V;
+    projections[i] = get_projection(tr.get_vertice(i), line);
   }
   return projections;
 }
@@ -71,7 +78,6 @@ ZeroSearch find_zero(const std::array<int, 3>& signs) noexcept
 
 MHIResult MollerHainsInterval(const Triangle3D& tr, const LineInf3D& line, const Plane3D& plane) noexcept
 {
-  std::array<double, 3> projections = get_projections(tr, line);
   std::array<double, 3> distances   = get_distances(tr, plane);
   std::array<int, 3>    dist_signs  = get_dist_signs(distances);
 
@@ -81,19 +87,20 @@ MHIResult MollerHainsInterval(const Triangle3D& tr, const LineInf3D& line, const
     ZeroSearch zero = find_zero(dist_signs);
     if (zero.found)
     {
-      double val = projections[zero.ind];
+      double val = get_projection(tr.get_vertice(zero.ind), line);
       return {MHIResult::SINGLE, {val, val}};
     }
-    return {MHIResult::NONE}; // empty at this moment
+    return {MHIResult::NONE};
   }
 
-  MHIResult intersections;
+  MHIResult intersections {MHIResult::FOUND};
+  std::array<double, 3> projections = get_projections(tr, line);
 
   for (int i = 0; i < 2; ++i)
   {
     int ind = (isep + 1 + i) % 3;
-    double di = dist(plane, tr.get_vertice(ind));
-    double ds = dist(plane, tr.get_vertice(isep));
+    double di = distances[ind];
+    double ds = distances[isep];
     double c = di / (di - ds);
     double t = projections[ind] + (projections[isep] - projections[ind]) * c;
     intersections.val[i] = t;
@@ -101,6 +108,49 @@ MHIResult MollerHainsInterval(const Triangle3D& tr, const LineInf3D& line, const
   
   std::sort(intersections.val.begin(), intersections.val.end());
   return intersections;
+}
+
+
+bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
+{
+  Plane3D p1 = tr1.get_plane();
+  Plane3D p2 = tr2.get_plane();
+
+  PlaneRelation pi = get_plane_relation(p1, p2);
+  return intersect_noncomplanar_triangles(tr1, tr2, p1, p2, pi);
+}
+
+bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2, const Plane3D& p1, const Plane3D& p2)
+{
+  PlaneRelation pi = get_plane_relation(p1, p2);
+  return intersect_noncomplanar_triangles(tr1, tr2, p1, p2, pi);
+}
+
+// Reference: [GCT page 541]
+bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2, const Plane3D& p1, const Plane3D& p2, const PlaneRelation& pi)
+{
+  //Plane3D p1 = tr1.get_plane();
+  //Plane3D p2 = tr2.get_plane();
+
+  //PlaneRelation pi = get_plane_relation(p1, p2);
+  LineInf3D pil = get_plane_intersection(p1, p2, pi);
+  
+  MHIResult mhi1 = MollerHainsInterval(tr1, pil, p2);
+  if (mhi1.status == mhi1.NONE) return false;
+  std::array<double, 2>& intrs1 = mhi1.val;
+  
+  MHIResult mhi2 = MollerHainsInterval(tr2, pil, p1);
+  if (mhi2.status == mhi2.NONE) return false;
+  std::array<double, 2>& intrs2 = mhi2.val;
+
+  double max1 = intrs1.back();
+  double min1 = intrs1.front();
+
+  double max2 = intrs2.back();
+  double min2 = intrs2.front();
+
+  // Next we shold apply interval overlap method
+  return intervals_intersect(min1, max1, min2, max2);
 }
 
 
@@ -161,34 +211,6 @@ std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& directio
   return {*minmax.first, *minmax.second}; 
 }
 
-// Reference: [GCT page 541]
-bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
-{
-  Plane3D p1 = tr1.get_plane();
-  Plane3D p2 = tr2.get_plane();
-
-  PlaneRelation pi = get_plane_relation(p1, p2);
-  LineInf3D pil = get_plane_intersection(p1, p2, pi);
-
-  MHIResult mhi1 = MollerHainsInterval(tr1, pil, p2);
-  std::array<double, 2> intrs1 = mhi1.val;
-  
-  MHIResult mhi2 = MollerHainsInterval(tr2, pil, p1);
-  std::array<double, 2> intrs2 = mhi2.val;
-
-  if (mhi1.status == mhi1.NONE || mhi2.status == mhi2.NONE)
-    return false;
-
-  double max1 = intrs1.back();
-  double min1 = intrs1.front();
-
-  double max2 = intrs2.back();
-  double min2 = intrs2.front();
-
-  // Next we shold apply interval overlap method
-  return intervals_intersect(min1, max1, min2, max2);
-}
-
 bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
 {
   Plane3D p1 = tr1.get_plane();
@@ -218,7 +240,7 @@ bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
     case pi.INTERSECTING:
     {
       //std::cout << ": INTERSECTING" << std::endl;
-      return intersect_noncomplanar_triangles(tr1, tr2);
+      return intersect_noncomplanar_triangles(tr1, tr2, p1, p2, pi);
     }
   } 
 
