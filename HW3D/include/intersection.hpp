@@ -9,6 +9,18 @@
 namespace HW3D
 {
 
+struct PointGroup
+{
+  std::vector<Point3D> pts;
+  Plane3D pl;
+
+  PointGroup(const Triangle3D& tr):
+  pts {tr.simplify()},
+  pl  {tr.get_plane()}
+  {
+  }
+};
+
 inline bool base_intersect(const Point3D& pt1, const Point3D& pt2) 
 {
   //std::cout << "PP" << std::endl;
@@ -110,6 +122,14 @@ inline bool base_intersect(const LineSeg3D& l, const Triangle3D& tr)
   return false;
 }
 
+inline bool triangles_with_planes_intersection(const PointGroup& pg1, const PointGroup& pg2)
+{
+  Triangle3D tr1 {pg1.pts[0], pg1.pts[1], pg1.pts[2]};
+  Triangle3D tr2 {pg2.pts[0], pg2.pts[1], pg2.pts[2]};
+
+  return intersect_triangles(tr1, tr2, pg1.pl, pg2.pl);
+}
+
 inline bool base_intersect(const Triangle3D& tr1, const Triangle3D& tr2) 
 {
   //std::cout << "TT" << std::endl;
@@ -123,40 +143,33 @@ inline bool base_intersect(const Triangle3D& tr1, const Triangle3D& tr2)
 // I am not sure this is a best way to choose intersection algorithm
 // I think other implementations may use dynamical polymorhism but i
 // don't want to use it due to potential overhead
-inline bool intersect(const std::vector<Point3D>& unique1, const std::vector<Point3D>& unique2)
+inline bool intersect(const PointGroup& pg1, const PointGroup& pg2)
 {
-  switch (unique1.size())
+  switch (pg1.pts.size())
   {
-    case 1: switch(unique2.size())
+    case 1: switch(pg2.pts.size())
             {
-              case 1:  return base_intersect(Point3D{unique1[0]}, Point3D{unique2[0]});
-              case 2:  return base_intersect(Point3D{unique1[0]}, LineSeg3D{unique2[0], unique2[1]});
-              case 3:  return base_intersect(Point3D{unique1[0]}, Triangle3D{unique2[0], unique2[1], unique2[2]});
-              default: throw std::runtime_error("Incorrect unique size");
+              case 1:  return base_intersect(Point3D{pg1.pts[0]}, Point3D{pg2.pts[0]});
+              case 2:  return base_intersect(Point3D{pg1.pts[0]}, LineSeg3D{pg2.pts[0], pg2.pts[1]});
+              case 3:  return base_intersect(Point3D{pg1.pts[0]}, Triangle3D{pg2.pts[0], pg2.pts[1], pg2.pts[2]});
+              default: throw std::runtime_error("Incorrect pg size");
             } 
-    case 2: switch(unique2.size())
+    case 2: switch(pg2.pts.size())
             {
-              case 1:  return base_intersect(Point3D{unique2[0]},  LineSeg3D{unique1[0], unique1[1]});
-              case 2:  return base_intersect(LineSeg3D{unique1[0], unique1[1]}, LineSeg3D{unique2[0], unique2[1]});
-              case 3:  return base_intersect(LineSeg3D{unique1[0], unique1[1]}, Triangle3D{unique2[0], unique2[1], unique2[2]});
-              default: throw std::runtime_error("Incorrect unique size");
+              case 1:  return base_intersect(Point3D{pg2.pts[0]},  LineSeg3D{pg1.pts[0], pg1.pts[1]});
+              case 2:  return base_intersect(LineSeg3D{pg1.pts[0], pg1.pts[1]}, LineSeg3D{pg2.pts[0], pg2.pts[1]});
+              case 3:  return base_intersect(LineSeg3D{pg1.pts[0], pg1.pts[1]}, Triangle3D{pg2.pts[0], pg2.pts[1], pg2.pts[2]});
+              default: throw std::runtime_error("Incorrect pg size");
             }
-    case 3: switch(unique2.size())
+    case 3: switch(pg2.pts.size())
             {
-              case 1:  return base_intersect(Point3D{unique2[0]}, Triangle3D{unique1[0], unique1[1], unique1[2]});
-              case 2:  return base_intersect(LineSeg3D{unique2[0], unique2[1]}, Triangle3D{unique1[0], unique1[1], unique1[2]});
-              case 3:  return base_intersect(Triangle3D{unique1[0], unique1[1], unique1[2]}, Triangle3D{unique2[0], unique2[1], unique2[2]});
-              default: throw std::runtime_error("Incorrect unique size");
+              case 1:  return base_intersect(Point3D{pg2.pts[0]}, Triangle3D{pg1.pts[0], pg1.pts[1], pg1.pts[2]});
+              case 2:  return base_intersect(LineSeg3D{pg2.pts[0], pg2.pts[1]}, Triangle3D{pg1.pts[0], pg1.pts[1], pg1.pts[2]});
+              case 3:  return triangles_with_planes_intersection(pg1, pg2);
+              default: throw std::runtime_error("Incorrect pg size");
             }
-    default:  throw std::runtime_error("Incorrect unique size");
+    default:  throw std::runtime_error("Incorrect pg size");
   }
-}
-
-inline bool intersect(const Triangle3D& tr1, const Triangle3D& tr2)
-{
-  std::vector<Point3D> unique1 = tr1.simplify();
-  std::vector<Point3D> unique2 = tr2.simplify();
-  return intersect(unique1, unique2);
 }
 
 }
