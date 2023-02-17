@@ -85,8 +85,7 @@ inline std::ostream& operator<<(std::ostream& os, const Plane3D& p)
 
 inline double dist(const Plane3D& plane, const Point3D& point)
 {
-  Point3D S = plane.get_s() * plane.get_n();
-  double d = plane.get_n() * (point - S);
+  double d = (plane.get_n() * point) - plane.get_s();
   return d;
 }
 
