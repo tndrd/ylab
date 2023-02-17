@@ -209,11 +209,13 @@ inline PlaneRelation get_plane_relation(const PlaneT1& p1, const PlaneT2& p2) no
   Vec3D  n2 = p2.get_n();
   double s2 = p2.get_s();
 
-  double a1  = s2 * (n1 * n2) - s1 * (n2 * n2);
-  double b1  = s1 * (n1 * n2) - s2 * (n1 * n1);
+  double mul = n1 * n2;
 
-  double den = (n1 * n2) * (n1 * n2) - (n1 * n1) * (n2 * n2); // Zero-division error is not possible,
-                                                              // planes are not parallel
+  double a1  = s2 * mul - s1;
+  double b1  = s1 * mul - s2;
+
+  double den = (mul * mul) - 1; // Zero-division error is not possible,
+                                // planes are not parallel
 
   return {state_t::INTERSECTING, a1 / den, b1 / den};
 }
