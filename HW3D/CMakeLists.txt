@@ -5,7 +5,7 @@ set(HEADERS_PATH include)
 set(SOURCES_PATH src)
 
 
-set(CMAKE_CXX_FLAGS "-std=c++17 -O0 -g")
+set(CMAKE_CXX_FLAGS "-std=c++17 -O2 -g -Wall -Wextra")
 
 add_library(lib3D INTERFACE)
 target_include_directories(lib3D INTERFACE ${HEADERS_PATH})
