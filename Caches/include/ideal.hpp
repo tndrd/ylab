@@ -40,7 +40,7 @@ template <typename PageT, typename KeyT=int> struct ideal
     {
       if (future[i] == key) return i;
     }
-    return 0;
+    return future.size();
   }
 
   struct CacheFarthest
@@ -76,7 +76,7 @@ template <typename PageT, typename KeyT=int> struct ideal
 
     CacheFarthest cache_farthest = find_farthest_in_cache(future, now);
     size_t input_farthest = find_first_occurence(future[now], future, now + 1);
-  
+
     if (cache_farthest.it != cache_.end())
     {
       if (input_farthest != 0 && cache_farthest.pos > input_farthest)
@@ -100,7 +100,8 @@ template <typename PageT, typename KeyT=int> struct ideal
   template<typename F> bool lookup_update(KeyT key, F slow_get_page, std::vector<PageT>& future, size_t now)
   {
     assert(now < future.size());
-    
+    if(sz_ == 0) return false;
+
     auto hit = hash_.find(key);
 
     if (hit == hash_.end())

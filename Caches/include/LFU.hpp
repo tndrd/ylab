@@ -8,7 +8,6 @@ namespace HWCache
 {
   template <typename PageT, typename KeyT=int> struct LFU
   {
-
     struct LFU_unit
     {
       PageT  content_; // Page content
@@ -45,6 +44,9 @@ namespace HWCache
 
     template<typename F> bool lookup_update(KeyT key, F slow_get_page)
     {
+
+      if (sz_ == 0) return false;
+
       auto hit = hash_.find(key);
 
       if (hit == hash_.end())

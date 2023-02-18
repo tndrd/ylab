@@ -21,6 +21,9 @@ namespace HWCache
 
     template<typename F> bool lookup_update(KeyT key, F slow_get_page)
     {
+
+      if(sz_ == 0) return 0;
+
       auto hit = hash_.find(key);
 
       if (hit == hash_.end())
