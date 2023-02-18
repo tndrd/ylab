@@ -29,7 +29,7 @@ template<typename CacheT> void test_cache(const char* testfile)
     output.clear();
     output.str("");
 
-    EXPECT_EQ(got, expected);
+    EXPECT_EQ(got, expected) << "On test #" << i + 1 << std::endl;
   }
 }
 }
