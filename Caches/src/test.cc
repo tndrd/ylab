@@ -6,19 +6,34 @@
 
 using namespace HWCache;
 
-TEST(LRU, E2E)
+TEST(LRU, E2E_hardcoded)
 {
   test_cache<LRU<int>>("tests/LRU.test");
 }
 
-TEST(LFU, E2E)
+TEST(LRU, E2E_gen)
+{
+  test_cache<LRU<int>>("tests/LRU_gen.test");
+}
+
+TEST(LFU, E2E_hardcoded)
 {
   test_cache<LFU<int>>("tests/LFU.test");
 }
 
-TEST(ideal, E2E)
+TEST(LFU, E2E_gen)
+{
+  test_cache<LFU<int>>("tests/LFU_gen.test");
+}
+
+TEST(ideal, E2E_hardcoded)
 {
   test_cache<ideal<int>>("tests/ideal.test");
+}
+
+TEST(ideal, E2E_gen)
+{
+  test_cache<ideal<int>>("tests/ideal_gen.test");
 }
 
 int main(int argc, char **argv) {
