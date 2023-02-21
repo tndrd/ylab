@@ -116,4 +116,4 @@ class LFUCache:
     
     return 0
 
-CACHES = [(IdealCache, "ideal"), (LRUCache, "LRU"), (LFUCache, "LFU")]
+CACHES = {"ideal": IdealCache, "LRU": LRUCache, "LFU": LFUCache}
