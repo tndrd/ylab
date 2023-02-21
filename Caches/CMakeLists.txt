@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(HWCache)
 
+set(CMAKE_CXX_FLAGS "-g -DNDEBUG")
+add_definitions(-DNDEBUG)
 set(HEADERS_PATH include)
 set(SOURCES_PATH src)
 
@@ -16,6 +18,9 @@ target_link_libraries(LFU libcaches)
 
 add_executable(ideal ${SOURCES_PATH}/ideal.cc)
 target_link_libraries(ideal libcaches)
+
+add_executable(ideal_old ${SOURCES_PATH}/ideal_old.cc)
+target_link_libraries(ideal_old libcaches)
 
 # Testing
 
