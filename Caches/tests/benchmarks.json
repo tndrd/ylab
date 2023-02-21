@@ -28,6 +28,15 @@
     },
 
     {
+      "name":       "ideal_perf_10_10e6_1000",
+      "cache":      "ideal",
+      "cache_size": [10, 10],
+      "data_len":   [1000000, 1000000],
+      "maxval":     1000,
+      "amount":     1
+    },
+
+    {
       "name":       "ideal_perf_10_10e6_100",
       "cache":      "ideal",
       "cache_size": [10, 10],
