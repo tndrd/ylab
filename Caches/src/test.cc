@@ -38,6 +38,16 @@ TEST(ideal, E2E_gen)
   test_cache<ideal<int>>("tests/build/ideal_gen.test");
 }
 
+TEST(ideal_old, E2E_hardcoded)
+{
+  test_cache<ideal_old<int>>("tests/build/ideal.test");
+}
+
+TEST(ideal_old, E2E_gen)
+{
+  test_cache<ideal_old<int>>("tests/build/ideal_gen.test");
+}
+
 // -------------- IDEAL CACHE PERFORMANCE -----------------
 
 TEST(ideal, E2E_perf1)
