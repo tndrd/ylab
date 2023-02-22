@@ -5,6 +5,10 @@
 !include/*
 !src
 !src/*
-!tests/*
+!tests/*.test
+!tests/*.py
+!tests/*.json
 !tests/
+!tests/build/
+!tests/build/*
 !CMakeLists.txt
