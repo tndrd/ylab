@@ -1,6 +1,7 @@
 from prototypes import *
 import random
 from tqdm import tqdm
+import numpy as np
 
 import json
 
@@ -34,7 +35,7 @@ def gen_single_test(config):
   cache_size = random.randint(config.MIN_CACHE_SIZE, config.MAX_CACHE_SIZE)
   data_len   = random.randint(config.MIN_DATA_LEN,   config.MAX_DATA_LEN)
   dataset    = set(range(0, config.maxval))
-  testdata   = [random.sample(dataset, 1)[0] for i in range(data_len)]
+  testdata   = np.array([random.sample(dataset, 1)[0] for i in range(data_len)])
 
   test = get_test(config.cache_t, cache_size, testdata)
   return test_to_string(*test)
@@ -50,7 +51,7 @@ def gen_tests(config):
 def gen_all_tests(config):
   print(f"Generating benchmark {config.name}:")
   tests = gen_tests(config)
-  with open(config.name + '_gen.test', 'w') as f:
+  with open("./build/" + config.name + '_gen.test', 'w') as f:
     f.write(tests)
 
 def load_config(benchmark):

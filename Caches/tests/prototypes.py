@@ -1,17 +1,13 @@
+import numpy as np
+
 def argmax(li):
-  maxind = 0
-  for i in range(1, len(li)):
-    if li[i] > li[maxind]:
-      maxind = i
+  maxind = np.argmax(li)
   return maxind, li[maxind] 
 
 def first_occurence(item, li):
-    ind = len(li)
-    for i in range(len(li)):
-      if item == li[i]:
-        ind = i
-        break
-    return ind
+    inds = np.where(item == li)[0]
+    if len(inds) == 0: return len(li)
+    return inds[0]
 
 def find_in_future(item, future, now):
   return first_occurence(item, future[now + 1:])
@@ -19,9 +15,10 @@ def find_in_future(item, future, now):
 class IdealCache:
   def __init__(self, size):
     self.size = size
-    self.data = []
+    self.data = np.array([None]*size)
+    self.used = 0
 
-  def full(self): return len(self.data) == self.size
+  def full(self): return self.used == self.size
 
   def lookup_update(self, item, future, now):
     
@@ -31,7 +28,8 @@ class IdealCache:
       return 1
     
     elif not self.full():
-      self.data.append(item)
+      self.data[self.used] = item
+      self.used = self.used + 1
       return 0
     
     elif now != len(future) - 1:
@@ -39,8 +37,7 @@ class IdealCache:
       input_far_pos = find_in_future(item, future, now)
 
       if cache_far_pos > input_far_pos:
-        self.data.remove(self.data[cache_far_ind])
-        self.data.append(item)
+        self.data[cache_far_ind] = item
     
     return 0
 
