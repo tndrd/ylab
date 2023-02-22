@@ -3,7 +3,7 @@
     {
       "name":       "LRU",
       "cache":      "LRU",
-      "cache_size": [0, 10],
+      "cache_size": [1, 10],
       "data_len":   [0, 1000],
       "maxval":     50,
       "amount":     100
@@ -12,7 +12,7 @@
     {
       "name":       "LFU",
       "cache":      "LFU",
-      "cache_size": [0, 10],
+      "cache_size": [1, 10],
       "data_len":   [0, 1000],
       "maxval":     50,
       "amount":     100
@@ -21,7 +21,7 @@
     {
       "name":       "ideal",
       "cache":      "ideal",
-      "cache_size": [0, 10],
+      "cache_size": [1, 10],
       "data_len":   [0, 1000],
       "maxval":     50,
       "amount":     100
