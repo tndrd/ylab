@@ -38,16 +38,26 @@ TEST(ideal, E2E_gen)
   test_cache<ideal<int>>("tests/build/ideal_gen.test");
 }
 
-// -------------- IDEAL PERFORMANCE ----------------------
+// -------------- IDEAL CACHE PERFORMANCE -----------------
 
-TEST(ideal, E2E_perf)
+TEST(ideal, E2E_perf1)
 {
-  test_cache<ideal<int>>("tests/build/ideal_perf.test");
+  test_cache<ideal<int>>("tests/build/ideal_perf_10_10e6_100_gen.test");
 }
 
-TEST(ideal_old, E2E_perf)
+TEST(ideal_old, E2E_perf1)
 {
-  test_cache<ideal_old<int>>("tests/build/ideal_perf.test");
+  test_cache<ideal_old<int>>("tests/build/ideal_perf_10_10e6_100_gen.test");
+}
+
+TEST(ideal, E2E_perf2)
+{
+  test_cache<ideal<int>>("tests/build/ideal_perf_10_10e6_1000_gen.test");
+}
+
+TEST(ideal_old, E2E_perf2)
+{
+  test_cache<ideal_old<int>>("tests/build/ideal_perf_10_10e6_1000_gen.test");
 }
 
 int main(int argc, char **argv) {
