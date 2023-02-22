@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(HWCache)
 
-set(CMAKE_CXX_FLAGS "-g -DNDEBUG")
+set(CMAKE_CXX_FLAGS "-g -DNDEBUG -O2")
 add_definitions(-DNDEBUG)
 set(HEADERS_PATH include)
 set(SOURCES_PATH src)
