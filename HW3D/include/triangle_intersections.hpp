@@ -6,7 +6,7 @@
 
 namespace HW3D
 {
-std::array<data_t,2> ComputeInterval(const Triangle3D& tr, const Vec3D& direction);
+std::array<data_t, 2> ComputeInterval(const Triangle3D& tr, const Vec3D& direction);
 
 bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2);
 
