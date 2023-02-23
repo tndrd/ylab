@@ -14,11 +14,7 @@ struct PointGroup
   std::vector<Point3D> pts;
   Plane3D pl;
 
-  PointGroup(const Triangle3D& tr):
-  pts {tr.simplify()},
-  pl  {tr.get_plane()}
-  {
-  }
+  PointGroup(const Triangle3D& tr): pts {tr.simplify()}, pl {tr.get_plane()} { }
 };
 
 inline bool base_intersect(const Point3D& pt1, const Point3D& pt2) 
