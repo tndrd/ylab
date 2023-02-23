@@ -49,7 +49,7 @@ class Triangle3D final
     for (int i = 0; i < 3; ++i)
     {
       bool is_unique = true;
-      for (int k = 0; k < unique_points.size(); ++k)
+      for (size_t k = 0; k < unique_points.size(); ++k)
         if (get_vertice(i) == unique_points[k])
         {
           is_unique = false;

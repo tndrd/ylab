@@ -47,7 +47,7 @@ inline bool base_intersect(const Point3D& pt, const LineSeg3D& l)
     return false;
   }
   double t2 = (direction * direction) / (a * a);
-  bool param = l.check_param(std::sqrt(t2));
+  //bool param = l.check_param(std::sqrt(t2));
   //std::cout << "param: " << t2 << std::endl; 
   return l.check_param(std::sqrt(t2));
 }

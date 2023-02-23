@@ -68,7 +68,7 @@ std::array<double, 3> get_distances(const Triangle3D& tr, const Plane3D& plane) 
 
 ZeroSearch find_zero(const std::array<int, 3>& signs) noexcept
 {
-  for (int i = 0; i < 3; ++i)
+  for (size_t i = 0; i < 3; ++i)
   {
     if (signs[i] == 0)
       return {true, i};

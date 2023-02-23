@@ -36,7 +36,6 @@ TEST(Vec3D, VectorOperations)
 {
   Vec3D a = {3, 4, 5};
   Vec3D b = {5, 4, 6};
-  Vec3D c = {15, 16, 30};
   EXPECT_EQ(a * b, 15 + 16 + 30);
 
   Vec3D v1 = {3, 3, 3};
@@ -1614,7 +1613,7 @@ TEST(AllTriangles, Generated)
 
   input >> n_tests;
 
-  for(int i = 0; i < n_tests; ++i)
+  for(size_t i = 0; i < n_tests; ++i)
   {
     bool expected;
     bool result;
@@ -1699,9 +1698,9 @@ TEST(Task, E2E_Hardcoded)
 
   std::vector<int> answers_c;
 
-  for (int i = 0; i < N; i++)
+  for (size_t i = 0; i < N; i++)
   {
-    for (int k = 0; k < N; k++)
+    for (size_t k = 0; k < N; k++)
     {
       if (k == i) continue;
       if (intersect_triangles(triangles[i], triangles[k]))
@@ -1729,7 +1728,7 @@ bool read_and_compare(std::istream& input)
   input >> expected_output_length;
 
   size_t result;
-  for (int i = 0; i < expected_output_length; ++i)
+  for (size_t i = 0; i < expected_output_length; ++i)
   {
     input >> result;
     expected_output << result << " ";
@@ -1751,7 +1750,7 @@ TEST(Task, E2E_Hardcoded_from_file)
   size_t n_tests;
   input >> n_tests;
   
-  for (int i = 0; i < n_tests; ++i)
+  for (size_t i = 0; i < n_tests; ++i)
   {
     EXPECT_TRUE(read_and_compare(input)) << "On test #" << i << std::endl;
   }

@@ -10,7 +10,7 @@ namespace HW3D
 struct PointsEntry
 {
   PointGroup pgroup;
-  int n;
+  size_t n;
 };
 
 Triangle3D read_triangle(std::istream& stream);

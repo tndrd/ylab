@@ -124,7 +124,7 @@ inline LineRelation get_line_relation(const LineT1& l1, const LineT2& l2) noexce
   const double C = a2 * a2;
   const double D = a1 * u;
   const double E = a2 * u;
-  const double F = u * u;
+  //const double F = u * u;
 
   double denominator = (A*C - B*B);
 
@@ -222,7 +222,7 @@ inline PlaneRelation get_plane_relation(const PlaneT1& p1, const PlaneT2& p2) no
 
 // Returns the intersection point of two lines. Given lines should really intersect
 template<typename LineT1, typename LineT2>
-inline Point3D get_line_intersection(const LineT1& l1, const LineT2& l2, const LineRelation& relation)
+inline Point3D get_line_intersection(const LineT1& l1, const LineT2& /*l2*/, const LineRelation& relation)
 {
   if (relation.get_state() != relation.INTERSECTING)
     throw std::invalid_argument("Attempt to intersect non-intersecting lines");
@@ -231,7 +231,7 @@ inline Point3D get_line_intersection(const LineT1& l1, const LineT2& l2, const L
 }
 
 template<typename LineT>
-inline Point3D get_line_plane_intersection(const LineT& l, const Plane3D& pl, const LinePlaneRelation& relation)
+inline Point3D get_line_plane_intersection(const LineT& l, const Plane3D& /*pl*/, const LinePlaneRelation& relation)
 {
   if (relation.get_state() != relation.INTERSECTING)
     throw std::invalid_argument("Attempt to intersect non-intersecting lines");

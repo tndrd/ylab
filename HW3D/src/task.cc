@@ -41,7 +41,7 @@ std::list<PointsEntry> read_triangles(std::istream& stream)
   assert(stream.good());
 
   std::list<PointsEntry> triangles;
-  for (int i = 0; i < N; i++)
+  for (size_t i = 0; i < N; i++)
     triangles.push_back({{read_triangle(stream)}, i});
 
   return triangles;
@@ -49,7 +49,6 @@ std::list<PointsEntry> read_triangles(std::istream& stream)
 
 std::vector<int> count_intersections(std::list<PointsEntry>& triangles)
 {
-  size_t N = triangles.size();
   std::vector<int> intersections;
 
   auto p = triangles.begin();
@@ -85,7 +84,7 @@ void write_intersections(std::ostream& stream, const std::vector<int>& intersect
 {
   size_t N = intersections.size();
 
-  for (int i = 0; i < N; ++i)
+  for (size_t i = 0; i < N; ++i)
   {
     stream << intersections[i] << " ";
   }
