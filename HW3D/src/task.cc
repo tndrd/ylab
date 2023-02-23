@@ -5,17 +5,17 @@ namespace HW3D
 
 Triangle3D read_triangle(std::istream& stream)
 {
-  double x1 = NAN;
-  double y1 = NAN;
-  double z1 = NAN;
+  data_t x1 = NAN;
+  data_t y1 = NAN;
+  data_t z1 = NAN;
 
-  double x2 = NAN;
-  double y2 = NAN;
-  double z2 = NAN;
+  data_t x2 = NAN;
+  data_t y2 = NAN;
+  data_t z2 = NAN;
 
-  double x3 = NAN;
-  double y3 = NAN;
-  double z3 = NAN;
+  data_t x3 = NAN;
+  data_t y3 = NAN;
+  data_t z3 = NAN;
 
   stream >> x1 >> y1 >> z1;
   assert(stream.good());

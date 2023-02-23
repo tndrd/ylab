@@ -46,7 +46,7 @@ inline bool base_intersect(const Point3D& pt, const LineSeg3D& l)
     //std::cout << "2" << std::endl;
     return false;
   }
-  double t2 = (direction * direction) / (a * a);
+  data_t t2 = (direction * direction) / (a * a);
   //bool param = l.check_param(std::sqrt(t2));
   //std::cout << "param: " << t2 << std::endl; 
   return l.check_param(std::sqrt(t2));
@@ -57,8 +57,8 @@ inline bool base_intersect(const Point3D& pt, const Triangle3D& tr)
   //std::cout << "PT" << std::endl;
   Plane3D plane = tr.get_plane();
 
-  double s0 = pt * plane.get_n();
-  double s  = plane.get_s();
+  data_t s0 = pt * plane.get_n();
+  data_t s  = plane.get_s();
   if (!fit(s0, s)) return false;
   
   auto normals = get_edge_normals(tr);
@@ -66,10 +66,10 @@ inline bool base_intersect(const Point3D& pt, const Triangle3D& tr)
   {
     auto interval = ComputeInterval(tr, normals[i]);
     
-    double min = interval[0];
-    double max = interval[1];
+    data_t min = interval[0];
+    data_t max = interval[1];
     
-    double t = pt * normals[i];
+    data_t t = pt * normals[i];
     if (!interval_fit(t, min, max)) return false;
   }
   return true;
@@ -110,7 +110,7 @@ inline bool base_intersect(const LineSeg3D& l, const Triangle3D& tr)
 
   if (rel.get_state() == LinePlaneRelation::COINCIDENT)
   {
-    std::vector<double> intersections = intersect_with(tr, l);
+    std::vector<data_t> intersections = intersect_with(tr, l);
     return intersections.size() > 0;
   }
 

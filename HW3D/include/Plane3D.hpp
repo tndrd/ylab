@@ -15,14 +15,14 @@ class Plane3D final
   // Equation should be tranformed into one with s >= 0 
 
   Vec3D  n_;
-  double s_;
+  data_t s_;
 
   Vec3D calc_n(const Point3D& a, const Point3D& b, const Point3D& c) const noexcept
   {
     return vecmul(a - b, c - b);
   }
 
-  double calc_s(const Point3D& a, const Point3D& b, const Point3D& c) const noexcept
+  data_t calc_s(const Point3D& a, const Point3D& b, const Point3D& c) const noexcept
   {
     return det(c, b, a);
   }
@@ -31,9 +31,9 @@ class Plane3D final
   // After the normalization parameters and their planes become one-to-one correspondent 
   void normalize() noexcept
   {
-    double nlen = n_.length();
+    data_t nlen = n_.length();
 
-    double ssgn = 1;
+    data_t ssgn = 1;
     if (s_ != 0)
     {
       ssgn = s_ / std::abs(s_);
@@ -44,7 +44,7 @@ class Plane3D final
   }
 
   public:
-  Plane3D(const Vec3D& n = {0,0,0}, double s=NAN): n_(n), s_(s)
+  Plane3D(const Vec3D& n = {0,0,0}, data_t s=NAN): n_(n), s_(s)
   {
     //if (n_ == Vec3D{0, 0, 0}) throw std::invalid_argument("Plane normal vector can not be zero");
     normalize();
@@ -53,7 +53,7 @@ class Plane3D final
   Plane3D(const Point3D& a, const Point3D& b, const Point3D& c): Plane3D(calc_n(a, b, c), calc_s(a, b, c)) {}
 
   Vec3D  get_n() const noexcept { return n_; }
-  double get_s() const noexcept { return s_; }
+  data_t get_s() const noexcept { return s_; }
 
   // Because of normalization planes wont be equal if their s-params are not same
   bool is_coincident(const Plane3D& p) const noexcept
@@ -83,9 +83,9 @@ inline std::ostream& operator<<(std::ostream& os, const Plane3D& p)
     return os;
 }
 
-inline double dist(const Plane3D& plane, const Point3D& point)
+inline data_t dist(const Plane3D& plane, const Point3D& point)
 {
-  double d = (plane.get_n() * point) - plane.get_s();
+  data_t d = (plane.get_n() * point) - plane.get_s();
   return d;
 }
 

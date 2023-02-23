@@ -40,7 +40,7 @@ class Line3D
   Vec3D   get_a() const noexcept {return a_;}
   Point3D get_p() const noexcept {return p_;}
 
-  Point3D point_from_param(double t) const noexcept
+  Point3D point_from_param(data_t t) const noexcept
   {
     return p_ + (a_ * t);
   }
@@ -54,7 +54,7 @@ class Line3D
   // virtual bool is_coincident(const Line3D&) const { throw; };
 
   // Check if given parameter fits the restrictions on t
-  // virtual bool check_param(double t) const { throw; };  
+  // virtual bool check_param(data_t t) const { throw; };  
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Line3D& l)
@@ -63,7 +63,7 @@ inline std::ostream& operator<<(std::ostream& os, const Line3D& l)
     return os;
 }
 
-inline double dist(const Line3D& line, const Point3D& point)
+inline data_t dist(const Line3D& line, const Point3D& point)
 {
   Point3D P = line.get_p() + project_v(point - line.get_p(), line.get_a());
   return (P - point).length();

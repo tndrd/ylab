@@ -25,7 +25,7 @@ TEST(Vec3D, SimpleOperations)
 TEST(Vec3D, ExtraOperations)
 {
   Vec3D a = {3, 4, 5};
-  const double real_len = 7.07106781;
+  const data_t real_len = 7.07106781;
   EXPECT_FIT(a.length(), real_len);
 
   Vec3D b = {3 / real_len, 4 / real_len, 5 / real_len};
@@ -243,7 +243,7 @@ TEST(Plane3D, ThreePointsGeneral)
 
   Plane3D pl1 {p1, p2, p3};
   Vec3D n1 {0, 0, 1};
-  double s1 = 2;
+  data_t s1 = 2;
   EXPECT_EQ(pl1.get_n(), n1);
   EXPECT_EQ(pl1.get_s(), s1);
   
@@ -252,7 +252,7 @@ TEST(Plane3D, ThreePointsGeneral)
   EXPECT_TRUE(pl1.is_parallel(pl2));
 
   Vec3D n3 {0, 0, -2};
-  double s3 = -4;
+  data_t s3 = -4;
   Plane3D pl3 {n3, s3};
 
   EXPECT_EQ(pl3.get_n(), n1);
@@ -266,9 +266,9 @@ TEST(Plane3D, ThreePoints1)
   Point3D p3 {0, 0, -2};
 
   Plane3D pl {p1, p2, p3};
-  double a = -1 / std::sqrt(3) ;
+  data_t a = -1 / std::sqrt(3) ;
   Vec3D  n {a, a, a};
-  double s = 2 / std::sqrt(3); 
+  data_t s = 2 / std::sqrt(3); 
 
   EXPECT_EQ(pl.get_n(), n);
   EXPECT_EQ(pl.get_s(), s);
@@ -282,7 +282,7 @@ TEST(Plane3D, ThreePoints2)
 
   Plane3D pl {p1, p2, p3};
   Vec3D  n {-1, 0, 0};
-  double s = 0; 
+  data_t s = 0; 
 
   EXPECT_EQ(pl.get_n(), n);
   EXPECT_EQ(pl.get_s(), s);
@@ -296,7 +296,7 @@ TEST(Plane3D, ThreePoints3)
 
   Plane3D pl {p1, p2, p3};
   Vec3D  n {-0.0590024, 0.944039, -0.324513};
-  double s = 6.16576; 
+  data_t s = 6.16576; 
 
   EXPECT_EQ(pl.get_n(), n);
   EXPECT_FIT(pl.get_s(), s);
@@ -310,7 +310,7 @@ TEST(Plane3D, ThreePoints4)
 
   Plane3D pl {p1, p2, p3};
   Vec3D  n {-0.420135, -0.897561, -0.133679};
-  double s = 3.30379; 
+  data_t s = 3.30379; 
 
   EXPECT_EQ(pl.get_n(), n);
   EXPECT_FIT(pl.get_s(), s);
@@ -324,7 +324,7 @@ TEST(Plane3D, ThreePoints5)
 
   Plane3D pl {p1, p2, p3};
   Vec3D  n {-0.506408, 0.272681, -0.818044};
-  double s = 0; 
+  data_t s = 0; 
 
   EXPECT_EQ(pl.get_n(), n);
   EXPECT_EQ(pl.get_s(), s);
@@ -752,7 +752,7 @@ TEST(Triangle3D, General)
   Triangle3D t {p1, p2, p3};
   Plane3D pl = t.get_plane();
   Vec3D  n {-0.506408, 0.272681, -0.818044};
-  double s = 0; 
+  data_t s = 0; 
 
   EXPECT_EQ(pl.get_n(), n);
   EXPECT_EQ(pl.get_s(), s);
@@ -768,7 +768,7 @@ TEST(Triangle3D, Intersection1)
 
   LineInf3D li {p2 - p1, p1}; 
 
-  std::vector<double> intr_c = intersect_with(t, li);
+  std::vector<data_t> intr_c = intersect_with(t, li);
 
   ASSERT_EQ(intr_c.size(), 2);
   Point3D pi1 = li.point_from_param(intr_c[0]);
@@ -790,7 +790,7 @@ TEST(Triangle3D, Intersection2)
 
   LineInf3D li {p2 - p1, p1 + ofs}; 
 
-  std::vector<double> intr_c = intersect_with(t, li);
+  std::vector<data_t> intr_c = intersect_with(t, li);
 
   EXPECT_EQ(intr_c.size(), 0);
 }
@@ -805,7 +805,7 @@ TEST(Triangle3D, Intersection3)
 
   LineSeg3D ls {{-2, -2, -2}, {1, 1, 1}}; 
 
-  std::vector<double> intr_c = intersect_with(t, ls);
+  std::vector<data_t> intr_c = intersect_with(t, ls);
 
   EXPECT_EQ(intr_c.size(), 0);
 }
@@ -823,7 +823,7 @@ TEST(Triangle3D, Intersection4)
 
   LineInf3D li {p2 - p1, p1}; 
 
-  std::vector<double> intr_c = intersect_with(t, li);
+  std::vector<data_t> intr_c = intersect_with(t, li);
 
   ASSERT_EQ(intr_c.size(), 2);
 
@@ -849,7 +849,7 @@ TEST(Triangle3D, Intersection5)
 
   LineSeg3D li {p2 - (a / 2), p1 - (a / 2)}; 
 
-  std::vector<double> intr_c = intersect_with(t, li);
+  std::vector<data_t> intr_c = intersect_with(t, li);
 
   ASSERT_EQ(intr_c.size(), 1);
 
@@ -871,7 +871,7 @@ TEST(Triangle3D, Intersection6)
 
   LineInf3D li {p2 - p1, pt3}; 
 
-  std::vector<double> intr_c = intersect_with(t, li);
+  std::vector<data_t> intr_c = intersect_with(t, li);
 
   ASSERT_EQ(intr_c.size(), 2);
   
@@ -894,7 +894,7 @@ TEST(Triangle3D, Intersection7)
 
   LineInf3D li {p4 - p3, p3}; 
 
-  std::vector<double> intr_c = intersect_with(t, li);
+  std::vector<data_t> intr_c = intersect_with(t, li);
 
   ASSERT_EQ(intr_c.size(), 3);
 
@@ -1029,8 +1029,8 @@ TEST(ComplanarTriangles, ComputeInterval5)
 
   auto intv = ComputeInterval(tr, dir.normalize());
 
-  double pr1 = -2.12132;
-  double pr2 = 4.24264;
+  data_t pr1 = -2.12132;
+  data_t pr2 = 4.24264;
 
   EXPECT_FIT(intv[0], pr1);
   EXPECT_FIT(intv[1], pr2);
@@ -1049,10 +1049,10 @@ TEST(ComplanarTriangles, ComputeInterval6)
 
   auto intv = ComputeInterval(tr, dir.normalize());
 
-  double pr1 = -2.12132;
-  double pr2 = 4.24264;
+  data_t pr1 = -2.12132;
+  data_t pr2 = 4.24264;
 
-  double int_ofs = ofs * dir.normalize();
+  data_t int_ofs = ofs * dir.normalize();
 
   EXPECT_FIT(intv[0], pr1 + int_ofs);
   EXPECT_FIT(intv[1], pr2 + int_ofs);

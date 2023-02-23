@@ -22,19 +22,19 @@ class LineRelation final
     NON_INTERSECTING 
   };
 
-  LineRelation(State state, double t1=NAN, double t2=NAN) noexcept:
+  LineRelation(State state, data_t t1=NAN, data_t t2=NAN) noexcept:
   state_(state), t1_(t1), t2_(t2) {}
 
   private:
   State state_;
 
-  double t1_;
-  double t2_;
+  data_t t1_;
+  data_t t2_;
   
   public:
   State  get_state() const noexcept { return state_; }
-  double get_t1()    const noexcept { return t1_; }
-  double get_t2()    const noexcept { return t2_; }
+  data_t get_t1()    const noexcept { return t1_; }
+  data_t get_t2()    const noexcept { return t2_; }
 };
 
 
@@ -52,19 +52,19 @@ class PlaneRelation final
     INTERSECTING
   };
 
-  PlaneRelation(State state, double a=NAN, double b=NAN) noexcept:
+  PlaneRelation(State state, data_t a=NAN, data_t b=NAN) noexcept:
   state_(state), a_(a), b_(b) {}
 
   private:
   State state_;
 
-  double a_;
-  double b_;
+  data_t a_;
+  data_t b_;
 
   public:
   State  get_state() const noexcept { return state_; }
-  double get_a()     const noexcept { return a_; }
-  double get_b()     const noexcept { return b_; }
+  data_t get_a()     const noexcept { return a_; }
+  data_t get_b()     const noexcept { return b_; }
 };
 
 // Info about relationship between line and plane
@@ -82,17 +82,17 @@ class LinePlaneRelation final
     NON_INTERSECTING 
   };
 
-  LinePlaneRelation(State state, double t=NAN) noexcept:
+  LinePlaneRelation(State state, data_t t=NAN) noexcept:
   state_(state), t_(t) {}
 
   private:
   State state_;
 
-  double t_;
+  data_t t_;
   
   public:
   State  get_state() const noexcept { return state_; }
-  double get_t()    const noexcept { return t_; }
+  data_t get_t()    const noexcept { return t_; }
 };
 
 // Check the lines relationship (coincident, parallel, intersecting, non-intersecting)
@@ -119,17 +119,17 @@ inline LineRelation get_line_relation(const LineT1& l1, const LineT2& l2) noexce
   const Point3D p2 = l2.get_p();
 
   const Vec3D  u = p1 - p2;
-  const double A = a1 * a1;
-  const double B = a1 * a2;
-  const double C = a2 * a2;
-  const double D = a1 * u;
-  const double E = a2 * u;
-  //const double F = u * u;
+  const data_t A = a1 * a1;
+  const data_t B = a1 * a2;
+  const data_t C = a2 * a2;
+  const data_t D = a1 * u;
+  const data_t E = a2 * u;
+  //const data_t F = u * u;
 
-  double denominator = (A*C - B*B);
+  data_t denominator = (A*C - B*B);
 
-  double t1 =  (B*E - C*D) / denominator; // Zero-division is not possible, 
-  double t2 = -(B*D - A*E) / denominator; // lines are not parallel
+  data_t t1 =  (B*E - C*D) / denominator; // Zero-division is not possible, 
+  data_t t2 = -(B*D - A*E) / denominator; // lines are not parallel
 
   if (!l1.check_param(t1) || !l2.check_param(t2))
     return {state_t::NON_INTERSECTING, t1, t2};
@@ -162,7 +162,7 @@ inline LinePlaneRelation get_line_plane_relation(const LineT& l, const Plane3D& 
   Vec3D   a = l.get_a();
 
   Vec3D  n = pl.get_n();
-  double s = pl.get_s();
+  data_t s = pl.get_s();
 
   if (fit(a * n, 0))
   {
@@ -176,7 +176,7 @@ inline LinePlaneRelation get_line_plane_relation(const LineT& l, const Plane3D& 
     }
   }
 
-  double t = (s - (n * p)) / (n * a);
+  data_t t = (s - (n * p)) / (n * a);
 
   if (l.check_param(t))
   {
@@ -204,17 +204,17 @@ inline PlaneRelation get_plane_relation(const PlaneT1& p1, const PlaneT2& p2) no
     return {state_t::PARALLEL};
 
   Vec3D  n1 = p1.get_n();
-  double s1 = p1.get_s();
+  data_t s1 = p1.get_s();
 
   Vec3D  n2 = p2.get_n();
-  double s2 = p2.get_s();
+  data_t s2 = p2.get_s();
 
-  double mul = n1 * n2;
+  data_t mul = n1 * n2;
 
-  double a1  = s2 * mul - s1;
-  double b1  = s1 * mul - s2;
+  data_t a1  = s2 * mul - s1;
+  data_t b1  = s1 * mul - s2;
 
-  double den = (mul * mul) - 1; // Zero-division error is not possible,
+  data_t den = (mul * mul) - 1; // Zero-division error is not possible,
                                 // planes are not parallel
 
   return {state_t::INTERSECTING, a1 / den, b1 / den};

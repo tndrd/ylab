@@ -35,11 +35,11 @@ namespace HW3D
       return p1 == p2; 
     }
 
-    bool is_coincident(const LineInf3D& li) const noexcept
-    { 
-      return abseq(a_, li.get_a()) && p_ == li.get_p(); 
-    }
+    //bool is_coincident(const LineInf3D& li) const noexcept
+    //{ 
+    //  return abseq(a_, li.get_a()) && p_ == li.get_p(); 
+    //}
 
-    static bool check_param(double /*t*/) noexcept { return true; }
+    static bool check_param(data_t /*t*/) noexcept { return true; }
   }; 
 }

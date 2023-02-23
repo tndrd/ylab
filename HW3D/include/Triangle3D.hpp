@@ -78,7 +78,7 @@ class Triangle3D final
 
       if (edge.normalize() == direction.normalize())
       {
-        double t2 = (direction * direction) / (edge * edge);
+        data_t t2 = (direction * direction) / (edge * edge);
         if (interval_fit(std::sqrt(t2), 0, 1))
         {
           return {unique_points[i], unique_points[(i + 1) % 3]};
@@ -116,9 +116,9 @@ inline std::vector<Vec3D> get_edge_normals(const Triangle3D& tr) noexcept
 // If only one vertice lay on desired line, we consider the intersection count to be equal two
 // That's because in this case two edges intersect the line in one point
 template<typename LineT>
-inline std::vector<double> intersect_with(const Triangle3D& tr, const LineT& line) noexcept
+inline std::vector<data_t> intersect_with(const Triangle3D& tr, const LineT& line) noexcept
 {
-  std::vector<double> intersections;
+  std::vector<data_t> intersections;
   
   for (int i = 0; i < 3; i++)
   {
