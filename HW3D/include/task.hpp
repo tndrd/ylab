@@ -13,6 +13,7 @@ struct PointsEntry
   size_t n;
 };
 
+Point3D read_point(std::istream& stream);
 Triangle3D read_triangle(std::istream& stream);
 
 std::list<PointsEntry> read_triangles(std::istream& stream);

@@ -3,24 +3,19 @@
 namespace HW3D
 {
 
+Point3D read_point(std::istream& stream)
+{
+  data_t x, y, z = NAN;
+  stream >> x >> y >> z;
+  assert(stream.good());
+  return {x, y, z};
+}
+
 Triangle3D read_triangle(std::istream& stream)
 {
-  data_t x1, y1, z1 = NAN;
-  data_t x2, y2, z2 = NAN;
-  data_t x3, y3, z3 = NAN;
-
-  stream >> x1 >> y1 >> z1;
-  assert(stream.good());
-
-  stream >> x2 >> y2 >> z2;
-  assert(stream.good());
-
-  stream >> x3 >> y3 >> z3;
-  assert(stream.good());
-
-  Point3D p1 {x1, y1, z1};
-  Point3D p2 {x2, y2, z2};
-  Point3D p3 {x3, y3, z3};
+  Point3D p1 = read_point(stream);
+  Point3D p2 = read_point(stream);
+  Point3D p3 = read_point(stream);
 
   Triangle3D tr {p1, p2, p3};
   return tr;
