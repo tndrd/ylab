@@ -21,7 +21,8 @@ namespace HW3D
     public:
     LineInf3D(const Vec3D& a, const Point3D& p={0, 0, 0}): Line3D(a, p)
     {
-      normalize();
+      //normalize();
+      //std::cout << "here" << std::endl;
     }
 
     bool is_coincident(const Line3D& li) const noexcept
