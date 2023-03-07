@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Plane3D.hpp"
-#include "LineSeg3D.hpp"
+#include "lines.hpp"
 #include "primitive_intersections.hpp"
 #include <array>
 #include <vector>
@@ -40,52 +40,6 @@ class Triangle3D final
   const Vec3D& get_vertice(u_char i) const
   {
     return vertices_[i]; // Will throw an exception if index out of range
-  }
-  
-  // Returns vector of unique vertices
-  std::vector<Point3D> unique() const noexcept
-  {
-    std::vector<Point3D> unique_points;
-    for (int i = 0; i < 3; ++i)
-    {
-      bool is_unique = true;
-      for (size_t k = 0; k < unique_points.size(); ++k)
-        if (get_vertice(i) == unique_points[k])
-        {
-          is_unique = false;
-          break;
-        }
-      if (is_unique)
-        unique_points.push_back(get_vertice(i));
-    }
-    return unique_points;
-  }
-  
-  // Creates vector of unique vertices and deletes ones which lay
-  // on line between two other vertices
-  std::vector<Point3D> simplify() const noexcept
-  {
-    std::vector<Point3D> unique_points = unique();
-    if (unique_points.size() < 3) return unique_points;
-    
-    for (int i = 0; i < 3; ++i)
-    {
-      Vec3D edge      = get_vertice((i + 1) % 3) - get_vertice(i);
-      Vec3D direction = get_vertice((i + 2) % 3) - get_vertice(i);
-
-      //assert(edge.length() != 0);
-      //assert(direction.length() != 0);
-
-      if (edge.normalize() == direction.normalize())
-      {
-        data_t t2 = (direction * direction) / (edge * edge);
-        if (interval_fit(std::sqrt(t2), 0, 1))
-        {
-          return {unique_points[i], unique_points[(i + 1) % 3]};
-        }
-      }
-    }
-    return unique_points;
   }
 };
 
@@ -131,11 +85,6 @@ inline std::vector<data_t> intersect_with(const Triangle3D& tr, const LineT& lin
   
     switch(rel.get_state())
     {
-      case state_t::COINCIDENT:
-      {
-        break;
-      }
-
       case state_t::PARALLEL:
       {
         break;
