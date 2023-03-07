@@ -1,6 +1,6 @@
 #pragma once
 
-#include "intersection.hpp"
+#include "intersections.hpp"
 #include <cassert>
 #include <list>
 
@@ -9,14 +9,14 @@ namespace HW3D
 
 struct PointsEntry
 {
-  PointGroup pgroup;
+  std::unique_ptr<IntersectibleWrapper> object;
   size_t n;
 };
 
 Point3D read_point(std::istream& stream);
-Triangle3D read_triangle(std::istream& stream);
+std::unique_ptr<IntersectibleWrapper> read_object(std::istream& stream);
 
-std::list<PointsEntry> read_triangles(std::istream& stream);
+std::list<PointsEntry> read_objects(std::istream& stream);
 
 std::vector<int> count_intersections(std::list<PointsEntry>& triangles);
 

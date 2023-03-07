@@ -11,17 +11,17 @@ Point3D read_point(std::istream& stream)
   return {x, y, z};
 }
 
-Triangle3D read_triangle(std::istream& stream)
+std::unique_ptr<IntersectibleWrapper> read_object(std::istream& stream)
 {
   Point3D p1 = read_point(stream);
   Point3D p2 = read_point(stream);
   Point3D p3 = read_point(stream);
 
-  Triangle3D tr {p1, p2, p3};
-  return tr;
+  std::array<Point3D, 3> points = {p1, p2, p3};
+  return IntersectibleFactory::create(points);
 }
 
-std::list<PointsEntry> read_triangles(std::istream& stream)
+std::list<PointsEntry> read_objects(std::istream& stream)
 {
   size_t N = 0;
   stream >> N;
@@ -29,7 +29,7 @@ std::list<PointsEntry> read_triangles(std::istream& stream)
 
   std::list<PointsEntry> triangles;
   for (size_t i = 0; i < N; i++)
-    triangles.push_back({{read_triangle(stream)}, i});
+    triangles.push_back({read_object(stream), i});
 
   return triangles;
 }
@@ -48,7 +48,7 @@ std::vector<int> count_intersections(std::list<PointsEntry>& triangles)
     while(q != triangles.end())
     {
       auto next = std::next(q);
-      if (intersect(p->pgroup, q->pgroup))
+      if (intersects(*p->object, *q->object))
       {
         if(!in)
         {
@@ -81,7 +81,7 @@ void write_intersections(std::ostream& stream, const std::vector<int>& intersect
 
 void task_e2e(std::istream& in, std::ostream& out)
 {
-  auto triangles     = read_triangles(in);
+  auto triangles     = read_objects(in);
   auto intersections = count_intersections(triangles);
 
   write_intersections(out, intersections);
