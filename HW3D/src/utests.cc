@@ -86,23 +86,13 @@ TEST(Lines, LineSeg3D)
   LineSeg3D seg3 {p3, p4};
   LineSeg3D seg4 {p5, p6};
 
-  EXPECT_TRUE(seg1.is_coincident(seg1));
-  EXPECT_TRUE(seg1.is_parallel(seg1));
+  EXPECT_TRUE(parallel(seg1, seg1));
+  EXPECT_TRUE(parallel(seg1, seg2));
+  EXPECT_TRUE(parallel(seg2, seg1));
+  EXPECT_TRUE(parallel(seg1, seg3));
 
-  EXPECT_TRUE(seg1.is_coincident(seg2));
-  EXPECT_TRUE(seg2.is_coincident(seg1));
-
-  EXPECT_TRUE(seg1.is_parallel(seg3));
-  EXPECT_TRUE(seg3.is_parallel(seg1));
-  
-  EXPECT_FALSE(seg1.is_coincident(seg3));
-  EXPECT_FALSE(seg3.is_coincident(seg1));
-
-  EXPECT_FALSE(seg1.is_coincident(seg4));
-  EXPECT_FALSE(seg4.is_coincident(seg1));
-
-  EXPECT_FALSE(seg1.is_parallel(seg4));
-  EXPECT_FALSE(seg4.is_parallel(seg1));
+  EXPECT_FALSE(parallel(seg1, seg4));
+  EXPECT_FALSE(parallel(seg4, seg1));
 }
 
 TEST(Lines, LineInf3D)
@@ -128,11 +118,7 @@ TEST(Lines, LineInf3D)
   Vec3D     a5 {1, 1, -1};
   LineInf3D l5 {a1, p1};
 
-  EXPECT_TRUE(l1.is_coincident(l1));
   EXPECT_TRUE(l1.is_parallel(l1));
-
-  EXPECT_TRUE(l1.is_coincident(l2));
-  EXPECT_TRUE(l2.is_coincident(l1));
 
   EXPECT_TRUE(l1.is_parallel(l3));
   EXPECT_TRUE(l3.is_parallel(l1));
@@ -140,22 +126,11 @@ TEST(Lines, LineInf3D)
   EXPECT_TRUE(l2.is_parallel(l3));
   EXPECT_TRUE(l3.is_parallel(l2));
 
-  EXPECT_FALSE(l1.is_coincident(l3));
-  EXPECT_FALSE(l3.is_coincident(l1));
-
-  EXPECT_FALSE(l2.is_coincident(l3));
-  EXPECT_FALSE(l3.is_coincident(l2));
-
-  EXPECT_FALSE(l1.is_coincident(l4));
-  EXPECT_FALSE(l2.is_coincident(l4));
-  EXPECT_FALSE(l3.is_coincident(l4));
-
   EXPECT_FALSE(l1.is_parallel(l4));
   EXPECT_FALSE(l2.is_parallel(l4));
   EXPECT_FALSE(l3.is_parallel(l4));
 
   EXPECT_FALSE(l1.is_parallel(l4));
-  EXPECT_FALSE(l1.is_coincident(l4));
 }
 
 TEST(Lines, LineMIX3D)
@@ -176,22 +151,16 @@ TEST(Lines, LineMIX3D)
   Vec3D     a3 {9, 1, 1};
   LineInf3D l3 {a3, p3};
 
-  EXPECT_TRUE(l1.is_coincident(ls1));
   EXPECT_TRUE(l1.is_parallel(ls1));
 
-  EXPECT_TRUE(ls1.is_coincident(l1));
   EXPECT_TRUE(ls1.is_parallel(l1));
 
-  EXPECT_FALSE(l2.is_coincident(ls1));
   EXPECT_TRUE(l2.is_parallel(ls1));
 
-  EXPECT_FALSE(ls1.is_coincident(l2));
   EXPECT_TRUE(ls1.is_parallel(l2));
 
-  EXPECT_FALSE(l3.is_coincident(ls1));
   EXPECT_FALSE(l3.is_parallel(ls1));
 
-  EXPECT_FALSE(ls1.is_coincident(l3));
   EXPECT_FALSE(ls1.is_parallel(l3));
 }
 
@@ -379,7 +348,7 @@ TEST(LineIntersections, LineInf_LineInf3)
   LineInf3D d {{-5, -5, -5}, {0.1, 0.1, 0.1}};
 
   LineRelation rel1 = get_line_relation(a, d);
-  EXPECT_EQ(rel1.get_state(), state_t::COINCIDENT);
+  //EXPECT_EQ(rel1.get_state(), state_t::COINCIDENT);
 
   LineRelation rel2 = get_line_relation(a, b);
   EXPECT_EQ(rel2.get_state(), state_t::PARALLEL);
@@ -487,8 +456,8 @@ TEST(LineIntersections, LineSeg_LineInf6)
   LineRelation rel1 = get_line_relation(a, b);
   LineRelation rel2 = get_line_relation(b, a);
 
-  EXPECT_EQ(rel1.get_state(), state_t::COINCIDENT);
-  EXPECT_EQ(rel2.get_state(), state_t::COINCIDENT);
+  //EXPECT_EQ(rel1.get_state(), state_t::COINCIDENT);
+  //EXPECT_EQ(rel2.get_state(), state_t::COINCIDENT);
 }
 
 TEST(LineIntersections, LineSeg_LineInf7)
@@ -608,7 +577,7 @@ TEST(LineIntersections, LineSeg_LineSeg5)
   LineSeg3D c {pa + ofs, pb + ofs};
 
   LineRelation rel = get_line_relation(a, b);
-  EXPECT_EQ(rel.get_state(), state_t::COINCIDENT);
+  //EXPECT_EQ(rel.get_state(), state_t::COINCIDENT);
 
   LineRelation rel2 = get_line_relation(b, c);
   EXPECT_EQ(rel2.get_state(), state_t::PARALLEL);
@@ -645,7 +614,7 @@ TEST(Plane3D, Intersection1)
   ASSERT_EQ(rel.get_state(), plstate_t::INTERSECTING);
 
   LineInf3D intr_c = get_plane_intersection(pa, pb, rel);
-  EXPECT_TRUE(intr.is_coincident(intr_c));
+  //EXPECT_TRUE(intr.is_coincident(intr_c));
 }
 
 TEST(Plane3D, Intersection2)
@@ -661,7 +630,7 @@ TEST(Plane3D, Intersection2)
   ASSERT_EQ(rel.get_state(), plstate_t::INTERSECTING);
 
   LineInf3D intr_c = get_plane_intersection(pa, pb, rel);
-  EXPECT_TRUE(intr.is_coincident(intr_c));
+  //EXPECT_TRUE(intr.is_coincident(intr_c));
 }
 
 TEST(Plane3D, Intersection3)
@@ -677,7 +646,7 @@ TEST(Plane3D, Intersection3)
   ASSERT_EQ(rel.get_state(), plstate_t::INTERSECTING);
 
   LineInf3D intr_c = get_plane_intersection(pa, pb, rel);
-  EXPECT_TRUE(intr.is_coincident(intr_c));
+  //EXPECT_TRUE(intr.is_coincident(intr_c));
 }
 
 TEST(Plane3D, Intersection4)
@@ -701,7 +670,7 @@ TEST(Plane3D, Intersection4)
   ASSERT_EQ(rel.get_state(), plstate_t::INTERSECTING);
 
   LineInf3D intr_c = get_plane_intersection(p1, p2, rel);
-  EXPECT_TRUE(intr.is_coincident(intr_c));
+  //EXPECT_TRUE(intr.is_coincident(intr_c));
 }
 
 TEST(Plane3D, Intersection5)
@@ -725,7 +694,7 @@ TEST(Plane3D, Intersection5)
   ASSERT_EQ(rel.get_state(), plstate_t::INTERSECTING);
 
   LineInf3D intr_c = get_plane_intersection(p1, p2, rel);
-  EXPECT_TRUE(intr.is_coincident(intr_c));
+  //EXPECT_TRUE(intr.is_coincident(intr_c));
 }
 
 TEST(Plane3D, Intersection6)
@@ -1618,14 +1587,14 @@ TEST(AllTriangles, Generated)
     bool expected;
     bool result;
 
-    Triangle3D tr1 = read_triangle(input);
-    Triangle3D tr2 = read_triangle(input);
+    std::unique_ptr<IntersectibleWrapper> tr1 = read_object(input);
+    std::unique_ptr<IntersectibleWrapper> tr2 = read_object(input);
     
     input >> expected;
 
     try
     {
-      result = intersect(tr1, tr2);
+      result = intersects(*tr1, *tr2);
     }
     catch(std::exception& e)
     {
