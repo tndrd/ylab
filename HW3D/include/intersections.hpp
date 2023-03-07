@@ -27,6 +27,12 @@ inline bool base_intersects(const IntersectibleTriangle& tr1, const Intersectibl
 
 struct IntersectibleWrapper
 {
+
+  enum TYPE {POINT, LINE, TRIANGLE};
+  TYPE type_;
+
+  IntersectibleWrapper(TYPE type): type_(type) { }
+
   virtual ~IntersectibleWrapper() { }
 
   virtual bool intersects(const IntersectiblePoint& pt) const = 0;
@@ -37,7 +43,7 @@ struct IntersectibleWrapper
 struct IntersectiblePoint final: public IntersectibleWrapper 
 {
   Point3D point;
-  IntersectiblePoint(const Point3D& p): point(p) { }
+  IntersectiblePoint(const Point3D& p): IntersectibleWrapper(TYPE::POINT), point(p) { }
 
   bool intersects(const IntersectiblePoint& pt) const override
   {
@@ -58,7 +64,7 @@ struct IntersectiblePoint final: public IntersectibleWrapper
 struct IntersectibleLineSeg final: public IntersectibleWrapper
 {
   LineSeg3D line;
-  IntersectibleLineSeg(const Point3D& p1, const Point3D& p2): line(p1, p2) { }
+  IntersectibleLineSeg(const Point3D& p1, const Point3D& p2): IntersectibleWrapper(TYPE::LINE), line(p1, p2) { }
 
   bool intersects(const IntersectiblePoint& pt) const override
   {
@@ -81,7 +87,7 @@ struct IntersectibleTriangle final: public IntersectibleWrapper
   Triangle3D triangle;
   Plane3D    plane;
 
-  IntersectibleTriangle(const Point3D& p1, const Point3D& p2, const Point3D& p3):
+  IntersectibleTriangle(const Point3D& p1, const Point3D& p2, const Point3D& p3): IntersectibleWrapper(TYPE::TRIANGLE),
   triangle(p1, p2, p3), plane(p1, p2, p3) { }
 
   bool intersects(const IntersectiblePoint& pt) const override
@@ -296,9 +302,12 @@ class IntersectibleFactory
 
 inline bool intersects(const IntersectibleWrapper& lhs, const IntersectibleWrapper& rhs)
 {
-  if (typeid(rhs) == typeid(IntersectiblePoint&))    return lhs.intersects(static_cast<const IntersectiblePoint&>(rhs));
-  if (typeid(rhs) == typeid(IntersectibleLineSeg&))  return lhs.intersects(static_cast<const IntersectibleLineSeg&>(rhs));
-  if (typeid(rhs) == typeid(IntersectibleTriangle&)) return lhs.intersects(static_cast<const IntersectibleTriangle&>(rhs));
+  // Works much faster than typeid comparison
+
+  using objtype_t = typename IntersectibleWrapper::TYPE;
+  if (rhs.type_ == objtype_t::POINT)    return lhs.intersects(static_cast<const IntersectiblePoint&>(rhs));
+  if (rhs.type_ == objtype_t::LINE)     return lhs.intersects(static_cast<const IntersectibleLineSeg&>(rhs));
+  if (rhs.type_ == objtype_t::TRIANGLE) return lhs.intersects(static_cast<const IntersectibleTriangle&>(rhs));
 }
 
 }
