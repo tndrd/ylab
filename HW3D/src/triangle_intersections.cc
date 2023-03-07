@@ -78,8 +78,13 @@ ZeroSearch find_zero(const std::array<int, 3>& signs) noexcept
 
 MHIResult MollerHainsInterval(const Triangle3D& tr, const LineInf3D& line, const Plane3D& plane) noexcept
 {
-  std::array<data_t, 3> distances   = get_distances(tr, plane);
-  std::array<int, 3>    dist_signs  = get_dist_signs(distances);
+  std::array<data_t, 3> distances   = {dist(plane, tr.get_vertice(0)),
+                                       dist(plane, tr.get_vertice(1)),
+                                       dist(plane, tr.get_vertice(2))};
+  
+  std::array<int, 3>    dist_signs  = {distsign(distances[0]),
+                                       distsign(distances[1]),
+                                       distsign(distances[2])};
 
   int isep = find_separate_point(dist_signs); 
   if (isep == -1)
@@ -94,7 +99,10 @@ MHIResult MollerHainsInterval(const Triangle3D& tr, const LineInf3D& line, const
   }
 
   MHIResult intersections {MHIResult::FOUND};
-  std::array<data_t, 3> projections = get_projections(tr, line);
+  
+  std::array<data_t, 3> projections = {get_projection(tr.get_vertice(0), line),
+                                       get_projection(tr.get_vertice(1), line),
+                                       get_projection(tr.get_vertice(2), line)};
 
   for (int i = 0; i < 2; ++i)
   {
