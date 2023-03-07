@@ -40,7 +40,9 @@ class Plane3D final
     }
 
     n_ = n_ / nlen * ssgn;
-    s_ = s_ / nlen * ssgn; 
+    s_ = s_ / nlen * ssgn;
+
+    if (fit(s_, 0) && n_.x < 0) n_ = -n_; 
   }
 
   public:
@@ -68,12 +70,7 @@ class Plane3D final
     Vec3D  n1 = get_n();
     Vec3D  n2 = p2.get_n();
 
-    if (fit(s1, s2))
-    {
-      if (!fit(s1, 0)) return (n1 == n2);
-      else             return collinear(n1, n2);
-    }
-    return false;
+    return fit(s1, s2) && (n1 == n2);
   }
 
   LineInf3D make_line(const Vec3D& direction) const noexcept
