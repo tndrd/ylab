@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Plane3D.hpp"
-#include "LineInf3D.hpp"
-#include "LineSeg3D.hpp"
+#include "lines.hpp"
 
 namespace HW3D
 {
@@ -16,7 +15,6 @@ class LineRelation final
   public:
   enum State
   {
-    COINCIDENT,
     PARALLEL,
     INTERSECTING,
     NON_INTERSECTING 
@@ -105,9 +103,6 @@ template<typename LineT1, typename LineT2>
 inline LineRelation get_line_relation(const LineT1& l1, const LineT2& l2) noexcept
 {
   using state_t = LineRelation;
-
-  if (l1.is_coincident(l2))
-    return {state_t::COINCIDENT};
 
   if (l1.is_parallel(l2))
     return {state_t::PARALLEL};
