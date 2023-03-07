@@ -305,9 +305,12 @@ inline bool intersects(const IntersectibleWrapper& lhs, const IntersectibleWrapp
   // Works much faster than typeid comparison
 
   using objtype_t = typename IntersectibleWrapper::TYPE;
-  if (rhs.type_ == objtype_t::POINT)    return lhs.intersects(static_cast<const IntersectiblePoint&>(rhs));
-  if (rhs.type_ == objtype_t::LINE)     return lhs.intersects(static_cast<const IntersectibleLineSeg&>(rhs));
-  if (rhs.type_ == objtype_t::TRIANGLE) return lhs.intersects(static_cast<const IntersectibleTriangle&>(rhs));
+  switch(rhs.type_)
+  {
+    case objtype_t::POINT:    return lhs.intersects(static_cast<const IntersectiblePoint&>(rhs));
+    case objtype_t::LINE:     return lhs.intersects(static_cast<const IntersectibleLineSeg&>(rhs));
+    case objtype_t::TRIANGLE: return lhs.intersects(static_cast<const IntersectibleTriangle&>(rhs));
+  } 
 }
 
 }
