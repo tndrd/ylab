@@ -129,10 +129,6 @@ bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& t
 // Reference: [GCT page 541]
 bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2, const Plane3D& p1, const Plane3D& p2, const PlaneRelation& pi)
 {
-  //Plane3D p1 = tr1.get_plane();
-  //Plane3D p2 = tr2.get_plane();
-
-  //PlaneRelation pi = get_plane_relation(p1, p2);
   LineInf3D pil = get_plane_intersection(p1, p2, pi);
   
   MHIResult mhi1 = MollerHainsInterval(tr1, pil, p2);
