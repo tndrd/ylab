@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Vec3D.hpp"
-#include "LineInf3D.hpp"
+#include "lines.hpp"
 
 namespace HW3D
 {
@@ -55,20 +55,25 @@ class Plane3D final
   Vec3D  get_n() const noexcept { return n_; }
   data_t get_s() const noexcept { return s_; }
 
-  // Because of normalization planes wont be equal if their s-params are not same
-  bool is_coincident(const Plane3D& p) const noexcept
-  { 
-    if (fit(p.s_, s_))
-    {
-      if (!fit(s_, 0)) return (p.n_ == n_);
-      else             return abseq(p.n_, n_);
-    }
-    return false;
+  bool is_parallel(const Plane3D& p2) const
+  {
+    return abseq(get_n(), p2.get_n());
   }
 
-  bool is_parallel(const Plane3D& p) const noexcept
+  bool is_coincident(const Plane3D& p2) const
   {
-    return abseq(n_, p.n_);
+    data_t s1 = get_s();
+    data_t s2 = p2.get_s();
+
+    Vec3D  n1 = get_n();
+    Vec3D  n2 = p2.get_n();
+
+    if (fit(s1, s2))
+    {
+      if (!fit(s1, 0)) return (n1 == n2);
+      else             return abseq(n1, n2);
+    }
+    return false;
   }
 
   LineInf3D make_line(const Vec3D& direction) const noexcept
@@ -87,6 +92,29 @@ inline data_t dist(const Plane3D& plane, const Point3D& point)
 {
   data_t d = (plane.get_n() * point) - plane.get_s();
   return d;
+}
+
+// Because of normalization planes wont be equal if their s-params are not same
+inline bool coincident(const Plane3D& p1, const Plane3D& p2) noexcept
+{ 
+
+  data_t s1 = p1.get_s();
+  data_t s2 = p2.get_s();
+
+  Vec3D  n1 = p1.get_n();
+  Vec3D  n2 = p2.get_n();
+
+  if (fit(s1, s2))
+  {
+    if (!fit(s1, 0)) return (n1 == n2);
+    else             return abseq(n1, n2);
+  }
+  return false;
+}
+
+inline bool parallel(const Plane3D& p1, const Plane3D& p2) noexcept
+{
+  return abseq(p1.get_n(), p2.get_n());
 }
 
 }
