@@ -219,8 +219,7 @@ inline PlaneRelation get_plane_relation(const PlaneT1& p1, const PlaneT2& p2) no
 template<typename LineT1, typename LineT2>
 inline Point3D get_line_intersection(const LineT1& l1, const LineT2& /*l2*/, const LineRelation& relation)
 {
-  if (relation.get_state() != relation.INTERSECTING)
-    throw std::invalid_argument("Attempt to intersect non-intersecting lines");
+  assert(relation.get_state() == relation.INTERSECTING);
   
   return l1.point_from_param(relation.get_t1());
 }
@@ -228,9 +227,7 @@ inline Point3D get_line_intersection(const LineT1& l1, const LineT2& /*l2*/, con
 template<typename LineT>
 inline Point3D get_line_plane_intersection(const LineT& l, const Plane3D& /*pl*/, const LinePlaneRelation& relation)
 {
-  if (relation.get_state() != relation.INTERSECTING)
-    throw std::invalid_argument("Attempt to intersect non-intersecting lines");
-  
+  assert(relation.get_state() == relation.INTERSECTING);
   return l.point_from_param(relation.get_t());
 }
 
@@ -238,8 +235,7 @@ inline Point3D get_line_plane_intersection(const LineT& l, const Plane3D& /*pl*/
 template<typename PlaneT1, typename PlaneT2>
 inline LineInf3D get_plane_intersection(const PlaneT1& p1, const PlaneT2& p2, const PlaneRelation& relation)
 {
-  if (relation.get_state() != relation.INTERSECTING)
-    throw std::invalid_argument("Attempt to intersect non-intersecting planes");
+  assert(relation.get_state() == relation.INTERSECTING);
 
   Vec3D n1 = p1.get_n();
   Vec3D n2 = p2.get_n();

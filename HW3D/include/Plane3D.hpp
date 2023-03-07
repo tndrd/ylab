@@ -46,7 +46,7 @@ class Plane3D final
   public:
   Plane3D(const Vec3D& n = {0,0,0}, data_t s=NAN): n_(n), s_(s)
   {
-    //if (n_ == Vec3D{0, 0, 0}) throw std::invalid_argument("Plane normal vector can not be zero");
+    assert(!is_zero(n));
     normalize();
   }
 
@@ -57,7 +57,7 @@ class Plane3D final
 
   bool is_parallel(const Plane3D& p2) const
   {
-    return abseq(get_n(), p2.get_n());
+    return collinear(get_n(), p2.get_n());
   }
 
   bool is_coincident(const Plane3D& p2) const
@@ -71,7 +71,7 @@ class Plane3D final
     if (fit(s1, s2))
     {
       if (!fit(s1, 0)) return (n1 == n2);
-      else             return abseq(n1, n2);
+      else             return collinear(n1, n2);
     }
     return false;
   }
@@ -107,14 +107,14 @@ inline bool coincident(const Plane3D& p1, const Plane3D& p2) noexcept
   if (fit(s1, s2))
   {
     if (!fit(s1, 0)) return (n1 == n2);
-    else             return abseq(n1, n2);
+    else             return collinear(n1, n2);
   }
   return false;
 }
 
 inline bool parallel(const Plane3D& p1, const Plane3D& p2) noexcept
 {
-  return abseq(p1.get_n(), p2.get_n());
+  return collinear(p1.get_n(), p2.get_n());
 }
 
 }

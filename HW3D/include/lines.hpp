@@ -30,7 +30,7 @@ class Line3D
 
   Line3D(const Vec3D& a, const Point3D& p): a_(a), p_(p)
   {
-    if (a_ == Vec3D{0, 0, 0}) throw std::invalid_argument("Line direction vector can not be zero");
+    assert(!is_zero(a_));
   }
 
   public:
@@ -49,7 +49,7 @@ class Line3D
   }
 
   // Check if given parameter fits the restrictions on t
-  virtual bool check_param(data_t /*t*/) const noexcept { return false; }
+  virtual bool check_param(data_t /*t*/) const noexcept = 0;
 
   // virtual dtor
   virtual ~Line3D() { } 
@@ -93,10 +93,7 @@ inline std::ostream& operator<<(std::ostream& os, const Line3D& line)
 
 inline bool parallel(const Line3D& l1, const Line3D& l2) noexcept
 {
-  //return abseq(l1.get_a().normalize(), l2.get_a().normalize());
-  
-  Vec3D  cross = vecmul(l1.get_a(), l2.get_a());
-  return fit(cross * cross, 0);
+  return collinear(l1.get_a(), l2.get_a());
 }
 
 inline Vec3D distvec(const Point3D& point, const Line3D& line) noexcept

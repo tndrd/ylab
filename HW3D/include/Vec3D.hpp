@@ -5,6 +5,7 @@
 #include <iostream>
 #include <exception>
 #include "intervals.hpp"
+#include <cassert>
 
 namespace HW3D
 {
@@ -24,8 +25,7 @@ struct Vec3D final
 
   Vec3D(data_t newx, data_t newy, data_t newz): x(newx), y(newy), z(newz)
   {
-    if (!valid()) 
-      throw std::invalid_argument("Vec3D construction with NAN"); // just for safety purposes
+    assert(valid()); 
   }
 
   // cppcheck-suppress syntaxError
@@ -129,11 +129,6 @@ inline Vec3D project_v(const Vec3D& which_vec, const Vec3D& where_vec) // Potent
   return ((which_vec * where_vec) / (where_vec * where_vec)) * where_vec; 
 }
 
-inline bool abseq(const Vec3D& v1, const Vec3D& v2) noexcept
-{
-  return v1 == v2 || v1 == -v2;
-}
-
 inline data_t det(const Vec3D& v1, const Vec3D& v2, const Vec3D& v3) noexcept
 {
   data_t min1 = v1.x * (v2.y*v3.z - v2.z*v3.y);
@@ -150,6 +145,21 @@ inline Vec3D vecmul(const Vec3D& v1, const Vec3D& v2) noexcept
   data_t min3 = v1.x*v2.y - v1.y*v2.x;
 
   return {min1, -min2, min3};
+}
+
+inline bool abseq(const Vec3D& v1, const Vec3D& v2) noexcept
+{
+  return v1 == v2 || v1 == -v2;
+}
+
+inline bool is_zero(const Vec3D& v) noexcept
+{
+  return v == Vec3D{0, 0, 0};
+}
+
+inline bool collinear(const Vec3D& v1, const Vec3D& v2) noexcept
+{
+  return is_zero(vecmul(v1, v2));
 }
 
 inline std::ostream& operator<<(std::ostream& os, const Vec3D& v)
