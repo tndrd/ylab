@@ -155,9 +155,10 @@ class IntersectibleFactory
 
     switch(undegenerate_pts.size())
     {
-      case 1: return create_point(undegenerate_pts);
-      case 2: return create_lineseg(undegenerate_pts);
-      case 3: return create_triangle(undegenerate_pts);
+      case 1:  return create_point(undegenerate_pts);
+      case 2:  return create_lineseg(undegenerate_pts);
+      case 3:  return create_triangle(undegenerate_pts);
+      default: throw std::runtime_error("Impossible size");
     }
   }
 };

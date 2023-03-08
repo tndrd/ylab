@@ -351,7 +351,7 @@ TEST(LineIntersections, LineInf_LineInf3)
   LineInf3D c {{5, 3, -5}, {1, 1, 1}};
   LineInf3D d {{-5, -5, -5}, {0.1, 0.1, 0.1}};
 
-  LineRelation rel1 = get_line_relation(a, d);
+  //LineRelation rel1 = get_line_relation(a, d);
   //EXPECT_EQ(rel1.get_state(), state_t::COINCIDENT);
 
   LineRelation rel2 = get_line_relation(a, b);
@@ -457,8 +457,8 @@ TEST(LineIntersections, LineSeg_LineInf6)
   LineSeg3D a {pa, intr};
   LineInf3D b {(intr - pa) * -3, pa};
 
-  LineRelation rel1 = get_line_relation(a, b);
-  LineRelation rel2 = get_line_relation(b, a);
+  //LineRelation rel1 = get_line_relation(a, b);
+  //LineRelation rel2 = get_line_relation(b, a);
 
   //EXPECT_EQ(rel1.get_state(), state_t::COINCIDENT);
   //EXPECT_EQ(rel2.get_state(), state_t::COINCIDENT);
@@ -580,7 +580,7 @@ TEST(LineIntersections, LineSeg_LineSeg5)
   LineSeg3D b {pb, pa};
   LineSeg3D c {pa + ofs, pb + ofs};
 
-  LineRelation rel = get_line_relation(a, b);
+  //LineRelation rel = get_line_relation(a, b);
   //EXPECT_EQ(rel.get_state(), state_t::COINCIDENT);
 
   LineRelation rel2 = get_line_relation(b, c);

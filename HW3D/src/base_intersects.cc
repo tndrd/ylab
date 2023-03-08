@@ -74,6 +74,7 @@ bool base_intersects(const LineSeg3D& l1, const LineSeg3D& l2)
       Point3D p2 = p1 + l1.get_a();
       return base_intersects(p1, l2) || base_intersects(p2, l2);   
     }
+    default: return false;
   }
 }
 
