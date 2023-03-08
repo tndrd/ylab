@@ -211,10 +211,10 @@ inline PlaneRelation get_plane_relation(const PlaneT1& p1, const PlaneT2& p2) no
   data_t a1  = s2 * mul - s1;
   data_t b1  = s1 * mul - s2;
 
-  data_t den = (mul * mul) - 1; // Zero-division error is not possible,
+  //data_t den = (mul * mul) - 1; // Zero-division error is not possible,
                                 // planes are not parallel
 
-  return {state_t::INTERSECTING, a1 / den, b1 / den};
+  return {state_t::INTERSECTING, a1, b1};//a1 / den, //b1 / den};
 }
 
 // Returns the intersection point of two lines. Given lines should really intersect
