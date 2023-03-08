@@ -63,6 +63,8 @@ class Plane3D final
     return collinear(get_n(), p2.get_n());
   }
 
+  // Plane coincidence check
+  // Because of normalization planes wont be equal if their s-params are not same
   bool is_coincident(const Plane3D& p2) const
   {
     data_t s1 = get_s();
@@ -86,31 +88,6 @@ inline data_t dist(const Plane3D& plane, const Point3D& point)
 {
   data_t d = (plane.get_n() * point) - plane.get_s();
   return d;
-}
-
-// Plane coincidence check
-// Because of normalization planes wont be equal if their s-params are not same
-inline bool coincident(const Plane3D& p1, const Plane3D& p2) noexcept
-{ 
-
-  data_t s1 = p1.get_s();
-  data_t s2 = p2.get_s();
-
-  Vec3D  n1 = p1.get_n();
-  Vec3D  n2 = p2.get_n();
-
-  if (fit(s1, s2))
-  {
-    if (!fit(s1, 0)) return (n1 == n2);
-    else             return collinear(n1, n2);
-  }
-  return false;
-}
-
-// Plane parallelity check
-inline bool parallel(const Plane3D& p1, const Plane3D& p2) noexcept
-{
-  return collinear(p1.get_n(), p2.get_n());
 }
 
 }

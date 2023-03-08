@@ -47,7 +47,7 @@ class Line3D
 
   bool is_parallel(const Line3D& l2) const
   {
-    return abseq(get_a().normalize(), l2.get_a().normalize());
+    return collinear(a_, l2.get_a());
   }
 
   // Check if given parameter fits the restrictions on t
@@ -91,11 +91,6 @@ inline std::ostream& operator<<(std::ostream& os, const Line3D& line)
 {
   os << "a: " << line.get_a() << " p:" << line.get_p();
   return os;
-}
-
-inline bool parallel(const Line3D& l1, const Line3D& l2) noexcept
-{
-  return collinear(l1.get_a(), l2.get_a());
 }
 
 // Returns vector that is orthagonal to line and fits the point

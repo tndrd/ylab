@@ -86,6 +86,8 @@ TEST(Lines, LineSeg3D)
   LineSeg3D seg3 {p3, p4};
   LineSeg3D seg4 {p5, p6};
 
+  #define parallel(seg1, seg2) seg1.is_parallel(seg2)
+
   EXPECT_TRUE(parallel(seg1, seg1));
   EXPECT_TRUE(parallel(seg1, seg2));
   EXPECT_TRUE(parallel(seg2, seg1));
@@ -93,6 +95,8 @@ TEST(Lines, LineSeg3D)
 
   EXPECT_FALSE(parallel(seg1, seg4));
   EXPECT_FALSE(parallel(seg4, seg1));
+
+  #undef parallel
 }
 
 TEST(Lines, LineInf3D)
@@ -250,7 +254,7 @@ TEST(Plane3D, ThreePoints2)
   Point3D p3 {0, 0, 5};
 
   Plane3D pl {p1, p2, p3};
-  Vec3D  n {-1, 0, 0};
+  Vec3D  n {1, 0, 0};
   data_t s = 0; 
 
   EXPECT_EQ(pl.get_n(), n);
@@ -292,7 +296,7 @@ TEST(Plane3D, ThreePoints5)
   Point3D p3 {0, 0, 0};
 
   Plane3D pl {p1, p2, p3};
-  Vec3D  n {-0.506408, 0.272681, -0.818044};
+  Vec3D  n {0.506408, -0.272681, 0.818044};
   data_t s = 0; 
 
   EXPECT_EQ(pl.get_n(), n);
@@ -720,7 +724,7 @@ TEST(Triangle3D, General)
 
   Triangle3D t {p1, p2, p3};
   Plane3D pl = t.get_plane();
-  Vec3D  n {-0.506408, 0.272681, -0.818044};
+  Vec3D  n {0.506408, -0.272681, 0.818044};
   data_t s = 0; 
 
   EXPECT_EQ(pl.get_n(), n);
