@@ -1587,8 +1587,8 @@ TEST(AllTriangles, Generated)
     bool expected;
     bool result;
 
-    std::unique_ptr<IntersectibleWrapper> tr1 = read_object(input);
-    std::unique_ptr<IntersectibleWrapper> tr2 = read_object(input);
+    std::unique_ptr<IIntersectible> tr1 = read_object(input);
+    std::unique_ptr<IIntersectible> tr2 = read_object(input);
     
     input >> expected;
 
