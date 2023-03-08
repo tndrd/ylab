@@ -1,5 +1,5 @@
 /* Triangle-triangle intersection check implementation    */
-/* For further algorithm explanation check GCT references */
+/* For further algorithm explanations check GCT references */
 
 #include "triangle_intersections.hpp"
 
