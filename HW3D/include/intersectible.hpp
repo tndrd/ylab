@@ -17,7 +17,7 @@ struct IIntersectible
 
   virtual bool intersects(const Point3D&    rhs) const = 0;
   virtual bool intersects(const LineSeg3D&  rhs) const = 0;
-  virtual bool intersects(const PlaneTriangle& rhs) const = 0;
+  virtual bool intersects(const SuperFastTriangle& rhs) const = 0;
 };
 
 // Just another form of calling intersection check
@@ -38,7 +38,7 @@ struct IntersectiblePoint final: public IIntersectible
 
   bool intersects(const Point3D&       rhs) const override { return base_intersects(data, rhs); }
   bool intersects(const LineSeg3D&     rhs) const override { return base_intersects(data, rhs); }
-  bool intersects(const PlaneTriangle& rhs) const override { return base_intersects(data, rhs); }
+  bool intersects(const SuperFastTriangle& rhs) const override { return base_intersects(data, rhs); }
 };
 
 struct IntersectibleLineSeg final: public IIntersectible 
@@ -53,12 +53,12 @@ struct IntersectibleLineSeg final: public IIntersectible
 
   bool intersects(const Point3D&       rhs) const override { return base_intersects(data, rhs); }
   bool intersects(const LineSeg3D&     rhs) const override { return base_intersects(data, rhs); }
-  bool intersects(const PlaneTriangle& rhs) const override { return base_intersects(data, rhs); }
+  bool intersects(const SuperFastTriangle& rhs) const override { return base_intersects(data, rhs); }
 };
 
 struct IntersectibleTriangle final: public IIntersectible 
 { 
-  PlaneTriangle data;
+  SuperFastTriangle data;
   IntersectibleTriangle(const Point3D& p1, const Point3D& p2, const Point3D& p3): data(p1, p2, p3) { }
 
   bool intersects(const IIntersectible& rhs) const override
@@ -68,7 +68,7 @@ struct IntersectibleTriangle final: public IIntersectible
 
   bool intersects(const Point3D&       rhs) const override { return base_intersects(data, rhs); }
   bool intersects(const LineSeg3D&     rhs) const override { return base_intersects(data, rhs); }
-  bool intersects(const PlaneTriangle& rhs) const override { return base_intersects(data, rhs); }
+  bool intersects(const SuperFastTriangle& rhs) const override { return base_intersects(data, rhs); }
 };
 
 // Factory class that creates geometric primitives

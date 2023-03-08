@@ -29,7 +29,7 @@ bool base_intersects(const Point3D& pt, const LineSeg3D& l)
   return l.check_param(std::sqrt(t2));
 }
 
-bool base_intersects(const Point3D& pt, const PlaneTriangle& plt)
+bool base_intersects(const Point3D& pt, const SuperFastTriangle& plt)
 {
   const Triangle3D& tr = plt.triangle;
   const Plane3D& plane = plt.plane;
@@ -78,7 +78,7 @@ bool base_intersects(const LineSeg3D& l1, const LineSeg3D& l2)
   }
 }
 
-bool base_intersects(const LineSeg3D& l, const PlaneTriangle& plt)
+bool base_intersects(const LineSeg3D& l, const SuperFastTriangle& plt)
 {
   const Triangle3D& tr = plt.triangle;
   const Plane3D& plane = plt.plane;
@@ -102,19 +102,19 @@ bool base_intersects(const LineSeg3D& l, const PlaneTriangle& plt)
   return false;
 }
 
-bool base_intersects(const PlaneTriangle& plt, const Point3D& pt)
+bool base_intersects(const SuperFastTriangle& plt, const Point3D& pt)
 {
   return base_intersects(pt, plt);
 }
 
-bool base_intersects(const PlaneTriangle& plt, const LineSeg3D& l)
+bool base_intersects(const SuperFastTriangle& plt, const LineSeg3D& l)
 {
   return base_intersects(l, plt);
 }
 
-bool base_intersects(const PlaneTriangle& plt1, const PlaneTriangle& plt2)
+bool base_intersects(const SuperFastTriangle& plt1, const SuperFastTriangle& plt2)
 {
-  return intersect_triangles(plt1.triangle, plt2.triangle, plt1.plane, plt2.plane);
+  return intersect_triangles(plt1, plt2);
 }
 
 }

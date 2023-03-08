@@ -218,23 +218,25 @@ std::array<data_t,2> ComputeInterval(const Triangle3D& tr, const Vec3D& directio
   return {*minmax.first, *minmax.second}; 
 }
 
+
 bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
 {
-  Plane3D p1 = tr1.get_plane();
-  Plane3D p2 = tr2.get_plane();
-  return intersect_triangles(tr1, tr2, p1, p2);
+  return intersect_triangles(SuperFastTriangle{tr1}, SuperFastTriangle{tr2});
 }
 
-bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2, const Plane3D& p1, const Plane3D& p2)
+
+bool intersect_triangles(const SuperFastTriangle& tr1, const SuperFastTriangle& tr2)
 {
-  PlaneRelation pi = get_plane_relation(p1, p2);
+  if(!intersects(tr1.bbox, tr2.bbox)) return false;
+  
+  PlaneRelation pi = get_plane_relation(tr1.plane, tr2.plane);
 
   switch(pi.get_state())
   {
     case pi.COINCIDENT:
     {
       //std::cout << ": COINCIDENT" << std::endl; 
-      return intersect_complanar_triangles(tr1, tr2);
+      return intersect_complanar_triangles(tr1.triangle, tr2.triangle);
     }
 
     case pi.PARALLEL:
@@ -246,7 +248,7 @@ bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2, const Pla
     case pi.INTERSECTING:
     {
       //std::cout << ": INTERSECTING" << std::endl;
-      return intersect_noncomplanar_triangles(tr1, tr2, p1, p2, pi);
+      return intersect_noncomplanar_triangles(tr1.triangle, tr2.triangle, tr1.plane, tr2.plane, pi);
     }
   } 
 
