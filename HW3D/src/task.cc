@@ -43,23 +43,31 @@ std::vector<int> count_intersections(std::list<PointsEntry>& triangles)
 
   while(p != triangles.end())
   {
+    if (p->in)
+    {
+      p = std::next(p);
+      continue;
+    }
+
     auto q  = std::next(p);
-    bool in = false; // Shows if p will go to out
 
     while(q != triangles.end())
     {
-      auto next = std::next(q);
       if (intersects(*p->object, *q->object))
       {
-        if(!in)
+        
+        intersections.push_back(p->n);
+
+        if (!q->in)
         {
-          intersections.push_back(p->n);
-          in = true;
+          intersections.push_back(q->n);
+          q->in = true;
         }
-        intersections.push_back(q->n);
-        triangles.erase(q);
+
+        
+        break;
       }
-      q = next;
+      q = std::next(q);
     }
 
     p = std::next(p);

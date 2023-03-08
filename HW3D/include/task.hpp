@@ -13,6 +13,7 @@ struct PointsEntry
 {
   std::unique_ptr<IIntersectible> object;
   size_t n;
+  bool in = false;
 };
 
 Point3D read_point(std::istream& stream);
