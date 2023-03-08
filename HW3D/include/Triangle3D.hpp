@@ -43,6 +43,14 @@ class Triangle3D final
   }
 };
 
+struct PlaneTriangle final
+{
+  Triangle3D triangle;
+  Plane3D plane;
+
+  PlaneTriangle(const Point3D& p1, const Point3D& p2, const Point3D& p3): triangle(p1, p2, p3), plane(p1, p2, p3) { }
+};
+
 // Returns edge normal directions
 inline std::vector<Vec3D> get_edge_normals(const Triangle3D& tr) noexcept
 {
