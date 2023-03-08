@@ -9,7 +9,7 @@ namespace HW3D
 
 using data_t = double;
 
-inline const data_t FIT_TOLERANCE = 0.0001;
+static const data_t FIT_TOLERANCE = 0.0001;
 
 inline bool fit(data_t a, data_t b) noexcept
 {
