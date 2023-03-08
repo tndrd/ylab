@@ -11,7 +11,7 @@ Point3D read_point(std::istream& stream)
   return {x, y, z};
 }
 
-std::unique_ptr<IntersectibleWrapper> read_object(std::istream& stream)
+std::unique_ptr<IIntersectible> read_object(std::istream& stream)
 {
   Point3D p1 = read_point(stream);
   Point3D p2 = read_point(stream);
