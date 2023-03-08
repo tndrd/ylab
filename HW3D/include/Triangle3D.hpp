@@ -1,3 +1,5 @@
+/* Contains 3D triangle class*/
+
 #pragma once
 
 #include "Plane3D.hpp"

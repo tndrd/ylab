@@ -1,3 +1,5 @@
+/* Contains all the intersection check algorithms for each pair of primitives (except triangle-triangle) */
+
 #pragma once
 
 #include "Vec3D.hpp"

@@ -1,3 +1,5 @@
+/* Intersection check algorithms implementation */
+
 #include "base_intersects.hpp"
 
 namespace HW3D

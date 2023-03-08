@@ -1,3 +1,5 @@
+/* Contains 3D plane class */
+
 #pragma once
 
 #include "Vec3D.hpp"
@@ -8,7 +10,6 @@ namespace HW3D
 
 class Plane3D final
 {
-
   // Plane equation: (n, P) = s
   // n - plane normal, |n| = 1
   // s - plane offset
@@ -28,7 +29,7 @@ class Plane3D final
   }
 
   // Normalization is an inportant part of defining planes in 3D
-  // After the normalization parameters and their planes become one-to-one correspondent 
+  // After the normalization, parameters and their planes become one-to-one correspondent 
   void normalize() noexcept
   {
     data_t nlen = n_.length();
@@ -72,11 +73,6 @@ class Plane3D final
 
     return fit(s1, s2) && (n1 == n2);
   }
-
-  LineInf3D make_line(const Vec3D& direction) const noexcept
-  {
-    return {direction, n_ * s_};
-  }
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Plane3D& p)
@@ -85,12 +81,14 @@ inline std::ostream& operator<<(std::ostream& os, const Plane3D& p)
     return os;
 }
 
+// Returns distance from point to plane
 inline data_t dist(const Plane3D& plane, const Point3D& point)
 {
   data_t d = (plane.get_n() * point) - plane.get_s();
   return d;
 }
 
+// Plane coincidence check
 // Because of normalization planes wont be equal if their s-params are not same
 inline bool coincident(const Plane3D& p1, const Plane3D& p2) noexcept
 { 
@@ -109,6 +107,7 @@ inline bool coincident(const Plane3D& p1, const Plane3D& p2) noexcept
   return false;
 }
 
+// Plane parallelity check
 inline bool parallel(const Plane3D& p1, const Plane3D& p2) noexcept
 {
   return collinear(p1.get_n(), p2.get_n());

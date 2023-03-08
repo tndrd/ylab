@@ -1,3 +1,5 @@
+/* Contains 3D line classes */
+
 #pragma once
 #include "Vec3D.hpp" 
 
@@ -96,6 +98,7 @@ inline bool parallel(const Line3D& l1, const Line3D& l2) noexcept
   return collinear(l1.get_a(), l2.get_a());
 }
 
+// Returns vector that is orthagonal to line and fits the point
 inline Vec3D distvec(const Point3D& point, const Line3D& line) noexcept
 {
   Vec3D  p = line.get_p();
@@ -104,6 +107,7 @@ inline Vec3D distvec(const Point3D& point, const Line3D& line) noexcept
   return p + project_v(point - p, a) - point;
 }
 
+// Returns distance from point to line
 inline data_t dist(const Point3D& point, const Line3D& line) noexcept
 {
   return distvec(point, line).length();

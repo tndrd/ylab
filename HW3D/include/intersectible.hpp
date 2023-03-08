@@ -1,3 +1,5 @@
+/* Contains polymorhic stuff for creating and intersecting primitives */
+
 #pragma once
 #include "base_intersects.hpp"
 #include <memory>
@@ -5,15 +7,24 @@
 namespace HW3D
 {
 
+// Intersectible object interface
 struct IIntersectible
 {
+  // This function does double dispatch *magic*
   virtual bool intersects(const IIntersectible& rhs) const = 0;
+  
   virtual ~IIntersectible() { }
 
   virtual bool intersects(const Point3D&    rhs) const = 0;
   virtual bool intersects(const LineSeg3D&  rhs) const = 0;
   virtual bool intersects(const PlaneTriangle& rhs) const = 0;
 };
+
+// Just another form of calling intersection check
+inline bool intersects(const IIntersectible& lhs, const IIntersectible& rhs)
+{
+  return lhs.intersects(rhs);
+}
 
 struct IntersectiblePoint final: public IIntersectible 
 { 
@@ -60,6 +71,11 @@ struct IntersectibleTriangle final: public IIntersectible
   bool intersects(const PlaneTriangle& rhs) const override { return base_intersects(data, rhs); }
 };
 
+// Factory class that creates geometric primitives
+// Factory method IntersectibleFactory::create takes 3 points
+// And constructs one of three objects: point, line or triangle
+// Points may form a degenerate triangle that in fact may be a line or even a point
+// Factory does all the required checks and creates right object
 class IntersectibleFactory
 { 
   private: 
@@ -132,7 +148,7 @@ class IntersectibleFactory
   }
 
   public:
-
+  
   static std::unique_ptr<IIntersectible> create(std::array<Point3D, 3>& pts)
   {
     std::vector<Point3D> undegenerate_pts = get_undegenerate_points(pts);
@@ -145,10 +161,5 @@ class IntersectibleFactory
     }
   }
 };
-
-inline bool intersects(const IIntersectible& lhs, const IIntersectible& rhs)
-{
-  return lhs.intersects(rhs);
-}
 
 }

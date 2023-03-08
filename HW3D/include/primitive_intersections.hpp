@@ -1,3 +1,5 @@
+/* Contains functionality of finding intersections between pairs: line-line, line-plane, plane-plane */
+
 #pragma once
 
 #include "Plane3D.hpp"

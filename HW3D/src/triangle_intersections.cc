@@ -1,3 +1,5 @@
+/* Triangle-triangle intersection check implementation */
+
 #include "triangle_intersections.hpp"
 
 namespace HW3D

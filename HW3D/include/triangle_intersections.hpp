@@ -1,3 +1,5 @@
+/* Contains triangle-triangle intersection check algorithms */
+
 #pragma once
 
 #include "Triangle3D.hpp"

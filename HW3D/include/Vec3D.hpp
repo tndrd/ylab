@@ -1,3 +1,5 @@
+/* Contains 3D vector class with overloaded vector operations */
+
 #pragma once
 
 #include <array>

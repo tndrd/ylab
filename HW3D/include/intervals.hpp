@@ -1,3 +1,5 @@
+// Contains tolerant floating-point comparison functionality
+
 #pragma once
 
 #include <array>

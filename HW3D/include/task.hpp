@@ -1,3 +1,5 @@
+/* Contains HW3D lvl1-specific functionality */
+
 #pragma once
 
 #include "intersectible.hpp"

@@ -1,3 +1,4 @@
+/* HW3D lvl1-specific functionality implementation */
 #include "task.hpp"
 
 namespace HW3D
