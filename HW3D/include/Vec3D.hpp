@@ -1,5 +1,3 @@
-/* Contains 3D vector class with overloaded vector operations */
-
 #pragma once
 
 #include <array>
@@ -29,9 +27,6 @@ struct Vec3D final
   {
     assert(valid()); 
   }
-
-  // cppcheck-suppress syntaxError
-  Vec3D(const Vec3D& vec) = default;
 
   data_t length() const noexcept
   {
