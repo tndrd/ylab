@@ -9,10 +9,11 @@
 namespace HW3D
 {
 
-struct BoundingBox final
+class BoundingBox final
 {
   data_t x1, x2, y1, y2, z1, z2;
 
+  public:
   BoundingBox(const Triangle3D& tr)
   {
     Point3D v0 = tr.get_vertice(0);
@@ -35,18 +36,19 @@ struct BoundingBox final
       z2 = std::max(z2, v.z);
     }
   }
-};
 
-inline bool axis_intersect(data_t min1, data_t max1, data_t min2, data_t max2)
-{
-  return max1 >= min2 && min1 <= max2;
-}
+  bool intersects(const BoundingBox& rhs) const
+  {
+    return intervals_intersect_strong(x1, x2, rhs.x1, rhs.x2) && 
+           intervals_intersect_strong(y1, y2, rhs.y1, rhs.y2) &&
+           intervals_intersect_strong(z1, z2, rhs.z1, rhs.z2);
+  }
+};
 
 inline bool intersects(const BoundingBox& bb1, const BoundingBox& bb2)
 {
-  return axis_intersect(bb1.x1, bb1.x2, bb2.x1, bb2.x2) && 
-         axis_intersect(bb1.y1, bb1.y2, bb2.y1, bb2.y2) &&
-         axis_intersect(bb1.z1, bb1.z2, bb2.z1, bb2.z2);
+  return bb1.intersects(bb2);
 }
+
 
 }
