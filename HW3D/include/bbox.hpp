@@ -14,17 +14,19 @@ class BoundingBox final
   data_t x1, x2, y1, y2, z1, z2;
 
   public:
-  BoundingBox(const Triangle3D& tr)
+  BoundingBox(std::vector<Point3D> points)
   {
-    Point3D v0 = tr.get_vertice(0);
+    assert(points.size() > 0);
+
+    Point3D v0 = points[0];
     
     x1 = x2 = v0.x;
     y1 = y2 = v0.y;
     z1 = z2 = v0.z;
 
-    for(int i = 1; i < 3; ++i)
+    for(size_t i = 1; i < points.size(); ++i)
     {
-      Point3D v = tr.get_vertice(i);
+      Point3D v = points[i];
 
       x1 = std::min(x1, v.x);
       x2 = std::max(x2, v.x);

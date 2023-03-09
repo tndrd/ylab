@@ -17,7 +17,7 @@ struct SuperFastTriangle final
   BoundingBox bbox;
 
   SuperFastTriangle(const Point3D& p1, const Point3D& p2, const Point3D& p3):
-  triangle(p1, p2, p3), plane(p1, p2, p3), bbox(triangle) { }
+  triangle(p1, p2, p3), plane(p1, p2, p3), bbox({p1, p2, p3}) { }
 
   explicit SuperFastTriangle(const Triangle3D& tr): SuperFastTriangle(tr.get_vertice(0), tr.get_vertice(1), tr.get_vertice(2)) { }
 };
