@@ -1,74 +1,58 @@
+/* HW3D lvl1-specific functionality implementation */
 #include "task.hpp"
-#include <cassert>
 
 namespace HW3D
 {
 
-Triangle3D read_triangle(std::istream& stream)
+Point3D read_point(std::istream& stream)
 {
-  double x1 = NAN;
-  double y1 = NAN;
-  double z1 = NAN;
-
-  double x2 = NAN;
-  double y2 = NAN;
-  double z2 = NAN;
-
-  double x3 = NAN;
-  double y3 = NAN;
-  double z3 = NAN;
-
-  stream >> x1 >> y1 >> z1;
+  data_t x, y, z = NAN;
+  stream >> x >> y >> z;
   assert(stream.good());
-
-  stream >> x2 >> y2 >> z2;
-  assert(stream.good());
-
-  stream >> x3 >> y3 >> z3;
-  assert(stream.good());
-
-  Point3D p1 {x1, y1, z1};
-  Point3D p2 {x2, y2, z2};
-  Point3D p3 {x3, y3, z3};
-
-  try
-  {
-    Triangle3D tr {p1, p2, p3};
-    return tr;
-  }
-  catch (std::invalid_argument)
-  {
-    throw std::runtime_error("Attempt to create triangle with two or more coincident points");
-  }
+  return {x, y, z};
 }
 
-std::vector<std::vector<Point3D>> read_triangles(std::istream& stream)
+std::unique_ptr<IIntersectible> read_object(std::istream& stream)
+{
+  Point3D p1 = read_point(stream);
+  Point3D p2 = read_point(stream);
+  Point3D p3 = read_point(stream);
+
+  std::array<Point3D, 3> points = {p1, p2, p3};
+  return IntersectibleFactory::create(points);
+}
+
+std::vector<PointsEntry> read_objects(std::istream& stream)
 {
   size_t N = 0;
   stream >> N;
   assert(stream.good());
 
-  std::vector<std::vector<Point3D>> triangles;
-  for (int i = 0; i < N; i++) {
-    triangles.push_back(read_triangle(stream).simplify());
-  }
+  std::vector<PointsEntry> triangles;
+  for (size_t i = 0; i < N; i++)
+    triangles.push_back({read_object(stream), i});
 
   return triangles;
 }
 
-std::vector<int> count_intersections(const std::vector<std::vector<Point3D>>& triangles)
+std::vector<int> count_intersections(std::vector<PointsEntry>& triangles)
 {
-  size_t N = triangles.size();
   std::vector<int> intersections;
-
-  for (int i = 0; i < N; i++)
+  
+  for(auto p = triangles.begin(); p != triangles.end(); p = std::next(p))
   {
-    for (int k = 0; k < N; k++)
-    {
-      if (k == i) continue;
-      if (intersect(triangles[i], triangles[k]))
+    if (p->in) continue;
+
+    for(auto q = std::next(p); q != triangles.end(); q = std::next(q))
+    {  if (intersects(*p->object, *q->object))
       {
-        intersections.push_back(i);
+        intersections.push_back(p->n);
+
+        if (!q->in)
+        {
+          intersections.push_back(q->n);
+          q->in = true;
+        }
         break;
       }
     }
@@ -81,7 +65,7 @@ void write_intersections(std::ostream& stream, const std::vector<int>& intersect
 {
   size_t N = intersections.size();
 
-  for (int i = 0; i < N; ++i)
+  for (size_t i = 0; i < N; ++i)
   {
     stream << intersections[i] << " ";
   }
@@ -91,7 +75,7 @@ void write_intersections(std::ostream& stream, const std::vector<int>& intersect
 
 void task_e2e(std::istream& in, std::ostream& out)
 {
-  auto triangles     = read_triangles(in);
+  auto triangles     = read_objects(in);
   auto intersections = count_intersections(triangles);
 
   write_intersections(out, intersections);

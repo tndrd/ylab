@@ -4,14 +4,20 @@ project(HW3D)
 set(HEADERS_PATH include)
 set(SOURCES_PATH src)
 
+
+set(CMAKE_CXX_FLAGS "-std=c++17 -O2 -g -Wall -Wextra -DNDEBUG")
+
 add_library(lib3D INTERFACE)
 target_include_directories(lib3D INTERFACE ${HEADERS_PATH})
 
 add_library(triangle_intersections ${SOURCES_PATH}/triangle_intersections.cc)
 target_link_libraries(triangle_intersections lib3D)
 
+add_library(intersects ${SOURCES_PATH}/base_intersects.cc)
+target_link_libraries(intersects triangle_intersections)
+
 add_library(task ${SOURCES_PATH}/task.cc)
-target_link_libraries(task triangle_intersections)
+target_link_libraries(task intersects)
 
 add_executable(main ${SOURCES_PATH}/main.cc)
 target_link_libraries(main task)

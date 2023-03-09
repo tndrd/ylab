@@ -1,7 +1,165 @@
+/* Triangle-triangle intersection check implementation    */
+/* For further algorithm explanations check GCT references */
+
 #include "triangle_intersections.hpp"
 
 namespace HW3D
 {
+
+int sgn(data_t val) {
+    return lesser(data_t(0), val) - lesser(val, data_t(0));
+}
+
+int distsign(const data_t dist) noexcept
+{
+  //return (fit(dist, 0)) ? 0 : 1 - (2 * std::signbit(dist));
+  return sgn(dist);
+}
+
+int find_separate_point(const std::array<int, 3>& signs) noexcept
+{
+  for (int i = 0; i < 3; ++i)
+  { 
+    int s_i = signs[i];
+    if (!s_i) continue;
+    
+    int s_i_r = signs[(i+1)%3];
+    if(s_i == s_i_r) continue;
+
+    int s_i_l = signs[(i+2)%3];
+    if(s_i == s_i_l) continue;
+    
+    return i;
+  }
+  return -1;
+}
+
+std::array<int, 3> get_dist_signs(const std::array<data_t, 3>& distances) noexcept
+{
+  std::array<int, 3> signs;
+  for (int i = 0; i < 3; ++i)
+  {
+    signs[i] = distsign(distances[i]);
+  }
+  return signs;
+}
+
+data_t get_projection(const Point3D& vertice, const LineInf3D& line) noexcept
+{
+  return line.get_a() * (vertice - line.get_p());
+}
+
+std::array<data_t, 3> get_projections(const Triangle3D& tr, const LineInf3D& line) noexcept
+{
+  std::array<data_t, 3> projections;
+  for (int i = 0; i < 3; ++i)
+  { 
+    projections[i] = get_projection(tr.get_vertice(i), line);
+  }
+  return projections;
+}
+
+std::array<data_t, 3> get_distances(const Triangle3D& tr, const Plane3D& plane) noexcept
+{
+  std::array<data_t, 3> distances;
+  for (int i = 0; i < 3; ++i)
+  {    
+    distances[i] = dist(plane, tr.get_vertice(i));
+  }
+  return distances;
+}
+
+ZeroSearch find_zero(const std::array<int, 3>& signs) noexcept
+{
+  for (size_t i = 0; i < 3; ++i)
+  {
+    if (signs[i] == 0)
+      return {true, i};
+  }
+  return {false, 0};
+}
+
+MHIResult MollerHainsInterval(const Triangle3D& tr, const LineInf3D& line, const Plane3D& plane) noexcept
+{
+  std::array<data_t, 3> distances   = {dist(plane, tr.get_vertice(0)),
+                                       dist(plane, tr.get_vertice(1)),
+                                       dist(plane, tr.get_vertice(2))};
+  
+  std::array<int, 3>    dist_signs  = {distsign(distances[0]),
+                                       distsign(distances[1]),
+                                       distsign(distances[2])};
+
+  int isep = find_separate_point(dist_signs); 
+  if (isep == -1)
+  {
+    ZeroSearch zero = find_zero(dist_signs);
+    if (zero.found)
+    {
+      data_t val = get_projection(tr.get_vertice(zero.ind), line);
+      return {MHIResult::SINGLE, {val, val}};
+    }
+    return {MHIResult::NONE};
+  }
+
+  MHIResult intersections {MHIResult::FOUND};
+  
+  std::array<data_t, 3> projections = {get_projection(tr.get_vertice(0), line),
+                                       get_projection(tr.get_vertice(1), line),
+                                       get_projection(tr.get_vertice(2), line)};
+
+  for (int i = 0; i < 2; ++i)
+  {
+    int ind = (isep + 1 + i) % 3;
+    data_t di = distances[ind];
+    data_t ds = distances[isep];
+    data_t c = di / (di - ds);
+    data_t t = projections[ind] + (projections[isep] - projections[ind]) * c;
+    intersections.val[i] = t;
+  }
+  
+  std::sort(intersections.val.begin(), intersections.val.end());
+  return intersections;
+}
+
+
+bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
+{
+  Plane3D p1 = tr1.get_plane();
+  Plane3D p2 = tr2.get_plane();
+
+  PlaneRelation pi = get_plane_relation(p1, p2);
+  return intersect_noncomplanar_triangles(tr1, tr2, p1, p2, pi);
+}
+
+bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2, const Plane3D& p1, const Plane3D& p2)
+{
+  PlaneRelation pi = get_plane_relation(p1, p2);
+  return intersect_noncomplanar_triangles(tr1, tr2, p1, p2, pi);
+}
+
+// Reference: [GCT page 541]
+bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2, const Plane3D& p1, const Plane3D& p2, const PlaneRelation& pi)
+{
+  LineInf3D pil = get_plane_intersection(p1, p2, pi);
+  
+  MHIResult mhi1 = MollerHainsInterval(tr1, pil, p2);
+  if (mhi1.status == mhi1.NONE) return false;
+  std::array<data_t, 2>& intrs1 = mhi1.val;
+  
+  MHIResult mhi2 = MollerHainsInterval(tr2, pil, p1);
+  if (mhi2.status == mhi2.NONE) return false;
+  std::array<data_t, 2>& intrs2 = mhi2.val;
+
+  data_t max1 = intrs1.back();
+  data_t min1 = intrs1.front();
+
+  data_t max2 = intrs2.back();
+  data_t min2 = intrs2.front();
+
+  // Next we shold apply interval overlap method
+  return intervals_intersect(min1, max1, min2, max2);
+}
+
 
 // Reference: [GCT page 265]
 bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
@@ -14,11 +172,11 @@ bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
     auto interval1 = ComputeInterval(tr1, normals1[i]);
     auto interval2 = ComputeInterval(tr2, normals1[i]);
 
-    double max1 = interval1[1];
-    double min1 = interval1[0];
+    data_t max1 = interval1[1];
+    data_t min1 = interval1[0];
 
-    double max2 = interval2[1];
-    double min2 = interval2[0];
+    data_t max2 = interval2[1];
+    data_t min2 = interval2[0];
 
     if (!intervals_intersect(min1, max1, min2, max2))
       return false;
@@ -29,11 +187,11 @@ bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
     auto interval1 = ComputeInterval(tr1, normals2[i]);
     auto interval2 = ComputeInterval(tr2, normals2[i]);
 
-    double max1 = interval1[1];
-    double min1 = interval1[0];
+    data_t max1 = interval1[1];
+    data_t min1 = interval1[0];
 
-    double max2 = interval2[1];
-    double min2 = interval2[0];
+    data_t max2 = interval2[1];
+    data_t min2 = interval2[0];
 
     if (!intervals_intersect(min1, max1, min2, max2))
       return false;
@@ -42,16 +200,16 @@ bool intersect_complanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
   return true;
 }
 
-std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& direction)
+std::array<data_t,2> ComputeInterval(const Triangle3D& tr, const Vec3D& direction)
 {
   assert(direction != (Vec3D{0, 0, 0}));
 
-  std::vector<double> projections;
+  std::vector<data_t> projections;
 
   for (int i = 0; i < 3; i++)
   {
     Point3D v = tr.get_vertice(i);
-    double t = v * direction; 
+    data_t t = v * direction; 
     projections.push_back(t);
   }
 
@@ -60,56 +218,37 @@ std::array<double,2> ComputeInterval(const Triangle3D& tr, const Vec3D& directio
   return {*minmax.first, *minmax.second}; 
 }
 
-// Reference: [GCT page 541]
-bool intersect_noncomplanar_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
-{
-  Plane3D p1 = tr1.get_plane();
-  Plane3D p2 = tr2.get_plane();
-
-  PlaneRelation pi = get_plane_relation(p1, p2);
-
-  LineInf3D pil = get_plane_intersection(p1, p2, pi);
-
-  std::vector<double> intrs1 = intersect_with(tr1, pil);
-  std::vector<double> intrs2 = intersect_with(tr2, pil);
-
-  // If triangle intersects infinite pil line, intersection count can be zero, two or three
-  if (intrs1.size() < 2 || intrs2.size() < 2)
-    return false;
-
-  double max1 = intrs1.back();
-  double min1 = intrs1.front();
-
-  double max2 = intrs2.back();
-  double min2 = intrs2.front();
-
-  // Next we shold apply interval overlap method
-  return intervals_intersect(min1, max1, min2, max2);
-}
 
 bool intersect_triangles(const Triangle3D& tr1, const Triangle3D& tr2)
 {
-  Plane3D p1 = tr1.get_plane();
-  Plane3D p2 = tr2.get_plane();
+  return intersect_triangles(SuperFastTriangle{tr1}, SuperFastTriangle{tr2});
+}
 
-  // Intersect triangles' planes
-  PlaneRelation pi = get_plane_relation(p1, p2);
+
+bool intersect_triangles(const SuperFastTriangle& tr1, const SuperFastTriangle& tr2)
+{
+  if(!intersects(tr1.bbox, tr2.bbox)) return false;
+  
+  PlaneRelation pi = get_plane_relation(tr1.plane, tr2.plane);
 
   switch(pi.get_state())
   {
-    case pi.PARALLEL:
-    {
-      return false;
-    }
-
     case pi.COINCIDENT:
     {
-      return intersect_complanar_triangles(tr1, tr2);
+      //std::cout << ": COINCIDENT" << std::endl; 
+      return intersect_complanar_triangles(tr1.triangle, tr2.triangle);
+    }
+
+    case pi.PARALLEL:
+    {
+      //std::cout << ": PARALLEL" << std::endl;
+      return false;
     }
     
     case pi.INTERSECTING:
     {
-      return intersect_noncomplanar_triangles(tr1, tr2);
+      //std::cout << ": INTERSECTING" << std::endl;
+      return intersect_noncomplanar_triangles(tr1.triangle, tr2.triangle, tr1.plane, tr2.plane, pi);
     }
   } 
 
