@@ -48,4 +48,10 @@ inline bool intervals_intersect(data_t min1, data_t max1, data_t min2, data_t ma
 {
   return egreater(max1, min2) && elesser(min1, max2);
 }
+
+inline bool intervals_intersect_strong(data_t min1, data_t max1, data_t min2, data_t max2) noexcept
+{
+  return max1 >= min2 && min1 <= max2;
+}
+
 }
