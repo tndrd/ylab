@@ -22,20 +22,20 @@ std::unique_ptr<IIntersectible> read_object(std::istream& stream)
   return IntersectibleFactory::create(points);
 }
 
-std::list<PointsEntry> read_objects(std::istream& stream)
+std::vector<PointsEntry> read_objects(std::istream& stream)
 {
   size_t N = 0;
   stream >> N;
   assert(stream.good());
 
-  std::list<PointsEntry> triangles;
+  std::vector<PointsEntry> triangles;
   for (size_t i = 0; i < N; i++)
     triangles.push_back({read_object(stream), i});
 
   return triangles;
 }
 
-std::vector<int> count_intersections(std::list<PointsEntry>& triangles)
+std::vector<int> count_intersections(std::vector<PointsEntry>& triangles)
 {
   std::vector<int> intersections;
 

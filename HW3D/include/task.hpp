@@ -19,9 +19,9 @@ struct PointsEntry
 Point3D read_point(std::istream& stream);
 std::unique_ptr<IIntersectible> read_object(std::istream& stream);
 
-std::list<PointsEntry> read_objects(std::istream& stream);
+std::vector<PointsEntry> read_objects(std::istream& stream);
 
-std::vector<int> count_intersections(std::list<PointsEntry>& triangles);
+std::vector<int> count_intersections(std::vector<PointsEntry>& triangles);
 
 void write_intersections(std::ostream& stream, const std::vector<int>& intersections);
 
