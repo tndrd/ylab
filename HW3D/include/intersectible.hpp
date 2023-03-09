@@ -149,7 +149,7 @@ class IntersectibleFactory
 
   public:
   
-  static std::unique_ptr<IIntersectible> create(std::array<Point3D, 3>& pts)
+  static std::unique_ptr<IIntersectible> create(const std::array<Point3D, 3>& pts)
   {
     std::vector<Point3D> undegenerate_pts = get_undegenerate_points(pts);
 
