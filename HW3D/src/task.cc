@@ -38,24 +38,14 @@ std::vector<PointsEntry> read_objects(std::istream& stream)
 std::vector<int> count_intersections(std::vector<PointsEntry>& triangles)
 {
   std::vector<int> intersections;
-
-  auto p = triangles.begin();
-
-  while(p != triangles.end())
+  
+  for(auto p = triangles.begin(); p != triangles.end(); p = std::next(p))
   {
-    if (p->in)
-    {
-      p = std::next(p);
-      continue;
-    }
+    if (p->in) continue;
 
-    auto q  = std::next(p);
-
-    while(q != triangles.end())
-    {
-      if (intersects(*p->object, *q->object))
+    for(auto q = std::next(p); q != triangles.end(); q = std::next(q))
+    {  if (intersects(*p->object, *q->object))
       {
-        
         intersections.push_back(p->n);
 
         if (!q->in)
@@ -63,14 +53,9 @@ std::vector<int> count_intersections(std::vector<PointsEntry>& triangles)
           intersections.push_back(q->n);
           q->in = true;
         }
-
-        
         break;
       }
-      q = std::next(q);
     }
-
-    p = std::next(p);
   }
 
   return intersections;
