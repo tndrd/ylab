@@ -5,15 +5,9 @@
 !tests/
 !src/*
 !include/*
-!tests/triangles.test
-!tests/e2e.test
-!tests/hardcoded.test
-!tests/pairgen.py
-!tests/2DGenDemo.ipynb
-!tests/3DGenDemo.ipynb
-!tests/scramble.py
-!tests/showtest.py
-!tests/testgen.py
+!tests/*.test
+!tests/*.py
+!tests/*.ipynb
 
 !CMakeLists.txt
 !.gitignore

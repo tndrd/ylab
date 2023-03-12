@@ -47,14 +47,17 @@ std::vector<int> count_intersections(std::vector<PointsEntry>& triangles)
     {  
       if (intersects(*p->object, *q->object))
       {
-        intersections.push_back(p->n);
+        if (!p->in)
+        {
+          intersections.push_back(p->n);
+          p->in = true;
+        }
 
         if (!q->in)
         {
           intersections.push_back(q->n);
           q->in = true;
         }
-        break;
       }
     }
   }

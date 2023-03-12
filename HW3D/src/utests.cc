@@ -1588,8 +1588,8 @@ TEST(AllTriangles, Generated)
 
   for(size_t i = 0; i < n_tests; ++i)
   {
-    bool expected;
-    bool result;
+    bool expected = false;
+    bool result   = false;
 
     std::unique_ptr<IIntersectible> tr1 = read_object(input);
     std::unique_ptr<IIntersectible> tr2 = read_object(input);
@@ -1704,7 +1704,7 @@ bool read_and_compare(std::istream& input)
   for (size_t i = 0; i < expected_output_length; ++i)
   {
     input >> result;
-    expected_output << result << " ";
+    expected_output << result << "\n";
   }
 
   expected_output << std::endl;
