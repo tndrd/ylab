@@ -33,13 +33,13 @@ class Triangle3D final
   }
 
   // Returns specified edge of triangle
-  LineSeg3D get_edge(u_char i1, u_char i2) const
+  LineSeg3D get_edge(size_t i1, size_t i2) const
   {
     return {vertices_[i1], vertices_[i2]}; // Will throw an exception if points coincide
   }
 
   // Returns specified vertice of triangle
-  const Vec3D& get_vertice(u_char i) const
+  const Vec3D& get_vertice(size_t i) const
   {
     return vertices_[i]; // Will throw an exception if index out of range
   }

@@ -23,6 +23,6 @@ add_executable(ideal_old ${SOURCES_PATH}/ideal_old.cc)
 target_link_libraries(ideal_old libcaches)
 
 # Testing
-
+add_subdirectory(../googletest bin)
 add_executable(test ${SOURCES_PATH}/test.cc)
-target_link_libraries(test PRIVATE gtest gtest_main pthread libcaches)
+target_link_libraries(test PRIVATE GTest::gtest_main libcaches)
