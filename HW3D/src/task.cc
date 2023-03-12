@@ -44,7 +44,8 @@ std::vector<int> count_intersections(std::vector<PointsEntry>& triangles)
     if (p->in) continue;
 
     for(auto q = std::next(p); q != triangles.end(); q = std::next(q))
-    {  if (intersects(*p->object, *q->object))
+    {  
+      if (intersects(*p->object, *q->object))
       {
         intersections.push_back(p->n);
 
@@ -58,6 +59,7 @@ std::vector<int> count_intersections(std::vector<PointsEntry>& triangles)
     }
   }
 
+  std::sort(intersections.begin(), intersections.end());
   return intersections;
 }
 
@@ -67,7 +69,7 @@ void write_intersections(std::ostream& stream, const std::vector<int>& intersect
 
   for (size_t i = 0; i < N; ++i)
   {
-    stream << intersections[i] << " ";
+    stream << intersections[i] << std::endl;
   }
 
   stream << std::endl;
