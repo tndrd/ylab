@@ -58,6 +58,7 @@ std::vector<int> count_intersections(std::vector<PointsEntry>& triangles)
     }
   }
 
+  std::sort(intersections.begin(), intersections.end());
   return intersections;
 }
 
