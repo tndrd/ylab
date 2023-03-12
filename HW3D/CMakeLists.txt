@@ -23,6 +23,6 @@ add_executable(main ${SOURCES_PATH}/main.cc)
 target_link_libraries(main task)
 
 # Tests
-find_package(GTest)
+add_subdirectory(../googletest bin)
 add_executable(utests ${SOURCES_PATH}/utests.cc)
-target_link_libraries(utests PRIVATE gtest gtest_main pthread triangle_intersections task)
+target_link_libraries(utests PRIVATE GTest::gtest_main triangle_intersections task)
