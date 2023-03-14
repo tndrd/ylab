@@ -57,7 +57,7 @@ std::vector<int> count_intersections(std::vector<PointsEntry>& triangles)
 {
   std::vector<int> intersections;
   
-  for(auto p = triangles.begin(); p != std::prev(triangles.end()); p = std::next(p))
+  for(auto p = triangles.begin(); p != triangles.end(); p = std::next(p))
   { 
     for(auto q = std::next(p); q != triangles.end(); q = std::next(q))
     {
