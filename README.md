@@ -5,7 +5,7 @@ This repo contains ylab course projects
 
 ```bash
 git clone --recursive https://github.com/tndrd/ylab.git
-cd <PROJECT_NAME>
+cd ylab/<PROJECT_NAME>
 cmake .
 cmake --build .
 ```
