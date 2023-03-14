@@ -1715,6 +1715,13 @@ bool read_and_compare(std::istream& input)
   return got == expected;
 }
 
+TEST(Task, E2E_Generated)
+{
+  std::ifstream input("tests/e2e.test");
+  ASSERT_TRUE(input.good());
+  EXPECT_TRUE(read_and_compare(input));
+}
+
 TEST(Task, E2E_Hardcoded_from_file)
 {
   std::ifstream input("tests/hardcoded.test");
@@ -1727,11 +1734,4 @@ TEST(Task, E2E_Hardcoded_from_file)
   {
     EXPECT_TRUE(read_and_compare(input)) << "On test #" << i << std::endl;
   }
-}
-
-TEST(Task, E2E_Generated)
-{
-  std::ifstream input("tests/e2e.test");
-  ASSERT_TRUE(input.good());
-  EXPECT_TRUE(read_and_compare(input));
 }

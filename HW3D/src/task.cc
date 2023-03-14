@@ -35,30 +35,34 @@ std::vector<PointsEntry> read_objects(std::istream& stream)
   return triangles;
 }
 
+void update_intersections(std::vector<int>& intersections, std::vector<PointsEntry>::iterator p, std::vector<PointsEntry>::iterator q)
+{
+  if (intersects(*p->object, *q->object))
+  {
+    if (!p->in)
+    {
+      intersections.push_back(p->n);
+      p->in = true;
+    }
+
+    if (!q->in)
+    {
+      intersections.push_back(q->n);
+      q->in = true;
+    }
+  }
+}
+
 std::vector<int> count_intersections(std::vector<PointsEntry>& triangles)
 {
   std::vector<int> intersections;
   
   for(auto p = triangles.begin(); p != triangles.end(); p = std::next(p))
-  {
-    if (p->in) continue;
-
+  { 
     for(auto q = std::next(p); q != triangles.end(); q = std::next(q))
-    {  
-      if (intersects(*p->object, *q->object))
-      {
-        if (!p->in)
-        {
-          intersections.push_back(p->n);
-          p->in = true;
-        }
-
-        if (!q->in)
-        {
-          intersections.push_back(q->n);
-          q->in = true;
-        }
-      }
+    {
+      if (p->in && q->in) continue;  
+      update_intersections(intersections, p , q);
     }
   }
 

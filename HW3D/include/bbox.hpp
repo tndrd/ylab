@@ -42,9 +42,9 @@ class BoundingBox final
 
   bool intersects(const BoundingBox& rhs) const
   {
-    return intervals_intersect_strong(x1, x2, rhs.x1, rhs.x2) && 
-           intervals_intersect_strong(y1, y2, rhs.y1, rhs.y2) &&
-           intervals_intersect_strong(z1, z2, rhs.z1, rhs.z2);
+    return intervals_intersect(x1, x2, rhs.x1, rhs.x2) && 
+           intervals_intersect(y1, y2, rhs.y1, rhs.y2) &&
+           intervals_intersect(z1, z2, rhs.z1, rhs.z2);
   }
 };
 
